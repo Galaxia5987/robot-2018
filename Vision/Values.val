@@ -1,0 +1,5 @@
+self.command_s = "area,0.1,1000000"
+self.draw_contours_b = True
+self.draw_hulls_b = True
+self.dirode_iterations_i = 3
+self.find_center_b = True

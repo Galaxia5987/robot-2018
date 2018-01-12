@@ -1,0 +1,2 @@
+self.lower_white_range,self.upper_white_range = (250,250,250),(255,255,255)
+self.lower_green_range,self.upper_green_range = (55,182,179),(61,227,255)

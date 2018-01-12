@@ -1,0 +1,107 @@
+All functions below filter contours based on a trait and a range set in SmartDashboard
+    def area(self, l, u):
+        if len(self.contours) > 0:
+            possible_fit = []
+            for c in self.contours:
+                if u > cv2.contourArea(c) > l:
+                    possible_fit.append(c)
+            self.contours=possible_fit
+
+    def bounding_rect(self, l, u):
+        possible_fit = []
+        if len(self.contours) > 0:
+            for c in self.contours:
+                if u > cv2.boundingRect(c) > l:
+                    possible_fit.append(c)
+            self.contours=possible_fit
+
+    def bounding_circ(self, l, u):
+        possible_fit = []
+        if len(self.contours) > 0:
+            for c in self.contours:
+                if u > cv2.minEnclosingCircle(c) > l:
+                    possible_fit.append(c)
+            self.contours=possible_fit
+
+    def extent(self, l, u):
+        possible_fit = []
+        for c in self.contours:
+            _, _, w, h = cv2.boundingRect(c)
+            rect_area = w*h
+            if u > cv2.contourArea(c)/rect_area > l:
+                possible_fit.append(c)
+        self.contours = possible_fit
+
+    def hull(self, l, u):
+        # Adds a list of hulls, which can be drawn like contours
+        self.hulls.clear()
+        possible_fit = []
+        for c in self.contours:
+            if (u > cv2.contourArea(c) / cv2.contourArea(cv2.convexHull(c)) > l):
+                possible_fit.append(c)
+                # Adds a hull to the list only if it fits our parameters
+                self.hulls.append(cv2.convexHull(c, returnPoints=False))
+        self.contour = possible_fit
+		
+if not self.calibration:
+            file=open('function.val','r')
+            func=file.read()
+            self.get_distance=lambda x:eval(func) #if we are not in calibration mode take the function from the file
+            file.close()
+        else:
+            self.input=0 # initiating the input variable
+            self.dist_cal=[] # creates an empty list of
+            self.contour_cal=[] # both distance and contour characteristic
+			
+def measure(self):
+        # Sums all desired variables of all contours. Used for distance measuring
+        self.total_cal = 0
+        for c in self.contours:
+            self.total_cal += eval(self.cal_fun[self.get_item("Method", self.find_by_s)][0])
+            if self.cal_fun[self.get_item("Method", self.find_by_s)][1]:
+                self.total_cal = self.total_cal / len(self.contours)
+        return self.total_cal
+
+    def numbers_input(self,key):
+        """
+        uses the numpad as a way of writing distance
+        :param key: gets keyboard key from the process
+        :return:
+        """
+        if key in range(48,58):#48-58 are the possible numbers
+            self.input *= 10
+            self.input += key-48
+        if key is 13: #13 is Enter
+            self.dist_cal.append(self.input)
+            self.contour_cal.append(self.measure())
+            self.input=0
+        if key is 8: #8 is backspace
+            if self.input is 0:
+                self.dist_cal.pop(len(self.dist_cal)-1)#if the number is 0 remove the last dist inserted
+                self.contour_cal.pop(len(self.contour_cal)-1)#if the number is 0 remove the last area inserted
+            self.input/=10
+            self.input=int(self.input)
+
+    def create_poly(self,deg):
+        """
+        this function creates a function of degree deg
+        :param deg: the degree of the funtion
+        :return: writes to a file the wanted function
+        """
+        polyfit=np.polyfit(self.contour_cal,self.dist_cal,deg=deg)
+        polyfit=list(polyfit)
+        string='0'
+        for i in polyfit:
+            string += '+'+str(i)+'*x**'+str((deg-polyfit.index(i)))
+        file=open('function.val','w')
+        file.write(string)
+        file.close()
+		
+if vision.calibration:
+            vision.numbers_input(vision.key)
+            if vision.key is ord('p') and vision.calibration:
+                vision.create_poly(5) #5 is the function's deg
+        else:
+            vision.distance=vision.get_distance(vision.measure())
+            vision.distance=vision.get_distance(vision.measure())
+            cv2.putText(vision.show_frame, "distance: " + str(vision.distance), (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1,(255, 255, 255), 2, cv2.LINE_AA)
