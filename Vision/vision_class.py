@@ -73,6 +73,8 @@ class Vision:
             the tuple is the string command, the second one is whether it needs to be average'd.
             * sees_target: A boolean that says whether the target was found.
         """
+        self.focal=638.6086956521739
+        self.target_height=41
         self.cam = cv2.VideoCapture(camera)
         self.distance=0
         # self.cam.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0)
@@ -104,7 +106,7 @@ class Vision:
         self.set_item("Command", self.command_s)
         self.set_item("Draw contours", self.draw_contours_b)
         self.set_item("Draw hulls", self.draw_hulls_b)
-        self.set_item("DiRode iterations", self.dirode_iterations_i)
+        self.set_item("DiRode iterations", self._iterations_i)
         self.set_item("Find center", self.find_center_b)
 
         self.set_item("Sees target", self.sees_target)
@@ -253,10 +255,28 @@ class Vision:
         self.contours = possible_fit
 
     def get_angle(self):
-        return 0
+        """
+        Finds the Center of all the contours and then returns the angle using
+        the focal length and the distance from the middle
+        :return:
+        angle from center
+        """
+        axes=0
+        for c in self.centers:
+            axes+=c[0]
+        x_dif=self.frame.shape[0]-axes/len(self.centers)
+        return math.atan(x_dif/self.focal)
 
     def get_distance(self):
-        return 0
+        """
+        Finds the distance using the real target height and its pixel representation
+        (similar triangles)
+        :return:
+        distance from target
+        """
+        _,_,_,height=cv2.boundingRect(self.contours)
+        distance=self.target_height*self.focal/height
+        return distance
 
 #-----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
