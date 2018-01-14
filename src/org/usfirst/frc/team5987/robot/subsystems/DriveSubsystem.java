@@ -178,6 +178,21 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	/**
+	 * MUST do this in order to <code>getBackDistance()</code> <br>
+	 * Starts the ultrasonic's ping
+	 */
+	public void enableUltrasonic(){
+		backDistanceSensor.setEnabled(true);
+	}
+	
+	/**
+	 * MUST do this in order to <code>getBackDistance()</code> <br>
+	 * Stops the ultrasonic's ping
+	 */
+	public void disableUltrasonic(){
+		backDistanceSensor.setEnabled(false);
+	}
+	/**
 	 * Get the distance from the back of the robot
 	 * @return distance in CM
 	 */
