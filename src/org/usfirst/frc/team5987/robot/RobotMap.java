@@ -18,7 +18,12 @@ public class RobotMap {
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
 	// public static int rightMotor = 2;
-
+	
+	// CLIMB SUBSYSTEM
+	public static int servo1 = -1;
+	public static int servo2 = -1;
+	public static int motor = -1;
+	public static int limitSwitch = -1;
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:
 	// public static int rangefinderPort = 1;
