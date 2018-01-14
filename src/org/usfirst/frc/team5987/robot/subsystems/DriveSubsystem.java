@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
  * TODO: FIX NetworkTable
@@ -97,7 +98,8 @@ public class DriveSubsystem extends Subsystem {
 	 * @param velocity velocity in METERS/SEC
 	 */
 	public void setRightSetpoint(double velocity){
-		
+		double error = velocity - getRightSpeed();
+		driveTable.putNumber("Drive Right Speed Error", error);
 		rightPID.setSetpoint(velocity);
 	}
 	
@@ -106,7 +108,8 @@ public class DriveSubsystem extends Subsystem {
 	 * @param velocity velocity in METERS/SEC
 	 */
 	public void setLeftSetpoint(double velocity){
-		
+		double error = velocity - getLeftSpeed();
+		driveTable.putNumber("Drive Left Speed Error", error);
 		leftPID.setSetpoint(velocity);
 	}
 	
