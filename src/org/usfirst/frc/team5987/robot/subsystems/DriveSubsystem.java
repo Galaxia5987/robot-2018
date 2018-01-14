@@ -5,6 +5,7 @@ import org.usfirst.frc.team5987.robot.RobotMap;
 import auxiliary.MiniPID;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -20,7 +21,7 @@ public class DriveSubsystem extends Subsystem {
 	private static double kF = 0;
 	
 	private static final boolean rightInverted = false; // inverts the right motors & right encoder
-	private static final boolean leftInverted = false; // inverts the left motors & left encoder
+	private static final boolean leftInverted = true; // inverts the left motors & left encoder
 	
 	private static final Victor driveRightRearMotor = new Victor(RobotMap.driveRightRearMotor);
 	private static final Victor driveRightFrontMotor = new Victor(RobotMap.driveRightFrontMotor);
@@ -31,6 +32,7 @@ public class DriveSubsystem extends Subsystem {
 	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, leftInverted);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
+	private static final Ultrasonic backDistanceSensor = new Ultrasonic(RobotMap.backUltrasonicPing, RobotMap.backUltrasonicEcho, Ultrasonic.Unit.kMillimeters);
 	
 	private double velocitySetpoint;
 	public NetworkTable driveTable;
@@ -45,7 +47,10 @@ public class DriveSubsystem extends Subsystem {
 		driveRightFrontMotor.setInverted(rightInverted);
 		driveLeftRearMotor.setInverted(leftInverted);
 		driveLeftFrontMotor.setInverted(leftInverted);
-		
+
+		driveRightFrontMotor.setInverted(rightInverted);
+		driveLeftRearMotor.setInverted(leftInverted);
+		driveLeftFrontMotor.setInverted(leftInverted);
 		// set the distance per pulse for the encoders
 		driveRightEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
 		driveLeftEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
@@ -170,6 +175,14 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public boolean isBump(){
 		return bumpSensor.get();
+	}
+	
+	/**
+	 * Get the distance from the back of the robot
+	 * @return distance in CM
+	 */
+	public double getBackDistance(){
+		return backDistanceSensor.getRangeMM() * 100;
 	}
 }
 

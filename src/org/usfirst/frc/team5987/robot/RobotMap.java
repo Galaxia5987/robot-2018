@@ -7,6 +7,9 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -29,11 +32,16 @@ public class RobotMap {
 	public static final int driveRightFrontMotor = 1; // TODO: CHANGE!
 	public static final int driveLeftRearMotor = 2; // TODO: CHANGE!
 	public static final int driveLeftFrontMotor = 3; // TODO: CHANGE!
+	
 	public static final int driveRightEncoderChannelA = 4; // TODO: CHANGE!
 	public static final int driveRightEncoderChannelB = 5; // TODO: CHANGE!
 	public static final int driveLeftEncoderChannelA = 6; // TODO: CHANGE!
 	public static final int driveLeftEncoderChannelB = 7; // TODO: CHANGE!
+	
 	public static final int driveEncoderDistancePerPulse = 1 * 1; // TODO: CHANGE!
+	
+	public static final int backUltrasonicPing = 8;
+	public static final int backUltrasonicEcho = 9;
 	public static int bumpSensor = 8; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 }
