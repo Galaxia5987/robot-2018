@@ -33,6 +33,7 @@ public class RobotMap {
 	public static final int driveRightEncoderChannelB = 5; // TODO: CHANGE!
 	public static final int driveLeftEncoderChannelA = 6; // TODO: CHANGE!
 	public static final int driveLeftEncoderChannelB = 7; // TODO: CHANGE!
+	public static final int driveEncoderDistancePerPulse = 1 * 1; // TODO: CHANGE!
 	public static int bumpSensor = 8; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 }
