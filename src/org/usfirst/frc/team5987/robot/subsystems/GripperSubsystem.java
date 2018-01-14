@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  * a gripper subsystem (duh)
  * Can define the speed of the two wheels
- * Can get a boolean if the box is in.
+ * Can get a boolean if the power cube is in.
  * @author Paulo Khayat
  */
 public class GripperSubsystem extends Subsystem {
@@ -23,7 +23,11 @@ public class GripperSubsystem extends Subsystem {
 
     }
     
-    //FUck your ti ud give me show kow
+    /**
+     * 
+     * @param speedL speed of the left wheels on the gripper
+     * @param speedR speed of the right wheels on the gripper
+     */
     public void setSpeed(double speedL, double speedR){
     	leftWheel.set(speedL);
     	rightWheel.set(speedR);
