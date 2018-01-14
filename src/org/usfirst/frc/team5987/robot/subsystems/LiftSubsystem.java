@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 
 /**
- *
+ *  @author mow
  */
 public class LiftSubsystem extends Subsystem {
 	
