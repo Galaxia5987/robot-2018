@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class LiftSubsystem extends Subsystem {
 	
 	NetworkTable LiftTable = NetworkTable.getTable("liftTable");
+	MiniPID pid = new MiniPID(LiftTable.getNumber("liftP", 0), LiftTable.getNumber("liftI", 0), LiftTable.getNumber("liftD", 0));
 	Victor liftMotor = new Victor(RobotMap.liftMotorPort);
 	Encoder liftEncoder = new Encoder(RobotMap.liftEncoderPortA, RobotMap.liftEncoderPortB);
 	DigitalInput hallEffect1 = new DigitalInput(RobotMap.liftHallEffect1Port);
@@ -46,13 +47,14 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void setPoint(double height) {
-    	wantedHeight = height;
+    	pid.setSetpoint(height);
     }
     
-    public void Update() {
-    	MiniPID pid = new MiniPID(LiftTable.getNumber("liftP", 0), LiftTable.getNumber("liftI", 0), LiftTable.getNumber("liftD", 0));
-    	pid.setOutputLimits(0, 1);
-    	pid.setSetpoint(wantedHeight);
+    public void update() {
+    	pid.setP(LiftTable.getNumber("liftP", 0));
+    	pid.setI(LiftTable.getNumber("liftI", 0));
+    	pid.setD(LiftTable.getNumber("liftD", 0));
+    	pid.setOutputLimits(-1, 1);
     	setSpeed(pid.getOutput());
     }
 }
