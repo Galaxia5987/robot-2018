@@ -33,3 +33,17 @@
 		servo1.set(position);
 		servo1.set(position);
 	}
+
+	/**
+	 * Set the PWM value.
+	 *
+	 * <p>
+	 * The PWM value is set using a range of -1.0 to 1.0, appropriately scaling
+	 * the value for the FPGA.
+	 *
+	 * @param speed
+	 *            The speed value between -1.0 and 1.0 to set.
+	 */
+	public void setClimbSpeed(double speed) {
+		motor.set(speed);
+	}
