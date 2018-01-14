@@ -1,5 +1,6 @@
 	/**
 	 * Servo number one (1) for hook number two (2) on the climb subsystem.
+	 * Servo number one (1) for hook number two (1) on the climb subsystem.
 	 */
 	Servo servo1 = new Servo(RobotMap.servo1);
 	
