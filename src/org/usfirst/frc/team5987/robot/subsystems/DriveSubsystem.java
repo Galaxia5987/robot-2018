@@ -12,17 +12,15 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
-
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
 	
+	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0; 
 	private static double kI = 0; 
 	private static double kD = 0;
 	private static double kF = 0;
 	
-	private static final boolean rightInverted = false;
-	private static final boolean leftInverted = false;
+	private static final boolean rightInverted = false; // inverts the right motors & right encoder
+	private static final boolean leftInverted = false; // inverts the left motors & left encoder
 	
 	private static final Victor driveRightRearMotor = new Victor(RobotMap.driveRightRearMotor);
 	private static final Victor driveRightFrontMotor = new Victor(RobotMap.driveRightFrontMotor);
@@ -39,19 +37,27 @@ public class DriveSubsystem extends Subsystem {
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
+	
 	/*TODO Set distance per pulse TODO*/
 	public DriveSubsystem(){
+		// invert the motors if needed
 		driveRightRearMotor.setInverted(rightInverted);
 		driveRightFrontMotor.setInverted(rightInverted);
 		driveLeftRearMotor.setInverted(leftInverted);
 		driveLeftFrontMotor.setInverted(leftInverted);
+		
+		// set the distance per pulse for the encoders
 		driveRightEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
 		driveLeftEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
+		
+		// init the PIDF constants in the NetworkTable
 		refreshPID();
 		driveTable.putNumber("Drive kP", kP);
 		driveTable.putNumber("Drive kI", kI);
 		driveTable.putNumber("Drive kD", kD);
 		driveTable.putNumber("Drive kF", kF);
+		
+		// init the MiniPID for each side
 		rightPID = new MiniPID(kP, kI, kD, kF);
 		leftPID = new MiniPID(kP, kI, kD, kF);
 	}
@@ -98,8 +104,10 @@ public class DriveSubsystem extends Subsystem {
 		leftPID.setSetpoint(velocity);
 	}
 	
+	/**
+	 * Gets the PIDF constants from the NetworkTable
+	 */
 	private void refreshPID(){
-		
 		kP = driveTable.getNumber("Drive kP", kP);
 		kI = driveTable.getNumber("Drive kI", kI);
 		kD = driveTable.getNumber("Drive kD", kD);
