@@ -25,6 +25,7 @@ import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem
 			= new ExampleSubsystem();
+	public static final ClimbSubsystem climb = new ClimbSubsystem();
 	public static OI m_oi;
 
 	Command m_autonomousCommand;
