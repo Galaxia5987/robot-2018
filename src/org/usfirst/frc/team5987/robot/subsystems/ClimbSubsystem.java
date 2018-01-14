@@ -47,3 +47,13 @@
 	public void setClimbSpeed(double speed) {
 		motor.set(speed);
 	}
+	
+	/**
+	   * Get the value from the limit switch to know whether the robot has reached the top.
+	   *
+	   * @return the status of the limit switch
+	   */
+	public boolean hasReachedTop()
+	{
+		return limitSwitch.get();
+	}
