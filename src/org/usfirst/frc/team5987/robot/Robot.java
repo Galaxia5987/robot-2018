@@ -7,6 +7,9 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -24,8 +27,8 @@ import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
+	NetworkTable liftTable;
+	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 
@@ -42,6 +45,12 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		
+		//NETWORKTABLES
+		liftTable = NetworkTableInstance.getDefault().getTable("Lift");
+		NetworkTableEntry pLift = liftTable.getEntry("liftP");
+		NetworkTableEntry iLift = liftTable.getEntry("liftI");
+		NetworkTableEntry dLift = liftTable.getEntry("liftD");
 	}
 
 	/**
