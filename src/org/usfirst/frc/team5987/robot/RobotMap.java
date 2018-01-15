@@ -18,7 +18,7 @@ public class RobotMap {
 	public static int liftMotorPort = 0;
 	public static int liftEncoderPortA = 0;
 	public static int liftEncoderPortB = 0;
-	public static int liftHallEffect1Port = 0;
-	public static int liftHallEffect2Port = 0;
+	public static int liftHallEffectUpper = 0;
+	public static int liftHallEffectBottom = 0;
 	
 }
