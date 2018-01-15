@@ -13,7 +13,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
- * TODO: FIX NetworkTable
  *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
