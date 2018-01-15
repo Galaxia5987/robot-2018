@@ -50,5 +50,6 @@ public class RobotMap {
 	public static int gripperWheelRight = 666; // TODO: CHANGE!
 	public static int beamChannel = 666; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
+
 	
 }

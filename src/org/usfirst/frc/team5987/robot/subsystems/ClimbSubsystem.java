@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Climbing subsystem of the robot.
+ * @author Dan Katzuv
  */
 public class ClimbSubsystem extends Subsystem {
 
@@ -51,7 +52,7 @@ public class ClimbSubsystem extends Subsystem {
 	 * @param value
 	 *            Position from 0.0 to 1.0.
 	 */
-	public void setServos(double position) {
+	public void setHooks(double position) {
 		servo1.set(position);
 		servo1.set(position);
 	}
