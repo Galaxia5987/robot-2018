@@ -10,19 +10,26 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class OpenHooksCommand extends Command {
 
-	public OpenHooksCommand() {
+	private boolean isOpen;
+
+	public OpenHooksCommand(boolean isOpen) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		requires(Robot.climb);
+		this.isOpen = isOpen;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.climb.setServos(RobotMap.destination);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		if (isOpen) {
+			Robot.climb.setServos(RobotMap.closedPosition);
+		} else {
+			Robot.climb.setServos(RobotMap.openPosition);
+		}
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
