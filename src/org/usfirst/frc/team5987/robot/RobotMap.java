@@ -17,15 +17,14 @@ import edu.wpi.first.wpilibj.DigitalOutput;
  * floating around.
  */
 public class RobotMap {
-	// For example to map the left and right motors, you could define the
-	// following variables to use with your drivetrain subsystem.
-	// public static int leftMotor = 1;
-	// public static int rightMotor = 2;
+	
+	/*--------------------------CLIMB-------------------------------*/
+	public static int servo1 = -1; // TODO: CHANGE!
+	public static int servo2 = -1; // TODO: CHANGE!
+	public static int motor = -1; // TODO: CHANGE!
+	public static int limitSwitch = -1; // TODO: CHANGE!
+	/*--------------------------------------------------------------*/
 
-	// If you are using multiple modules, make sure to define both the port
-	// number and the module. For example you with a rangefinder:
-	// public static int rangefinderPort = 1;
-	// public static int rangefinderModule = 1;
 	
 	/*--------------------------DRIVE-------------------------------*/
 	public static final int driveRightRearMotor = 0; // TODO: CHANGE!
@@ -40,8 +39,16 @@ public class RobotMap {
 	
 	public static final int driveEncoderDistancePerPulse = 1 * 1; // TODO: CHANGE!
 	
-	public static final int backUltrasonicPing = 8;
-	public static final int backUltrasonicEcho = 9;
+	public static final int backUltrasonicPing = 8; // TODO: CHANGE!
+	public static final int backUltrasonicEcho = 9; // TODO: CHANGE!
 	public static int bumpSensor = 8; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
+	
+	
+	/*--------------------------INTAKE------------------------------*/
+	public static int gripperWheelLeft = 666; // TODO: CHANGE!
+	public static int gripperWheelRight = 666; // TODO: CHANGE!
+	public static int beamChannel = 666; // TODO: CHANGE!
+	/*--------------------------------------------------------------*/
+	
 }
