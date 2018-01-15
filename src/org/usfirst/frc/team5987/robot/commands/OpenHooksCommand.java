@@ -6,7 +6,8 @@ import org.usfirst.frc.team5987.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * Command for openning the hooks on the climbing subsystem.
+ * @author Dan Katzuv
  */
 public class OpenHooksCommand extends Command {
 
@@ -26,9 +27,9 @@ public class OpenHooksCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		if (isOpen) {
-			Robot.climb.setServos(RobotMap.closedPosition);
+			Robot.climb.setHooks(RobotMap.closedPosition);
 		} else {
-			Robot.climb.setServos(RobotMap.openPosition);
+			Robot.climb.setHooks(RobotMap.openPosition);
 		}
 	}
 
