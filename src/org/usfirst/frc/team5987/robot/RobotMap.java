@@ -24,6 +24,9 @@ public class RobotMap {
 	public static int servo2 = -1;
 	public static int motor = -1;
 	public static int limitSwitch = -1;
+	public static double closedPosition = -2;
+	public static double openPosition = -2;
+	public static double climbSpeed = -2;
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:
 	// public static int rangefinderPort = 1;
