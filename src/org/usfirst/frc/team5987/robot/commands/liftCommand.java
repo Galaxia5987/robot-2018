@@ -15,7 +15,7 @@ public class liftCommand extends Command {
         this.position=pos;
         this.liftSubsystem=Robot.liftSubsystem;
     	// Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        requires(liftSubsystem);
     }
 
     // Called just before this Command runs the first time

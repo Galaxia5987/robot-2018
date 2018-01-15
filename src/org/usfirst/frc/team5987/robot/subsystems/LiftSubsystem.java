@@ -16,21 +16,21 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 
 /**
- *  @author mow
+ *  @author mow, paulo
  */
 public class LiftSubsystem extends Subsystem {
 	
-	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("Lift");
-	NetworkTableEntry pLift = liftTable.getEntry("liftP");
-	NetworkTableEntry iLift = liftTable.getEntry("liftI");
-	NetworkTableEntry dLift = liftTable.getEntry("liftD");
-	
-	MiniPID pid = new MiniPID(pLift.getDouble(0), iLift.getDouble(0), dLift.getDouble( 0));
+
+	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTableEntry kP = LiftTable.getEntry("kP");
+	NetworkTableEntry kI = LiftTable.getEntry("kI");
+	NetworkTableEntry kD = LiftTable.getEntry("kD");
+	MiniPID pid = new MiniPID(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0));
+
 	Spark liftMotor = new Spark(RobotMap.liftMotorPort);
 	Encoder liftEncoder = new Encoder(RobotMap.liftEncoderPortA, RobotMap.liftEncoderPortB);
 	DigitalInput hallEffect1 = new DigitalInput(RobotMap.liftHallEffect1Port);
 	DigitalInput hallEffect2 = new DigitalInput(RobotMap.liftHallEffect2Port);
-	double wantedHeight;
 
     public void initDefaultCommand() {
     }
@@ -60,9 +60,9 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void update() {
-    	pid.setP(pLift.getDouble(0));
-    	pid.setI( iLift.getDouble(0));
-    	pid.setD(dLift.getDouble( 0));
+    	pid.setP(kP.getDouble(0));
+    	pid.setI(kI.getDouble(0));
+    	pid.setD(kD.getDouble(0));
     	pid.setOutputLimits(-1, 1);
     	setSpeed(pid.getOutput(getHeight()));
     }
