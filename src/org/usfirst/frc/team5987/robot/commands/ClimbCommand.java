@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Command for climbing on the Rung.
+ * @author Dan Katzuv
  */
 public class ClimbCommand extends Command {
 
