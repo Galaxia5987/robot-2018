@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
  * TODO: FIX NetworkTable
@@ -36,8 +38,16 @@ public class DriveSubsystem extends Subsystem {
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
 	private static final Ultrasonic backDistanceSensor = new Ultrasonic(RobotMap.backUltrasonicPing, RobotMap.backUltrasonicEcho, Ultrasonic.Unit.kMillimeters);
 	
-	private double velocitySetpoint;
-	public NetworkTable driveTable;
+	// Creates a new NetworkTable
+	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	// NT PIDF constants
+	NetworkTableEntry ntKp = driveTable.getEntry("kP");
+	NetworkTableEntry ntKi = driveTable.getEntry("kI");
+	NetworkTableEntry ntKd = driveTable.getEntry("kD");
+	NetworkTableEntry ntKf = driveTable.getEntry("kF");
+	// NT error for debugging PIDF constants
+	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
+	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
@@ -58,11 +68,11 @@ public class DriveSubsystem extends Subsystem {
 		driveLeftEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
 		
 		// init the PIDF constants in the NetworkTable
-		refreshPID();
-		driveTable.putNumber("Drive kP", kP);
-		driveTable.putNumber("Drive kI", kI);
-		driveTable.putNumber("Drive kD", kD);
-		driveTable.putNumber("Drive kF", kF);
+		ntGetPID();
+		ntKp.setDouble(kP);
+		ntKi.setDouble(kI);
+		ntKd.setDouble(kD);
+		ntKf.setDouble(kF);
 		
 		// init the MiniPID for each side
 		rightPID = new MiniPID(kP, kI, kD, kF);
@@ -76,12 +86,22 @@ public class DriveSubsystem extends Subsystem {
     }
 	
 	/**
+	 * Gets the PIDF constants from the NetworkTable
+	 */
+	private void ntGetPID(){
+		kP = ntKp.getDouble(kP);
+		kI = ntKi.getDouble(kI);
+		kD = ntKd.getDouble(kD);
+		kF = ntKf.getDouble(kF);
+	}
+	
+	/**
 	 * Updates the PIDF control and moves the motors <br>
 	 * Controls the velocity according to <code>setRightSetpoint(..)</code> and <code>setLeftSetpoint(..)</code> <br>
 	 * <b>This should be run periodically in order to work!</b>
 	 */
 	private void updatePID(){
-		refreshPID();
+		ntGetPID();
 		
 		rightPID.setPID(kP, kI, kD, kF);
 		leftPID.setPID(kP, kI, kD, kF);
@@ -99,7 +119,7 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public void setRightSetpoint(double velocity){
 		double error = velocity - getRightSpeed();
-		driveTable.putNumber("Drive Right Speed Error", error);
+		ntRightError.setDouble(error);
 		rightPID.setSetpoint(velocity);
 	}
 	
@@ -109,18 +129,8 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public void setLeftSetpoint(double velocity){
 		double error = velocity - getLeftSpeed();
-		driveTable.putNumber("Drive Left Speed Error", error);
+		ntLeftError.setDouble(error);
 		leftPID.setSetpoint(velocity);
-	}
-	
-	/**
-	 * Gets the PIDF constants from the NetworkTable
-	 */
-	private void refreshPID(){
-		kP = driveTable.getNumber("Drive kP", kP);
-		kI = driveTable.getNumber("Drive kI", kI);
-		kD = driveTable.getNumber("Drive kD", kD);
-		kF = driveTable.getNumber("Drive kF", kF);
 	}
 	
 	/**
@@ -198,10 +208,10 @@ public class DriveSubsystem extends Subsystem {
 	}
 	/**
 	 * Get the distance from the back of the robot
-	 * @return distance in CM
+	 * @return distance in METER
 	 */
 	public double getBackDistance(){
-		return backDistanceSensor.getRangeMM() * 100;
+		return backDistanceSensor.getRangeMM() * 1000;
 	}
 }
 
