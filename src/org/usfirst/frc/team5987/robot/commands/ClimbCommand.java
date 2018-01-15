@@ -10,11 +10,22 @@ import edu.wpi.first.wpilibj.command.Command;
  * @author Dan Katzuv
  */
 public class ClimbCommand extends Command {
-
+	public final double climbSpeed = 1;
+	/**
+	 * true if should move motors and go up
+	 */
+	private boolean powerUp;
     public ClimbCommand() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.climb);
+    	requires(Robot.climbSubsystem);
+    }
+    
+    public ClimbCommand(boolean turnOn) {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	requires(Robot.climbSubsystem);
+    	this.powerUp = turnOn;
     }
 
     // Called just before this Command runs the first time
@@ -23,17 +34,19 @@ public class ClimbCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.climb.setClimbSpeed(RobotMap.climbSpeed);
+    	double speed = powerUp ? climbSpeed : 0;
+    	Robot.climbSubsystem.setClimbSpeed(speed);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.climb.hasReachedTop();
+    	// finish if reached top or supposed to stop
+        return Robot.climbSubsystem.hasReachedTop() || !powerUp;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.climb.setClimbSpeed(0);
+    	Robot.climbSubsystem.setClimbSpeed(0);
     }
 
     // Called when another command which requires one or more of the same

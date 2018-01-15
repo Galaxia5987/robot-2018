@@ -7,9 +7,6 @@
 
 package org.usfirst.frc.team5987.robot;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
-
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -19,10 +16,12 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 public class RobotMap {
 	
 	/*--------------------------CLIMB-------------------------------*/
-	public static int servo1 = -1; // TODO: CHANGE!
-	public static int servo2 = -1; // TODO: CHANGE!
-	public static int motor = -1; // TODO: CHANGE!
-	public static int limitSwitch = -1; // TODO: CHANGE!
+	public static int climbRightServo = 8; // TODO: CHANGE!
+	public static int climbLeftServo = 9; // TODO: CHANGE!
+	public static int climbMotor = 3; // TODO: CHANGE!
+	public static int climbLimitSwitch = 9; // TODO: CHANGE!
+	public static double climbServoOpenPosition = 1;
+	public static double climbServoClosedPosition = 0;
 	/*--------------------------------------------------------------*/
 
 	
