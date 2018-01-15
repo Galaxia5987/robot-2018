@@ -16,13 +16,12 @@ package org.usfirst.frc.team5987.robot;
 public class RobotMap {
 	
 	/*--------------------------CLIMB-------------------------------*/
-	public static int servo1 = 8; // TODO: CHANGE!
-	public static int servo2 = 9; // TODO: CHANGE!
-	public static int motor = 2; // TODO: CHANGE!
-	public static int limitSwitch = 9; // TODO: CHANGE!
-	public static double climbSpeed = 0.3;
-	public static double openPosition = 1;
-	public static double closedPosition = 0;
+	public static int climbRightServo = 8; // TODO: CHANGE!
+	public static int climbLeftServo = 9; // TODO: CHANGE!
+	public static int climbMotor = 3; // TODO: CHANGE!
+	public static int climbLimitSwitch = 9; // TODO: CHANGE!
+	public static double climbServoOpenPosition = 1;
+	public static double climbServoClosedPosition = 0;
 	/*--------------------------------------------------------------*/
 
 	
