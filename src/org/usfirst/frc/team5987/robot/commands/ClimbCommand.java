@@ -6,7 +6,7 @@ import org.usfirst.frc.team5987.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * Command for climbing on the Rung.
  */
 public class ClimbCommand extends Command {
 
