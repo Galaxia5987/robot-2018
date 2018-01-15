@@ -250,6 +250,7 @@ class Vision:
                 dis = abs(self.centers[i] - self.centers[j])
                 if dis < dif:
                     possible_fit = [self.contours[i], self.contours[j]]
+                    dif = dis
         self.contours = possible_fit
 
     def get_angle(self):
