@@ -10,7 +10,6 @@ package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
 import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -31,6 +30,7 @@ public class OI {
 	Button a = new JoystickButton(xbox, 1);
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
+	Button y = new JoystickButton(xbox, 4);
 	// There are a few additional built in buttons you can use. Additionally,
 	// by subclassing Button you can create custom triggers and bind those to
 	// commands the same as any other Button.
@@ -51,7 +51,8 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 	public OI() {
-		a.whenPressed(new ClimbCommand());
+		y.whenPressed(new ClimbCommand(true));
+		a.whenPressed(new ClimbCommand(false));
 		b.whenPressed(new OpenHooksCommand(true));
 		x.whenPressed(new OpenHooksCommand(false));
 	}
