@@ -31,8 +31,7 @@ public class Robot extends TimedRobot {
 	public static OI m_oi;
 	
 	Timer timer = new Timer();
-	timer.reset();
-	
+		
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
