@@ -2,6 +2,7 @@ package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
+import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,7 +17,7 @@ public class OpenHooksCommand extends Command {
 	public OpenHooksCommand(boolean isOpen) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
-		requires(Robot.climb);
+		requires(Robot.climbSubsystem);
 		this.isOpen = isOpen;
 	}
 
@@ -27,9 +28,9 @@ public class OpenHooksCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		if (isOpen) {
-			Robot.climb.setHooks(RobotMap.closedPosition);
+			Robot.climbSubsystem.setHooks(ClimbSubsystem.closePosition);
 		} else {
-			Robot.climb.setHooks(RobotMap.openPosition);
+			Robot.climbSubsystem.setHooks(ClimbSubsystem.openPosition);
 		}
 	}
 
