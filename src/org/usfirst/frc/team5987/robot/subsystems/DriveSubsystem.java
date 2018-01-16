@@ -3,6 +3,7 @@ package org.usfirst.frc.team5987.robot.subsystems;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.MiniPID;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -22,6 +23,10 @@ public class DriveSubsystem extends Subsystem {
 	private static double kI = 0; 
 	private static double kD = 0;
 	private static double kF = 0;
+	/**
+	 * Mapping between 0-5V to METER for the analog input
+	 */
+	private static final double ultransonicMeterFactor = 1.024;
 	
 	private static final boolean rightInverted = false; // inverts the right motors & right encoder
 	private static final boolean leftInverted = true; // inverts the left motors & left encoder
@@ -35,7 +40,10 @@ public class DriveSubsystem extends Subsystem {
 	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, leftInverted);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
-	private static final Ultrasonic backDistanceSensor = new Ultrasonic(RobotMap.backUltrasonicPing, RobotMap.backUltrasonicEcho, Ultrasonic.Unit.kMillimeters);
+	/**
+	 * HRLV-MaxSonar -EZ ultrasonic sensor
+	 */
+	private static final AnalogInput backDistanceSensor = new AnalogInput(RobotMap.backUltrasonic);
 	
 	// Creates a new NetworkTable
 	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
@@ -191,26 +199,11 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	/**
-	 * MUST do this in order to <code>getBackDistance()</code> <br>
-	 * Starts the ultrasonic's ping
-	 */
-	public void enableUltrasonic(){
-		backDistanceSensor.setEnabled(true);
-	}
-	
-	/**
-	 * MUST do this in order to <code>getBackDistance()</code> <br>
-	 * Stops the ultrasonic's ping
-	 */
-	public void disableUltrasonic(){
-		backDistanceSensor.setEnabled(false);
-	}
-	/**
 	 * Get the distance from the back of the robot
 	 * @return distance in METER
 	 */
 	public double getBackDistance(){
-		return backDistanceSensor.getRangeMM() * 1000;
+		return backDistanceSensor.getVoltage() * ultransonicMeterFactor;
 	}
 }
 

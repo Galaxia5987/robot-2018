@@ -38,8 +38,7 @@ public class RobotMap {
 	
 	public static final int driveEncoderDistancePerPulse = 1 * 1; // TODO: CHANGE!
 	
-	public static final int backUltrasonicPing = 8; // TODO: CHANGE!
-	public static final int backUltrasonicEcho = 9; // TODO: CHANGE!
+	public static final int backUltrasonic = 0; // TODO: CHANGE!
 	public static int bumpSensor = 8; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 	
