@@ -43,7 +43,6 @@ public class RobotMap {
 	public static int bumpSensor = 8; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 	
-	
 	/*--------------------------INTAKE------------------------------*/
 	public static int gripperWheelLeft = 666; // TODO: CHANGE!
 	public static int gripperWheelRight = 666; // TODO: CHANGE!
@@ -56,6 +55,14 @@ public class RobotMap {
 	public static int liftEncoderPortB = 0;
 	public static int liftHallEffectUpper = 0;
 	public static int liftHallEffectBottom = 0;
+	/*--------------------------------------------------------------*/
+	
+	/*--------------------------INTAKE------------------------------*/
+	public static int intakeMotorLeft = 9001; // TODO: CHANGE!
+	public static int intakeMotorRight = 9002; // TODO: CHANGE!
+	
+	public static int intakeSolenoid1 = 9003; // TODO: CHANGE!
+	public static int intakeSolenoid2 = 9004; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 	
 }
