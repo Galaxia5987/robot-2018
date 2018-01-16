@@ -9,8 +9,10 @@ package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -27,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
+	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static OI m_oi;
 
 	Command m_autonomousCommand;
@@ -114,6 +117,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		NetworkTableInstance.getDefault().getEntry("ultrasonic").setDouble(driveSubsystem.getBackDistance());
 	}
 
 	/**
