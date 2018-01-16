@@ -18,7 +18,7 @@ public class RobotMap {
 	/*--------------------------CLIMB-------------------------------*/
 	public static int climbRightServo = 8; // TODO: CHANGE!
 	public static int climbLeftServo = 9; // TODO: CHANGE!
-	public static int climbMotor = 3; // TODO: CHANGE!
+	public static int climbMotor = 5; // TODO: CHANGE!
 	public static int climbLimitSwitch = 9; // TODO: CHANGE!
 	public static double climbServoOpenPosition = 1;
 	public static double climbServoClosedPosition = 0;
@@ -31,10 +31,10 @@ public class RobotMap {
 	public static final int driveLeftRearMotor = 2; // TODO: CHANGE!
 	public static final int driveLeftFrontMotor = 3; // TODO: CHANGE!
 	
-	public static final int driveRightEncoderChannelA = 4; // TODO: CHANGE!
-	public static final int driveRightEncoderChannelB = 5; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelA = 6; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelB = 7; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelA = 2; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelB = 3; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelA = 4; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelB = 5; // TODO: CHANGE!
 	
 	public static final int driveEncoderDistancePerPulse = 1 * 1; // TODO: CHANGE!
 	

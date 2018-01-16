@@ -199,7 +199,8 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	/**
-	 * Get the distance from the back of the robot
+	 * Get the distance from the back of the robot <br>
+	 * <i>Note: Shows ~0.3 M under 0.3 M</i>
 	 * @return distance in METER
 	 */
 	public double getBackDistance(){
