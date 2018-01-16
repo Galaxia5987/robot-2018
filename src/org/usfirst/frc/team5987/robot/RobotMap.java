@@ -21,6 +21,5 @@ public class RobotMap {
 	public static int liftHallEffect1Port = 6;
 	public static int liftHallEffect2Port = 7;
 	
-	public static double liftEncoderToHeight = 0.0005;
 	
 }

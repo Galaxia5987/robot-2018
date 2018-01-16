@@ -20,7 +20,7 @@ public class liftCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	liftSubsystem.setPoint(position);
+    	liftSubsystem.setSetpoint(position);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -30,7 +30,7 @@ public class liftCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(liftSubsystem.getHeight()-position)<0.06;
+        return Math.abs(liftSubsystem.getAbsoluteEncoderHeight()-position)<0.06;
     }
 
     // Called once after isFinished returns true
