@@ -23,14 +23,14 @@ public class LiftSubsystem extends Subsystem {
 	NetworkTableEntry kP = LiftTable.getEntry("kP");
 	NetworkTableEntry kI = LiftTable.getEntry("kI");
 	NetworkTableEntry kD = LiftTable.getEntry("kD");
-
+	NetworkTableEntry loc = LiftTable.getEntry("height");
 	MiniPID pid;
 
 	Victor liftMotor = new Victor(RobotMap.liftMotorPort);
 	Encoder liftEncoder = new Encoder(RobotMap.liftEncoderPortA, RobotMap.liftEncoderPortB);
 	DigitalInput hallEffect1 = new DigitalInput(RobotMap.liftHallEffect1Port);
 	DigitalInput hallEffect2 = new DigitalInput(RobotMap.liftHallEffect2Port);
-	
+	double target = 0;
 	public LiftSubsystem(){
 		pid = new MiniPID(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0));
 		kP.setDouble(kP.getDouble(backupPID[0]));
@@ -61,16 +61,18 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void setPoint(double height) {
+    	target=height;
     	pid.setSetpoint(height);
     }
     
     public void update() {
-    	pid.setP(0.03);
+    	pid.setP(1);
     	pid.setI(kI.getDouble(0));
-    	pid.setD(kD.getDouble(0));
+    	pid.setD(kD.getDouble(0.3));
     	pid.setOutputLimits(-0.6, 0.6);
     	setSpeed(pid.getOutput(getHeight()));
     	
+    	loc.setDouble(getHeight()-target);
     }
 }
 

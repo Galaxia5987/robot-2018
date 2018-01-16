@@ -30,11 +30,12 @@ public class liftCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(liftSubsystem.getHeight()-position)<0.1;
+        return Math.abs(liftSubsystem.getHeight()-position)<0.06;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	liftSubsystem.setSpeed(0);
     }
 
     // Called when another command which requires one or more of the same
