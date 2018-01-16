@@ -1,6 +1,5 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
-import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.MiniPID;
@@ -9,7 +8,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -19,19 +17,26 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *  @author mow, paulo
  */
 public class LiftSubsystem extends Subsystem {
-	
+	double backupPID[] = {1,0.0002,00.00002};
 
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry kP = LiftTable.getEntry("kP");
 	NetworkTableEntry kI = LiftTable.getEntry("kI");
 	NetworkTableEntry kD = LiftTable.getEntry("kD");
-	MiniPID pid = new MiniPID(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0));
 
-	Spark liftMotor = new Spark(RobotMap.liftMotorPort);
+	MiniPID pid;
+
+	Victor liftMotor = new Victor(RobotMap.liftMotorPort);
 	Encoder liftEncoder = new Encoder(RobotMap.liftEncoderPortA, RobotMap.liftEncoderPortB);
 	DigitalInput hallEffect1 = new DigitalInput(RobotMap.liftHallEffect1Port);
 	DigitalInput hallEffect2 = new DigitalInput(RobotMap.liftHallEffect2Port);
-
+	
+	public LiftSubsystem(){
+		pid = new MiniPID(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0));
+		kP.setDouble(kP.getDouble(backupPID[0]));
+		kP.setDouble(kP.getDouble(backupPID[1]));
+		kP.setDouble(kP.getDouble(backupPID[2]));
+	}
     public void initDefaultCommand() {
     }
     
@@ -60,11 +65,12 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void update() {
-    	pid.setP(kP.getDouble(0));
+    	pid.setP(0.03);
     	pid.setI(kI.getDouble(0));
     	pid.setD(kD.getDouble(0));
-    	pid.setOutputLimits(-1, 1);
+    	pid.setOutputLimits(-0.6, 0.6);
     	setSpeed(pid.getOutput(getHeight()));
+    	
     }
 }
 

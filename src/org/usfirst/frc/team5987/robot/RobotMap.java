@@ -15,11 +15,11 @@ package org.usfirst.frc.team5987.robot;
  */
 public class RobotMap {
 	
-	public static int liftMotorPort = 4;
+	public static int liftMotorPort = 3;
 	public static int liftEncoderPortA = 0;
 	public static int liftEncoderPortB = 1;
-	public static int liftHallEffect1Port = 0;
-	public static int liftHallEffect2Port = 0;
+	public static int liftHallEffect1Port = 6;
+	public static int liftHallEffect2Port = 7;
 	
 	public static double liftEncoderToHeight = 1;
 	
