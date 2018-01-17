@@ -3,6 +3,7 @@ package org.usfirst.frc.team5987.robot.subsystems;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -47,6 +48,11 @@ public class ClimbSubsystem extends Subsystem {
 	 */
 	DigitalInput limitSwitch = new DigitalInput(RobotMap.climbLimitSwitch);
 	
+	/**
+	 * Solenoid for blocking the bar that another robot climbs on from openning before the Endgame.
+	 */
+	Relay solenoid = new Relay(RobotMap.climbBarSolenoid, Relay.Direction.kReverse);
+	
 	public ClimbSubsystem(){
 		motor.setInverted(motorReversed);
 	}
@@ -79,6 +85,14 @@ public class ClimbSubsystem extends Subsystem {
 		motor.set(speed);
 	}
 
+	/**
+	 * Open the bar for climbing at the Endgame.
+	 */
+	public void openClimbingBar()
+	{
+		solenoid.setDirection(Relay.Direction.kReverse);
+	}
+	
 	/**
 	 * Get the value from the limit switch to know whether the robot has reached
 	 * the top.
