@@ -86,9 +86,9 @@ public class ClimbSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Open the bar for climbing at the Endgame.
+	 * Open the bar for raising other robot at the Endgame.
 	 */
-	public void openClimbingBar()
+	public void openRaisingBar()
 	{
 		solenoid.setDirection(Relay.Direction.kReverse);
 	}
