@@ -4,6 +4,8 @@ import org.usfirst.frc.team5987.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Direction;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -86,11 +88,12 @@ public class ClimbSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Open the bar for raising other robot at the Endgame.
+	 * Change the direction of the raising bar brake solenoid.
+	 * @param direction The direction to set.
 	 */
-	public void openRaisingBar()
+	public void setRaisingSolenoid(Value direction)
 	{
-		solenoid.setDirection(Relay.Direction.kReverse);
+		solenoid.set(direction);
 	}
 	
 	/**
