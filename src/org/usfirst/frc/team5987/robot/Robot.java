@@ -7,13 +7,17 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
-import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,8 +27,9 @@ import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
+	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
+	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
+	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static OI m_oi;
 
 	Command m_autonomousCommand;
@@ -64,12 +69,14 @@ public class Robot extends TimedRobot {
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString code to get the auto name from the text box below the Gyro
 	 *
-	 * <p>You can add additional auto modes by adding additional commands to the
+	 * <p>
+	 * You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons
 	 * to the switch structure below with additional strings & commands.
 	 */
 	@Override
 	public void autonomousInit() {
+		// timer.start();
 		m_autonomousCommand = m_chooser.getSelected();
 
 		/*
@@ -110,6 +117,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		NetworkTableInstance.getDefault().getEntry("ultrasonic").setDouble(driveSubsystem.getBackDistance());
 	}
 
 	/**
