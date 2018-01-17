@@ -20,6 +20,7 @@ public class RobotMap {
 	public static int climbLeftServo = 9; // TODO: CHANGE!
 	public static int climbMotor = 5; // TODO: CHANGE!
 	public static int climbLimitSwitch = 9; // TODO: CHANGE!
+	public static int climbBarSolenoid = -1; // TODO: CHANGE!
 	public static double climbServoOpenPosition = 1;
 	public static double climbServoClosedPosition = 0;
 	/*--------------------------------------------------------------*/
