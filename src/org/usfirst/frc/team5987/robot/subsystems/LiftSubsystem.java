@@ -23,7 +23,8 @@ public class LiftSubsystem extends Subsystem {
 		RUNNING
 	}
 	
-	double backupPID[] = {1, 0.0002, 00.00002};
+	private static final double topPID[] = {1, 0, 0};
+	private static final double bottomPID[] = {0.5, 0, 0};
 	/**
 	 * Decreasing rate for the output (substructs this from the setpoint every iteration)
 	 */
@@ -31,9 +32,8 @@ public class LiftSubsystem extends Subsystem {
 	private static final double LIFT_DISTANCE_PER_PULSE = 0.0005;
 	private static final double MAX_ZEROING_OUTPUT = 0.3333334;
 	private double offset = 0;
-	
-	
 	private States state = States.MECHANISM_DISABLED;
+	
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntKp = LiftTable.getEntry("kP");
 	NetworkTableEntry ntKi = LiftTable.getEntry("kI");
@@ -51,13 +51,11 @@ public class LiftSubsystem extends Subsystem {
 	double target = 0;
 
 	public LiftSubsystem(){
-		ntKp.setDouble(ntKp.getDouble(backupPID[0]));
-		ntKp.setDouble(ntKp.getDouble(backupPID[1]));
-		ntKp.setDouble(ntKp.getDouble(backupPID[2]));
+		updatePIDConstants(1);
 		pid = new MiniPID(
-				ntKp.getDouble(backupPID[0]),
-				ntKi.getDouble(backupPID[1]),
-				ntKd.getDouble(backupPID[2])
+				ntKp.getDouble(topPID[0]),
+				ntKi.getDouble(topPID[1]),
+				ntKd.getDouble(topPID[2])
 				);
 		ntIsEnabled.setBoolean(ntIsEnabled.getBoolean(false));
 		liftEncoder.setDistancePerPulse(LIFT_DISTANCE_PER_PULSE);
@@ -69,10 +67,11 @@ public class LiftSubsystem extends Subsystem {
     public void setSpeed(double speed) {
     	boolean notExceedingBottom = speed < 0 && !isDown();
     	boolean notExceedingTop = speed > 0 && !isUp();
-    	if(notExceedingBottom || notExceedingTop || speed == 0){
+    	if(notExceedingBottom || notExceedingTop){
     		liftMotor.set(speed);
     		ntIsExceeding.setBoolean(false);
     	}else{
+    		liftMotor.set(0);
     		ntIsExceeding.setBoolean(true);
     	}
     }
@@ -98,6 +97,7 @@ public class LiftSubsystem extends Subsystem {
 	    			state = States.RUNNING;
 	    		maxOutput = 0.0;
 	    		break;
+	    		
 	    	case ZEROING:
 	    		setSetpoint(target - ZERO_RATE);
 	    		maxOutput = MAX_ZEROING_OUTPUT;
@@ -106,6 +106,7 @@ public class LiftSubsystem extends Subsystem {
 	    			offset = height;
 	    		}
 	    		break;
+	    		
 	    	case RUNNING:
 	    		maxOutput = 1.0;
 	    		break;
@@ -113,12 +114,23 @@ public class LiftSubsystem extends Subsystem {
 	    		state = States.MECHANISM_DISABLED;
 	    		break;
     	}
-    	pid.setP(ntKp.getDouble(backupPID[0]));
-    	pid.setI(ntKi.getDouble(backupPID[1]));
-    	pid.setD(ntKd.getDouble(backupPID[2]));
     	pid.setOutputLimits(-maxOutput, maxOutput);
+    	double out = pid.getOutput(height - offset);
+    	updatePIDConstants(out);
     	ntHeight.setDouble(height - offset);
-    	return pid.getOutput(height - offset);
+    	return out;
+    }
+    
+    private void updatePIDConstants(double speed){
+    	if(speed > 0){
+    		pid.setP(ntKp.getDouble(topPID[0]));
+        	pid.setI(ntKi.getDouble(topPID[1]));
+        	pid.setD(ntKd.getDouble(topPID[2]));
+    	}else{
+    		pid.setP(ntKp.getDouble(bottomPID[0]));
+        	pid.setI(ntKi.getDouble(bottomPID[1]));
+        	pid.setD(ntKd.getDouble(bottomPID[2]));
+    	}
     }
     
     public double getAbsoluteEncoderHeight(){
