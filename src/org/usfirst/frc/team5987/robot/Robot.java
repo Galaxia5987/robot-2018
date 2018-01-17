@@ -31,7 +31,11 @@ public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
-
+	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
+	NetworkTableEntry ntIsManualSetpoint = LiftTable.getEntry("Is Manual Setpoint");
+	
+	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -45,6 +49,8 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		ntIsManualSetpoint.setBoolean(false);
+		ntSetpoint.setDouble(0);
 	}
 
 	/**
@@ -116,6 +122,9 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
+		if(ntIsManualSetpoint.getBoolean(false)){
+			liftSubsystem.setSetpoint(ntSetpoint.getDouble(0));
+		}
 	}
 
 	/**

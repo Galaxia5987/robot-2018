@@ -31,13 +31,23 @@ public class LiftSubsystem extends Subsystem {
 	private static final double ZERO_RATE = 0.005;
 	private static final double LIFT_DISTANCE_PER_PULSE = 0.0005;
 	private static final double MAX_ZEROING_OUTPUT = 0.3333334;
+	private static final boolean TOP_HULL_REVERSED = true;
+	private static final boolean BOTTOM_HULL_REVERSED = false;
 	private double offset = 0;
 	private States state = States.MECHANISM_DISABLED;
 	
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
-	NetworkTableEntry ntKp = LiftTable.getEntry("kP");
-	NetworkTableEntry ntKi = LiftTable.getEntry("kI");
-	NetworkTableEntry ntKd = LiftTable.getEntry("kD");
+	NetworkTableEntry ntTopKp = LiftTable.getEntry("Top kP");
+	NetworkTableEntry ntTopKi = LiftTable.getEntry("Top kI");
+	NetworkTableEntry ntTopKd = LiftTable.getEntry("Top kD");
+	NetworkTableEntry ntBottomKp = LiftTable.getEntry("Bottom kP");
+	NetworkTableEntry ntBottomKi = LiftTable.getEntry("Bottom kI");
+	NetworkTableEntry ntBottomKd = LiftTable.getEntry("Bottom kD");
+	NetworkTableEntry ntTopHall = LiftTable.getEntry("Top Hall");
+	NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
+	NetworkTableEntry ntState = LiftTable.getEntry("State");
+	NetworkTableEntry ntSpeedError = LiftTable.getEntry("Speed Error");
+	
 	NetworkTableEntry ntIsEnabled = LiftTable.getEntry("IS ENABLED");
 	NetworkTableEntry ntIsExceeding = LiftTable.getEntry("Trying To Exceed Limits");
 	
@@ -46,18 +56,25 @@ public class LiftSubsystem extends Subsystem {
 
 	Victor liftMotor = new Victor(RobotMap.liftMotorPort);
 	Encoder liftEncoder = new Encoder(RobotMap.liftEncoderPortA, RobotMap.liftEncoderPortB);
-	DigitalInput hallEffect1 = new DigitalInput(RobotMap.liftHallEffect1Port);
-	DigitalInput hallEffect2 = new DigitalInput(RobotMap.liftHallEffect2Port);
+	DigitalInput hallEffectTop = new DigitalInput(RobotMap.liftHallEffectTop);
+	DigitalInput hallEffectBottom = new DigitalInput(RobotMap.liftHallEffectBottom);
 	double target = 0;
 
 	public LiftSubsystem(){
-		updatePIDConstants(1);
+//		updatePIDConstants(1.0);
 		pid = new MiniPID(
-				ntKp.getDouble(topPID[0]),
-				ntKi.getDouble(topPID[1]),
-				ntKd.getDouble(topPID[2])
+				ntTopKp.getDouble(topPID[0]),
+				ntTopKi.getDouble(topPID[1]),
+				ntTopKd.getDouble(topPID[2])
 				);
+		// Add the NetworkTable entries if they don't exist
 		ntIsEnabled.setBoolean(ntIsEnabled.getBoolean(false));
+		ntTopKp.setDouble(ntTopKp.getDouble(topPID[0]));
+		ntTopKi.setDouble(ntTopKi.getDouble(topPID[1]));
+		ntTopKd.setDouble(ntTopKd.getDouble(topPID[2]));
+		ntBottomKp.setDouble(ntBottomKp.getDouble(bottomPID[0]));
+		ntBottomKi.setDouble(ntBottomKi.getDouble(bottomPID[1]));
+		ntBottomKd.setDouble(ntBottomKd.getDouble(bottomPID[2]));
 		liftEncoder.setDistancePerPulse(LIFT_DISTANCE_PER_PULSE);
 	}
 	
@@ -67,7 +84,7 @@ public class LiftSubsystem extends Subsystem {
     public void setSpeed(double speed) {
     	boolean notExceedingBottom = speed < 0 && !isDown();
     	boolean notExceedingTop = speed > 0 && !isUp();
-    	if(notExceedingBottom || notExceedingTop){
+    	if(notExceedingBottom || notExceedingTop || speed == 0){
     		liftMotor.set(speed);
     		ntIsExceeding.setBoolean(false);
     	}else{
@@ -93,27 +110,37 @@ public class LiftSubsystem extends Subsystem {
     	double maxOutput = 0;
     	switch(state){
 	    	case MECHANISM_DISABLED:
+	    		ntState.setString("MECHANISM_DISABLED");
 	    		if(isEnabled)
-	    			state = States.RUNNING;
+	    			state = States.ZEROING;
 	    		maxOutput = 0.0;
 	    		break;
 	    		
 	    	case ZEROING:
+	    		ntState.setString("ZEROING");
 	    		setSetpoint(target - ZERO_RATE);
 	    		maxOutput = MAX_ZEROING_OUTPUT;
 	    		if(bottomHallEffect){
 	    			state = States.RUNNING;
 	    			offset = height;
+	    			setSetpoint(0);
 	    		}
 	    		break;
 	    		
 	    	case RUNNING:
+	    		ntState.setString("RUNNING");
 	    		maxOutput = 1.0;
+	    		if(!isEnabled)
+	    			state = States.MECHANISM_DISABLED;
 	    		break;
+	    		
 	    	default:
 	    		state = States.MECHANISM_DISABLED;
 	    		break;
     	}
+    	ntSpeedError.setDouble(pid.getSetpoint() - (height - offset));
+    	ntTopHall.setBoolean(isUp());
+    	ntBottomHall.setBoolean(isDown());
     	pid.setOutputLimits(-maxOutput, maxOutput);
     	double out = pid.getOutput(height - offset);
     	updatePIDConstants(out);
@@ -123,13 +150,13 @@ public class LiftSubsystem extends Subsystem {
     
     private void updatePIDConstants(double speed){
     	if(speed > 0){
-    		pid.setP(ntKp.getDouble(topPID[0]));
-        	pid.setI(ntKi.getDouble(topPID[1]));
-        	pid.setD(ntKd.getDouble(topPID[2]));
+    		pid.setP(ntTopKp.getDouble(topPID[0]));
+        	pid.setI(ntTopKi.getDouble(topPID[1]));
+        	pid.setD(ntTopKd.getDouble(topPID[2]));
     	}else{
-    		pid.setP(ntKp.getDouble(bottomPID[0]));
-        	pid.setI(ntKi.getDouble(bottomPID[1]));
-        	pid.setD(ntKd.getDouble(bottomPID[2]));
+    		pid.setP(ntBottomKp.getDouble(bottomPID[0]));
+        	pid.setI(ntBottomKi.getDouble(bottomPID[1]));
+        	pid.setD(ntBottomKd.getDouble(bottomPID[2]));
     	}
     }
     
@@ -144,11 +171,13 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public boolean isUp() {
-    	return hallEffect1.get();
+    	boolean rawVal = hallEffectTop.get();
+    	return TOP_HULL_REVERSED ? !rawVal : rawVal;
     }
     
     public boolean isDown() {
-    	return hallEffect2.get();
+    	boolean rawVal = hallEffectBottom.get();
+    	return BOTTOM_HULL_REVERSED ? !rawVal : rawVal;
     }
     
     public void resetEncoder(){
