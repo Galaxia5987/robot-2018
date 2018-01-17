@@ -1,48 +1,68 @@
-from clint.textui import colored
-#------------getting the ip------------------------------------------------------
-
-import socket
-
-ip=socket.gethostbyname(socket.gethostname())
-
 #------------launch options------------------------------------------------------
-
+from clint.textui import colored
 import sys
-
 camera=0
-is_local=is_stream=False
-
 if '-h' in sys.argv or '--help' in sys.argv:
-    print(colored.cyan('Usage:')+' python3 vision_class.py [-s / --stream] [-l / --local] [-p / --port {camera port}]')
+    print(colored.cyan('Usage: ')+'python3 vision_class.py [-s / --stream] [-l / --local] [-p / --port {camera port}]  '
+          '[-nts / --networktables-server {networktable ip address}]')
     exit(0)
 
 if '-s' in sys.argv or '--stream' in sys.argv:
     is_stream = True
+else:
+    is_stream=False
 
 if '-l' in sys.argv or '--local' in sys.argv:
     is_local = True
+else:
+    is_local=False
 
 if '-p' in sys.argv or '--port' in sys.argv:
     try:
         try:
-            i=sys.argv.index('-p')
-        except ValueError:
-            i=sys.argv.index('--port')
-        camera=int(sys.argv[i+1])
-    except ValueError:
+            index=sys.argv.index('-p')
+        except:
+            index=sys.argv.index('--port')
+        camera=int(sys.argv[index+1])
+    except:
         print(colored.red('ERROR: Not A Valid Camera Port'))
         exit(11)
+else:
+    camera=0
 
-    if '-nts' in sys.argv or '--networktable-server' in sys.argv:
-        try:
-            i=sys.argv.index('-cp')
-        except ValueError:
-            i=sys.argv.index('--camera-port')
-        nt_ip=sys.argv[i+1]
-        if len(nt_ip.split('.')) is 1:
-            print(colored.red('ERROR: Not A Valid IP Adress'))
+if '-nts' in sys.argv or '--networktables-server' in sys.argv:
+    try:
+        index=sys.argv.index('-nts')
+    except:
+        index=sys.argv.index('--networktabless-server')
+    try:
+        nt_server=sys.argv[index+1]
+        listed_nt=list(nt_server)
+        if listed_nt.count('.') == 0:
+            print(colored.red('ERROR: You Must Enter A Valid IP Address'))
             exit(12)
-        print('NetworkTables Server: '+colored.green(nt_ip))
+    except IndexError:
+        print(colored.red('ERROR: You Must Enter A Valid IP Address'))
+        exit(12)
+else:
+    nt_server="roboRIO-{team_number}-FRC.local".format(team_number=5987)
+print('NetworkTables Server: '+colored.green(nt_server))
+
+#------------getting the ip------------------------------------------------------
+import netifaces as ni
+
+ip=None
+for interface in ni.interfaces():
+    if ip is None:
+        try:
+            ip=ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+            start=ip.split('.')[0]
+            if start == '127':
+                ip=None
+        except KeyError:
+            pass
+    else:
+        break
 print('IP: '+colored.green(ip))
 #-----------------------------Starting The Vision Class--------------------------------------------------------------
 
@@ -79,7 +99,7 @@ class Vision:
         self.distance=0
         # self.cam.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0)
         # self.cam.set(cv2.CAP_PROP_AUTOFOCUS, 0)
-        self.cam.set(cv2.CAP_PROP_SETTINGS, 1)
+        # self.cam.set(cv2.CAP_PROP_SETTINGS, 1)
         _, self.frame = self.cam.read()
         try:
             self.show_frame=self.frame.copy()
@@ -161,11 +181,10 @@ class Vision:
 
     def filter_hsv(self):
         self.hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
+        self.mask = cv2.inRange(self.hsv, self.lower_range, self.upper_range)
         # toilet paper
-        mask_white = cv2.inRange(self.hsv, self.lower_white_range, self.upper_white_range)
-        # light reflector
-        mask_green = cv2.inRange(self.hsv, self.lower_green_range, self.upper_green_range)
-        self.mask = cv2.bitwise_or(mask_white, mask_green)
+        #mask_white = cv2.inRange(self.hsv, self.lower_white_range, self.upper_white_range)
+        #self.mask = cv2.bitwise_or(mask_white, mask_green)
 
     def draw_contours(self):
         # Draws contours on the frame, if asked so on SmartDashboard
@@ -175,7 +194,7 @@ class Vision:
                 # Draws all contours in blue
                 cv2.drawContours(self.show_frame, self.contours[x], -1, (255, 0, 0), 3)
                 # Draws a green rectangle around the target.
-                cv2.rectangle(self.frame, (cv2.boundingRect(self.contours[x])[0], cv2.boundingRect(self.contours[x])[1]), (cv2.boundingRect(self.contours[x])[0]+cv2.boundingRect(self.contours[x])[2], cv2.boundingRect(self.contours[x])[1]+cv2.boundingRect(self.contours[x])[3]),(0,255,0),2)
+                cv2.rectangle(self.show_frame, (cv2.boundingRect(self.contours[x])[0], cv2.boundingRect(self.contours[x])[1]), (cv2.boundingRect(self.contours[x])[0]+cv2.boundingRect(self.contours[x])[2], cv2.boundingRect(self.contours[x])[1]+cv2.boundingRect(self.contours[x])[3]),(0,255,0),2)
                 # Draws hulls on the frame, if asked so on SmartDashboard
                 if len(self.hulls) > 0 and self.get_item("Draw hulls", self.draw_hulls_b):
                     # Finds all defects in the outline compared to the hull
@@ -192,8 +211,8 @@ class Vision:
         # Dialates and erodes the mask to reduce static and make the image clearer
         # The kernel both functions will use
         kernel = np.ones((5, 5), dtype=np.uint8)
-        self.mask=cv2.dilate(self.mask, kernel, iterations = self.get_item("DiRode iterations", self.dirode_iterations_i))
         self.mask=cv2.erode(self.mask, kernel, iterations = self.get_item("DiRode iterations", self.dirode_iterations_i))
+        self.mask=cv2.dilate(self.mask, kernel, iterations = self.get_item("DiRode iterations", self.dirode_iterations_i))
 
     def find_center(self):
         # Finds the average of all centers of all contours
@@ -245,12 +264,15 @@ class Vision:
         return (np.sqrt(4 * cv2.contourArea(c) / np.pi)) / (cv2.minEnclosingCircle(c)[1] * 2)
 
     def get_two(self):
-        dif = self.frame.shape[0]
+        dif = 39/10
         possible_fit = []
         for i in range (0, len(self.contours) - 1):
             for j in range (0, len(self.contours) - 1):
-                dis = abs(self.centers[i] - self.centers[j])
-                if dis < dif:
+                _,_,_,h1=cv2.boundingRect(self.contours[i])
+                _,_,_,h2=cv2.boundingRect(self.contours[j])
+                h_av=abs((h1+h2)/2)
+                dis = abs((self.centers[i][0] - self.centers[j][0])/h_av)
+                if dif*0.9 < dis < dif*1.1: # <-- this specific line might be bugged and not tested yet so...
                     possible_fit = [self.contours[i], self.contours[j]]
                     dif = dis
         self.contours = possible_fit
@@ -317,7 +339,7 @@ def get_frame():
         _,vision.frame=vision.cam.read()
         # cv2.line(vision.frame,(0,int(vision.frame.shape[0]/2)),(int(vision.frame.shape[1]),int(vision.frame.shape[0]/2)),(0,0,0),int(1),int(1))
         vision.show_frame=vision.frame.copy()
-        key=cv2.waitKey(1)
+
 
 def analyse():
     global stop
@@ -358,5 +380,5 @@ threading._start_new_thread(get_frame,())
 threading._start_new_thread(analyse,())
 show()
 if not is_local and not is_stream:
-    _=input('Press Enter To End It All')
+    _=input('Press '+colored.cyan('Enter')+' To End It All')
 stop=True
