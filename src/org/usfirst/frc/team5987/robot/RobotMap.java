@@ -18,10 +18,9 @@ public class RobotMap {
 	/*--------------------------CLIMB-------------------------------*/
 	public static int climbRightServo = 8; // TODO: CHANGE!
 	public static int climbLeftServo = 9; // TODO: CHANGE!
+	
 	public static int climbMotor = 5; // TODO: CHANGE!
 	public static int climbLimitSwitch = 9; // TODO: CHANGE!
-	public static double climbServoOpenPosition = 1;
-	public static double climbServoClosedPosition = 0;
 	/*--------------------------------------------------------------*/
 
 	
@@ -42,26 +41,29 @@ public class RobotMap {
 	public static int bumpSensor = 8; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 	
-	/*--------------------------INTAKE------------------------------*/
+	/*--------------------------GRIPPER------------------------------*/
 	public static int gripperWheelLeft = 666; // TODO: CHANGE!
 	public static int gripperWheelRight = 666; // TODO: CHANGE!
+	
 	public static int beamChannel = 666; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 
 	/*--------------------------LIFT------------------------------*/
-	public static int liftMotorPort = 0;
+	public static int liftMotorPort = 3;
+	
 	public static int liftEncoderPortA = 0;
-	public static int liftEncoderPortB = 0;
-	public static int liftHallEffectUpper = 0;
-	public static int liftHallEffectBottom = 0;
+	public static int liftEncoderPortB = 1;
+	
+	public static int liftHallEffectTop = 9;
+	public static int liftHallEffectBottom = 8;
 	/*--------------------------------------------------------------*/
 	
 	/*--------------------------INTAKE------------------------------*/
-	public static int intakeMotorLeft = 9001; // TODO: CHANGE!
-	public static int intakeMotorRight = 9002; // TODO: CHANGE!
+	public static final int intakeMotorLeft = 66;
+	public static final int intakeMotorRight = 666;
 	
-	public static int intakeSolenoid1 = 9003; // TODO: CHANGE!
-	public static int intakeSolenoid2 = 9004; // TODO: CHANGE!
+	public static final int intakeSolenoid1 = 6666;
+	public static final int intakeSolenoid2 = 66666;
 	/*--------------------------------------------------------------*/
 	
 }

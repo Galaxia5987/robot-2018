@@ -7,17 +7,20 @@
 
 package org.usfirst.frc.team5987.robot;
 
-import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
-import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
-import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
-import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5987.robot.commands.liftCommand;
+import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,11 +30,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
+	NetworkTable liftTable;
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static OI m_oi;
-
+	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
+	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
+	
+	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -45,6 +53,8 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		ntSetpoint.setDouble(0);
+		SmartDashboard.putData(new liftCommand());
 	}
 
 	/**
@@ -69,14 +79,12 @@ public class Robot extends TimedRobot {
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString code to get the auto name from the text box below the Gyro
 	 *
-	 * <p>
-	 * You can add additional auto modes by adding additional commands to the
+	 * <p>You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons
 	 * to the switch structure below with additional strings & commands.
 	 */
 	@Override
 	public void autonomousInit() {
-		// timer.start();
 		m_autonomousCommand = m_chooser.getSelected();
 
 		/*
@@ -117,7 +125,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		NetworkTableInstance.getDefault().getEntry("ultrasonic").setDouble(driveSubsystem.getBackDistance());
+		liftSubsystem.updateMotors();
 	}
 
 	/**
