@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5987.robot.commands.liftCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
@@ -33,7 +34,6 @@ public class Robot extends TimedRobot {
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
-	NetworkTableEntry ntIsManualSetpoint = LiftTable.getEntry("Is Manual Setpoint");
 	
 	
 	Command m_autonomousCommand;
@@ -49,8 +49,8 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
-		ntIsManualSetpoint.setBoolean(false);
 		ntSetpoint.setDouble(0);
+		SmartDashboard.putData(new liftCommand());
 	}
 
 	/**
@@ -122,9 +122,6 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
-		if(ntIsManualSetpoint.getBoolean(false)){
-			liftSubsystem.setSetpoint(ntSetpoint.getDouble(0));
-		}
 	}
 
 	/**

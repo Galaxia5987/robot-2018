@@ -3,6 +3,7 @@ package org.usfirst.frc.team5987.robot.commands;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -10,32 +11,42 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class liftCommand extends Command {
 	double position;
-	LiftSubsystem liftSubsystem;
+	private boolean isShuffleboard;
+	NetworkTableEntry ntSetpoint = Robot.liftSubsystem.LiftTable.getEntry("Setpoint");
+	
     public liftCommand(double pos) {
         this.position=pos;
-        this.liftSubsystem=Robot.liftSubsystem;
+        this.isShuffleboard = false;
     	// Use requires() here to declare subsystem dependencies
-        requires(liftSubsystem);
+        requires(Robot.liftSubsystem);
     }
-
+    
+    public liftCommand(){
+    	this.isShuffleboard = true;
+    	// Use requires() here to declare subsystem dependencies
+        requires(Robot.liftSubsystem);
+    }
+    
     // Called just before this Command runs the first time
     protected void initialize() {
-    	liftSubsystem.setSetpoint(position);
+    	if(isShuffleboard)
+    		this.position = ntSetpoint.getDouble(0);
+    	Robot.liftSubsystem.setSetpoint(position);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	liftSubsystem.update();
+    	Robot.liftSubsystem.setSetpoint(position);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(liftSubsystem.getAbsoluteEncoderHeight()-position)<0.06;
+        return true;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	liftSubsystem.setSpeed(0);
+    	
     }
 
     // Called when another command which requires one or more of the same

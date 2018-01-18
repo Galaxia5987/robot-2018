@@ -31,12 +31,13 @@ public class LiftSubsystem extends Subsystem {
 	private static final double ZERO_RATE = 0.005;
 	private static final double LIFT_DISTANCE_PER_PULSE = 0.0005;
 	private static final double MAX_ZEROING_OUTPUT = 0.3333334;
+	private static final double MAX_RUNNING_OUTPUT = 0.3;
 	private static final boolean TOP_HULL_REVERSED = true;
 	private static final boolean BOTTOM_HULL_REVERSED = false;
 	private double offset = 0;
 	private States state = States.MECHANISM_DISABLED;
 	
-	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	public NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntTopKp = LiftTable.getEntry("Top kP");
 	NetworkTableEntry ntTopKi = LiftTable.getEntry("Top kI");
 	NetworkTableEntry ntTopKd = LiftTable.getEntry("Top kD");
@@ -46,7 +47,7 @@ public class LiftSubsystem extends Subsystem {
 	NetworkTableEntry ntTopHall = LiftTable.getEntry("Top Hall");
 	NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
 	NetworkTableEntry ntState = LiftTable.getEntry("State");
-	NetworkTableEntry ntSpeedError = LiftTable.getEntry("Speed Error");
+	NetworkTableEntry ntError = LiftTable.getEntry("Error");
 	
 	NetworkTableEntry ntIsEnabled = LiftTable.getEntry("IS ENABLED");
 	NetworkTableEntry ntIsExceeding = LiftTable.getEntry("Trying To Exceed Limits");
@@ -88,7 +89,7 @@ public class LiftSubsystem extends Subsystem {
     		liftMotor.set(speed);
     		ntIsExceeding.setBoolean(false);
     	}else{
-    		liftMotor.set(0);
+    		setSetpoint(getHeight());
     		ntIsExceeding.setBoolean(true);
     	}
     }
@@ -129,7 +130,7 @@ public class LiftSubsystem extends Subsystem {
 	    		
 	    	case RUNNING:
 	    		ntState.setString("RUNNING");
-	    		maxOutput = 1.0;
+	    		maxOutput = MAX_RUNNING_OUTPUT;
 	    		if(!isEnabled)
 	    			state = States.MECHANISM_DISABLED;
 	    		break;
@@ -138,7 +139,7 @@ public class LiftSubsystem extends Subsystem {
 	    		state = States.MECHANISM_DISABLED;
 	    		break;
     	}
-    	ntSpeedError.setDouble(pid.getSetpoint() - (height - offset));
+    	ntError.setDouble(pid.getSetpoint() - (height - offset));
     	ntTopHall.setBoolean(isUp());
     	ntBottomHall.setBoolean(isDown());
     	pid.setOutputLimits(-maxOutput, maxOutput);
