@@ -31,7 +31,7 @@ public class LiftSubsystem extends Subsystem {
 	private static final double ZERO_RATE = 0.005;
 	private static final double LIFT_DISTANCE_PER_PULSE = 0.0005;
 	private static final double MAX_ZEROING_OUTPUT = 0.3333334;
-	private static final double MAX_RUNNING_OUTPUT = 0.3;
+	private static final double MAX_RUNNING_OUTPUT = 1;
 	private static final boolean TOP_HULL_REVERSED = true;
 	private static final boolean BOTTOM_HULL_REVERSED = false;
 	private double offset = 0;
