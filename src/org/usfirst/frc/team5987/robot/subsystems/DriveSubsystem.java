@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.MiniPID;
@@ -17,16 +18,33 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
-	
+	/***********************CONSTANTS************************/
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0; 
 	private static double kI = 0; 
 	private static double kD = 0;
 	private static double kF = 0;
+	// Gyro PID
+	private static double gyroKp = 0.1; 
+	private static double gyroKi = 0; 
+	private static double gyroKd = 0;
+	/**
+	 * ABSOLUTE, METER/SEC
+	 */
+	public static final double MAX_VELOCITY = 2;
+	/**
+	 * ABSOLUTE, METER/SEC^2
+	 */
+	public static final double ACCELERATION = 1;
+	/**
+	 * ABSOLUTE, METER/SEC^2
+	 */
+	public static final double DECCELERATION = 1;
 	/**
 	 * Mapping between 0-5V to METER for the analog input
 	 */
-	private static final double ultransonicMeterFactor = 1.024;
+	public static final double ultransonicMeterFactor = 1.024;
+	/*******************************************************/
 	
 	private static final boolean rightInverted = false; // inverts the right motors & right encoder
 	private static final boolean leftInverted = true; // inverts the left motors & left encoder
@@ -55,9 +73,16 @@ public class DriveSubsystem extends Subsystem {
 	// NT error for debugging PIDF constants
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
+	// Gyro NT constants
+	NetworkTableEntry ntGyroKp = driveTable.getEntry("Gyro kP");
+	NetworkTableEntry ntGyroKi = driveTable.getEntry("Gyro kI");
+	NetworkTableEntry ntGyroKd = driveTable.getEntry("Gyro kD");
+	// NT error for debugging gyro PID
+	NetworkTableEntry ntGyroError = driveTable.getEntry("Gyro Error");
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
+	private static MiniPID gyroPID;
 	
 	/*TODO Set distance per pulse TODO*/
 	public DriveSubsystem(){
@@ -80,10 +105,15 @@ public class DriveSubsystem extends Subsystem {
 		ntKi.setDouble(kI);
 		ntKd.setDouble(kD);
 		ntKf.setDouble(kF);
+		ntGetGyroPID();
+		ntGyroKp.setDouble(gyroKp);
+		ntGyroKi.setDouble(gyroKi);
+		ntGyroKd.setDouble(gyroKd);
 		
 		// init the MiniPID for each side
 		rightPID = new MiniPID(kP, kI, kD, kF);
 		leftPID = new MiniPID(kP, kI, kD, kF);
+		gyroPID = new MiniPID(gyroKp, gyroKi, gyroKd);
 	}
 	
 	/*TODO ADD DriveJoystickCommand TODO*/
@@ -103,11 +133,20 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	/**
+	 * Gets the gyro PID constants from the NetworkTable
+	 */
+	private void ntGetGyroPID(){
+		gyroKp = ntGyroKp.getDouble(gyroKp);
+		gyroKi = ntGyroKi.getDouble(gyroKi);
+		gyroKd = ntGyroKd.getDouble(gyroKd);
+	}
+	
+	/**
 	 * Updates the PIDF control and moves the motors <br>
 	 * Controls the velocity according to <code>setRightSetpoint(..)</code> and <code>setLeftSetpoint(..)</code> <br>
 	 * <b>This should be run periodically in order to work!</b>
 	 */
-	private void updatePID(){
+	public void updatePID(){
 		ntGetPID();
 		
 		rightPID.setPID(kP, kI, kD, kF);
@@ -118,6 +157,16 @@ public class DriveSubsystem extends Subsystem {
 		
 		setRightSpeed(rightOut);
 		setLeftSpeed(leftOut);
+	}
+	
+	/**
+	 * Get the output from the gyro PID.
+	 * @param desiredAngle - the setpoint for the PID control
+	 * @return output for adding rotation to the robot
+	 */
+	public double getGyroPID(double desiredAngle){
+		ntGetGyroPID();
+		return gyroPID.getOutput(getAngle(), desiredAngle);
 	}
 	
 	/**
@@ -190,6 +239,14 @@ public class DriveSubsystem extends Subsystem {
 		return driveLeftEncoder.getDistance();
 	}
 	
+	/**
+	 * Get the angle of the navX
+	 * @return angle in DEGREES
+	 */
+    public double getAngle() {
+		return Robot.navx.getAngle();
+	}
+    
 	/**
 	 * 
 	 * @return true if the robot's on the cable bump on the center of the arena (in the null territory)
