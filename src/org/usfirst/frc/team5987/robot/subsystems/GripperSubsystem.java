@@ -2,6 +2,9 @@ package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.RobotMap;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -14,12 +17,14 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class GripperSubsystem extends Subsystem {
 
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
 	Victor leftWheel = new Victor(RobotMap.gripperWheelLeft);
-	AnalogInput beamSensor = new AnalogInput(RobotMap.beamChannel);
 	Victor rightWheel = new Victor(RobotMap.gripperWheelRight);
-    public void initDefaultCommand() {
+	AnalogInput proximitySensor = new AnalogInput(RobotMap.proximityChannel);
+	NetworkTable GripperTable = NetworkTableInstance.getDefault().getTable("GripperTable");
+	public NetworkTableEntry ntProximityVoltage = GripperTable.getEntry("Proximity Voltage");
+	public NetworkTableEntry ntSeesCube = GripperTable.getEntry("Sees Cube");
+	
+	public void initDefaultCommand() {
 
     }
     
@@ -36,8 +41,12 @@ public class GripperSubsystem extends Subsystem {
      * 
      * @return if there is a cube in the gripper, return true
      */
+    public double voltage() {
+    	return proximitySensor.getVoltage();
+    }
+    
     public boolean isCubeInside(){
-    		return beamSensor.getVoltage() >= 2.5;
+    		return voltage() >= 2.5;
     }
 }
 

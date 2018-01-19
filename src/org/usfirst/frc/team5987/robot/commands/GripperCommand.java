@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class GripperCommand extends Command {
-
+	
     public GripperCommand() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -21,6 +21,8 @@ public class GripperCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	Robot.gripperSubsystem.ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
+    	Robot.gripperSubsystem.ntSeesCube.setBoolean(Robot.gripperSubsystem.isCubeInside());
     	Robot.gripperSubsystem.setSpeed(0.5, 0.5);
     }
 
