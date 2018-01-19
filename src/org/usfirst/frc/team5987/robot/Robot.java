@@ -7,6 +7,13 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5987.robot.commands.liftCommand;
+import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -15,12 +22,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
-import org.usfirst.frc.team5987.robot.commands.liftCommand;
-import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
-import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
-import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
-import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,8 +39,7 @@ public class Robot extends TimedRobot {
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
-	
-	
+
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -79,7 +79,8 @@ public class Robot extends TimedRobot {
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString code to get the auto name from the text box below the Gyro
 	 *
-	 * <p>You can add additional auto modes by adding additional commands to the
+	 * <p>
+	 * You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons
 	 * to the switch structure below with additional strings & commands.
 	 */
