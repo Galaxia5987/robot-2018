@@ -25,10 +25,10 @@ public class RobotMap {
 
 	
 	/*--------------------------DRIVE-------------------------------*/
-	public static final int driveRightRearMotor = 0; // TODO: CHANGE!
-	public static final int driveRightFrontMotor = 1; // TODO: CHANGE!
-	public static final int driveLeftRearMotor = 2; // TODO: CHANGE!
-	public static final int driveLeftFrontMotor = 3; // TODO: CHANGE!
+	public static final int driveRightRearMotor = 10; // TODO: CHANGE!
+	public static final int driveRightFrontMotor = 11; // TODO: CHANGE!
+	public static final int driveLeftRearMotor = 12; // TODO: CHANGE!
+	public static final int driveLeftFrontMotor = 13; // TODO: CHANGE!
 	
 	public static final int driveRightEncoderChannelA = 2; // TODO: CHANGE!
 	public static final int driveRightEncoderChannelB = 3; // TODO: CHANGE!
@@ -42,17 +42,17 @@ public class RobotMap {
 	/*--------------------------------------------------------------*/
 	
 	/*--------------------------GRIPPER------------------------------*/
-	public static int gripperWheelLeft = 666; // TODO: CHANGE!
-	public static int gripperWheelRight = 666; // TODO: CHANGE!
+	public static int gripperWheelLeft = 2; // TODO: CHANGE!
+	public static int gripperWheelRight = 3; // TODO: CHANGE!
 	
-	public static int beamChannel = 666; // TODO: CHANGE!
+	public static int proximityChannel = 1; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 
 	/*--------------------------LIFT------------------------------*/
-	public static int liftMotorPort = 3;
+	public static int liftMotorPort = 15;
 	
 	public static int liftEncoderPortA = 0;
-	public static int liftEncoderPortB = 1;
+	public static int liftEncoderPortB = 11;
 	
 	public static int liftHallEffectTop = 9;
 	public static int liftHallEffectBottom = 8;

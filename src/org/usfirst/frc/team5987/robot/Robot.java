@@ -12,6 +12,7 @@ import org.usfirst.frc.team5987.robot.commands.liftCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.GripperSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
+	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");

@@ -6,7 +6,9 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team5987.robot;
+
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
+import org.usfirst.frc.team5987.robot.commands.GripperCommand;
 import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -26,11 +28,10 @@ public class OI {
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
-	
 
 	public OI() {
-
-		y.whenPressed(new ClimbCommand(true));
+		// y.whenPressed(new ClimbCommand(true));
+		y.whenPressed(new GripperCommand());
 		a.whenPressed(new ClimbCommand(false));
 		b.whenPressed(new OpenHooksCommand(true));
 		x.whenPressed(new OpenHooksCommand(false));
