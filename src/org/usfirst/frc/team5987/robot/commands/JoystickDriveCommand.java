@@ -7,7 +7,8 @@ import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * Drive the robot with the joysticks.
+ * @author Dan Katzuv
  */
 public class JoystickDriveCommand extends Command {
 
@@ -23,7 +24,7 @@ public class JoystickDriveCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		DriveSubsystem.differentialDrive.tankDrive(OI.leftStick.getY(), OI.rightStick.getY());
+		DriveSubsystem.setRobotSpeed(OI.leftStick.getY(), OI.rightStick.getY());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
