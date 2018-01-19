@@ -61,6 +61,7 @@ public class RobotMap {
 	/*--------------------------------------------------------------*/
 	
 	/*--------------------------INTAKE------------------------------*/
+	public static final double wheelSpeed = 0.5;
 	public static final int intakeMotorLeft = 66;
 	public static final int intakeMotorRight = 666;
 	
