@@ -4,6 +4,9 @@ import org.usfirst.frc.team5987.robot.RobotMap;
 import org.usfirst.frc.team5987.robot.commands.JoystickDriveCommand;
 
 import auxiliary.MiniPID;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -59,7 +62,6 @@ public class DriveSubsystem extends Subsystem {
 	// NT error for debugging PIDF constants
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
-	public Object ;
 
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
@@ -78,8 +80,18 @@ public class DriveSubsystem extends Subsystem {
 		// Set DiffrentialDrive
 		SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftFrontMotor, leftRearMotor);
 		SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
-		static DifferentialDrive differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
+		DifferentialDrive differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
 		// Initialize the PIDF constants in the NetworkTable
+		/**
+		 * Gets the PIDF constants from the NetworkTable
+		 */
+		private void ntGetPID() {
+			kP = ntKp.getDouble(kP);
+			kI = ntKi.getDouble(kI);
+			kD = ntKd.getDouble(kD);
+			kF = ntKf.getDouble(kF);
+		}
+
 		ntGetPID();
 		ntKp.setDouble(kP);
 		ntKi.setDouble(kI);
@@ -91,23 +103,13 @@ public class DriveSubsystem extends Subsystem {
 		leftPID = new MiniPID(kP, kI, kD, kF);
 	}
 
-	/* TODO ADD DriveJoystickCommand TODO */
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
 		setDefaultCommand(new JoystickDriveCommand());
 	}
 
-	/**
-	 * Gets the PIDF constants from the NetworkTable
-	 */
-	private void ntGetPID() {
-		kP = ntKp.getDouble(kP);
-		kI = ntKi.getDouble(kI);
-		kD = ntKd.getDouble(kD);
-		kF = ntKf.getDouble(kF);
-	}
-
+	
 	/**
 	 * Updates the PIDF control and moves the motors <br>
 	 * Controls the velocity according to <code>setRightSetpoint(..)</code> and
@@ -154,25 +156,36 @@ public class DriveSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Set the speed of the two right motors
-	 * 
-	 * @param speed
-	 *            between -1 and 1
-	 */
-	public void setRightSpeed(double speed) {
-		rightRearMotor.set(speed);
-		rightFrontMotor.set(speed);
-	}
-
-	/**
 	 * Set the speed of the two left motors
 	 * 
 	 * @param speed
 	 *            between -1 and 1
 	 */
-	public void setLeftSpeed(double speed) {
+	public static void setLeftSpeed(double speed) {
 		leftRearMotor.set(speed);
 		leftFrontMotor.set(speed);
+	}
+	
+	/**
+	 * Set the speed of the two right motors
+	 * 
+	 * @param speed
+	 *            between -1 and 1
+	 */
+	public static void setRightSpeed(double speed) {
+		rightRearMotor.set(speed);
+		rightFrontMotor.set(speed);
+	}
+	
+	/**
+	 * 
+	 * @param leftSpeed - Speed for the left side of the robot
+	 * @param rightSpeed - Speed for the right side of the robot
+	 */
+	public static void setRobotSpeed(double leftSpeed, double rightSpeed)
+	{
+		setLeftSpeed(leftSpeed);
+		setRightSpeed(rightSpeed);
 	}
 
 	/**
