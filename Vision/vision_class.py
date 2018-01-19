@@ -277,7 +277,7 @@ class Vision:
         return (np.sqrt(4 * cv2.contourArea(c) / np.pi)) / (cv2.minEnclosingCircle(c)[1] * 2)
 
     def get_two(self):
-        dif = 41/(10+(5.26))
+        dif = (10+(5.26))/41
         possible_fit = []
         for i in range(0, len(self.centers)-1):
             for j in range(i+1, len(self.centers)):
@@ -285,8 +285,9 @@ class Vision:
                 _, y2, _, h2 = cv2.boundingRect(self.contours[j])
                 h_av = abs((h1 + h2) / 2)
                 dis = abs((self.centers[i][0] - self.centers[j][0]))
-                hd=(h_av/dis)
-                if dif *0.75 < hd < dif * 1.25:  # <-- this specific line might be bugged and not tested yet so...
+                hd=(dis/h_av)
+                #print(hd,dif,self.centers[i],self.centers[j])
+                if dif * 0.75 < hd < dif * 1.25:  # <-- this specific line might be bugged and not tested yet so...
                     possible_fit = [self.contours[i], self.contours[j]]
                     self.center = (self.centers[i][0] - int((dis / 2)),int((self.centers[j][1]+self.centers[i][1])/2))
                     dif = dis
@@ -299,12 +300,10 @@ class Vision:
         :return:
         angle from center
         """
-        axes = 0
-        for c in self.centers:
-            axes += c[0]
-        x_dif = self.frame.shape[0] - axes / len(self.centers)
-        return math.atan(x_dif / self.focal)
-
+        x_dif = self.center[0] - self.frame.shape[0]/2
+        rad=math.atan(x_dif / self.focal)
+        self.degrees=rad/math.pi*180
+        return self.degrees
     def get_distance(self):
         """
         Finds the distance using the real target height and its pixel representation
@@ -314,6 +313,7 @@ class Vision:
         """
         _, _, _, height = cv2.boundingRect(self.contours)
         distance = self.target_height * self.focal / height
+        vision.distance=distance
         return distance
 
 
@@ -366,18 +366,20 @@ def analyse():
     global vision
     while not stop:
         vision.filter_hsv()
-        vision.dirode()
+        #vision.dirode()
         _, contours, _ = cv2.findContours(vision.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         vision.contours = list(contours)
         vision.get_contours()
+        #print(len(vision.contours))
         if len(vision.contours) > 0:
             vision.sees_target = True
             vision.set_item("Sees target", vision.sees_target)
             vision.find_center()
             vision.get_two()
             vision.draw_contours()
-            # vision.get_angle()
-            # vision.get_distance()
+            if vision.center is not None:
+                print(vision.get_angle())
+                vision.get_distance()
 
 
 def show():
