@@ -20,7 +20,10 @@ public class IntakeTakeCubeCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.intakeSubsystem.setSpeed(RobotMap.wheelSpeed, -RobotMap.wheelSpeed); //TODO: check the actual directions
+    	if(Robot.liftSubsystem.isDown())
+    		Robot.intakeSubsystem.setSpeed(RobotMap.wheelSpeed, -RobotMap.wheelSpeed); //TODO: check the actual directions
+    	else
+    		this.cancel();
     }
 
     // Called repeatedly when this Command is scheduled to run
