@@ -322,7 +322,10 @@ public class MiniPID {
 	public void setSetpoint(double setpoint) {
 		this.setpoint = setpoint;
 	}
-
+	
+	public double getSetpoint(){
+		return this.setpoint;
+	}
 	/**
 	 * Calculate the output value for the current PID cycle.<br>
 	 * 
