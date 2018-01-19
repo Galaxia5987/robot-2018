@@ -10,7 +10,7 @@ package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
-import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
+	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static OI m_oi;

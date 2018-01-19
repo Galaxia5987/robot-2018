@@ -42,7 +42,7 @@ public class RobotMap {
 	public static int bumpSensor = 8; // TODO: CHANGE!
 	/*--------------------------------------------------------------*/
 	
-	/*--------------------------INTAKE------------------------------*/
+	/*--------------------------GRIPPER------------------------------*/
 	public static int gripperWheelLeft = 666; // TODO: CHANGE!
 	public static int gripperWheelRight = 666; // TODO: CHANGE!
 	public static int beamChannel = 666; // TODO: CHANGE!
