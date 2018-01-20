@@ -61,6 +61,7 @@ public class RobotMap {
 					
 					public static final int backUltrasonic = 0; // TODO: CHANGE!
 					public static int bumpSensor = 7; // TODO: CHANGE!
+					public static int colorSensor = 2;
 					/*-------------------------------------*/
 					
 					/*---------------GRIPPER---------------*/
