@@ -271,7 +271,7 @@ class Vision:
         return cv2.contourArea(c) / cv2.contourArea(cv2.convexHull(c))
 
     def aspectratio(self, c):
-        return cv2.boundingRect(c)[2] / cv2.boundingRect(c)[3]
+        return cv2.minAreaRect(c)[3] / cv2.minAreaRect(c)[2]
 
     def diameterratio(self, c):
         return (np.sqrt(4 * cv2.contourArea(c) / np.pi)) / (cv2.minEnclosingCircle(c)[1] * 2)
@@ -300,21 +300,33 @@ class Vision:
         :return:
         angle from center
         """
-        x_dif = self.center[0] - self.frame.shape[0]/2
+        x_dif = self.center[0] - self.frame.shape[1]/2
         rad=math.atan(x_dif / self.focal)
         self.degrees=rad/math.pi*180
+        self.set_item('Switch Degrees',self.degrees)
         return self.degrees
     def get_distance(self):
         """
         Finds the distance using the real target height and its pixel representation
         (similar triangles)
         :return:
-        distance from target
+        distance from targetself.frame.shape
         """
-        _, _, _, height = cv2.boundingRect(self.contours)
-        distance = self.target_height * self.focal / height
-        vision.distance=distance
-        return distance
+        height=0
+        some=len(self.contours)
+        for cont in self.contours:
+            height+=cv2.boundingRect(cont)[3]
+        try:
+            height/=some
+        except ZeroDivisionError:
+            pass
+        try:
+            distance = self.target_height * self.focal / height
+        except ZeroDivisionError:
+            distance=None
+        self.distance=distance
+        self.set_item('Switch Distance',self.distance)
+        return self.distance
 
 
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -357,7 +369,7 @@ def get_frame():
     global vision
     while not stop:
         _, vision.frame = vision.cam.read()
-        # cv2.line(vision.frame,(0,int(vision.frame.shape[0]/2)),(int(vision.frame.shape[1]),int(vision.frame.shape[0]/2)),(0,0,0),int(1),int(1))
+        cv2.line(vision.show_frame,(int(vision.frame.shape[1]/2),0),(int(vision.frame.shape[1]/2),vision.frame.shape[0]),(0,0,0))
         vision.show_frame = vision.frame.copy()
 
 
@@ -377,11 +389,9 @@ def analyse():
             vision.find_center()
             vision.get_two()
             vision.draw_contours()
-            if vision.center is not None:
-                print(vision.get_angle())
-                vision.get_distance()
-
-
+            if hasattr(vision,'center'):
+                vision.get_angle()
+                print(vision.get_distance())
 def show():
     global stop
     global vision
