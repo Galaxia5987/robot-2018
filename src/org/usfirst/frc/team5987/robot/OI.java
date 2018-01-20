@@ -7,7 +7,8 @@
 
 package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
-import org.usfirst.frc.team5987.robot.commands.GripperCommand;
+import org.usfirst.frc.team5987.robot.commands.GripperShootCommand;
+import org.usfirst.frc.team5987.robot.commands.GripperTakeCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -27,9 +28,9 @@ public class OI {
 	
 
 	public OI() {
-		y.whenPressed(new GripperCommand());
-		a.whenPressed(new ClimbCommand(false));
-		b.whenPressed(new OpenHooksCommand(true));
+		y.whenPressed(new GripperTakeCubeCommand());
+		b.whenPressed(new ClimbCommand(false));
+		a.whileHeld(new GripperShootCommand(0.5));
 		x.whenPressed(new OpenHooksCommand(false));
 	}
 }
