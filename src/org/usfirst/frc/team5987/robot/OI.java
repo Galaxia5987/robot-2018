@@ -8,6 +8,8 @@
 package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
 import org.usfirst.frc.team5987.robot.commands.GripperCommand;
+import org.usfirst.frc.team5987.robot.commands.IntakeSelenoidCommand;
+import org.usfirst.frc.team5987.robot.commands.IntakeTakeCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -27,9 +29,8 @@ public class OI {
 	
 
 	public OI() {
-		y.whenPressed(new GripperCommand());
-		a.whenPressed(new ClimbCommand(false));
-		b.whenPressed(new OpenHooksCommand(true));
-		x.whenPressed(new OpenHooksCommand(false));
+		a.whenPressed(new IntakeTakeCubeCommand());
+		y.whenPressed(new IntakeSelenoidCommand(false));
+		b.whenPressed(new IntakeSelenoidCommand(true));
 	}
 }
