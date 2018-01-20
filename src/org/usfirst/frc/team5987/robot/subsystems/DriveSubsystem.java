@@ -108,7 +108,7 @@ public class DriveSubsystem extends Subsystem {
 	 * Controls the velocity according to <code>setRightSetpoint(..)</code> and <code>setLeftSetpoint(..)</code> <br>
 	 * <b>This should be run periodically in order to work!</b>
 	 */
-	private void updatePID(){
+	public void updatePID(){
 		ntGetPID();
 		
 		rightPID.setPID(kP, kI, kD, kF);
