@@ -18,9 +18,10 @@ public class ClimbSubsystem extends Subsystem {
 	// here. Call these from Commands.
 	public static final double openPosition = -1;
 	public static final double closePosition = 1;
-	// make it true if the limit switch is normally on
+	// Make it true if the limit switch is normally on
 	public final boolean limitSwitchReverse = true;
 	public final boolean motorReversed = false;
+
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
@@ -40,16 +41,17 @@ public class ClimbSubsystem extends Subsystem {
 	 * Motor for climbing.
 	 */
 	Victor motor = new Victor(RobotMap.climbMotor);
-	
+
 	/**
 	 * Limit switch at the top that is used for affirmation if the robot has
 	 * reached the top.
 	 */
 	DigitalInput limitSwitch = new DigitalInput(RobotMap.climbLimitSwitch);
-	
-	public ClimbSubsystem(){
+
+	public ClimbSubsystem() {
 		motor.setInverted(motorReversed);
 	}
+
 	/**
 	 * Set the servo position.
 	 *
@@ -83,7 +85,7 @@ public class ClimbSubsystem extends Subsystem {
 	 * Get the value from the limit switch to know whether the robot has reached
 	 * the top.
 	 *
-	 * @return the status of the limit switch
+	 * @return The status of the limit switch
 	 */
 	public boolean hasReachedTop() {
 		boolean rawVal = limitSwitch.get();
