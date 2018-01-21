@@ -40,6 +40,7 @@ public class DriveSubsystem extends Subsystem {
 	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, leftInverted);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
+	private static final AnalogInput colorSensor = new AnalogInput(RobotMap.colorSensor);
 	/**
 	 * HRLV-MaxSonar -EZ ultrasonic sensor
 	 */
@@ -107,7 +108,7 @@ public class DriveSubsystem extends Subsystem {
 	 * Controls the velocity according to <code>setRightSetpoint(..)</code> and <code>setLeftSetpoint(..)</code> <br>
 	 * <b>This should be run periodically in order to work!</b>
 	 */
-	private void updatePID(){
+	public void updatePID(){
 		ntGetPID();
 		
 		rightPID.setPID(kP, kI, kD, kF);
@@ -196,6 +197,10 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public boolean isBump(){
 		return bumpSensor.get();
+	}
+	
+	public boolean seesWhite() {
+		return colorSensor.getVoltage() >= 4.5;
 	}
 	
 	/**
