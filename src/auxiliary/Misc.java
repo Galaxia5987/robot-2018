@@ -28,6 +28,10 @@ public class Misc {
 		return limit(value, -maxAbs, 0, 0, maxAbs);
 	}
 	
+	public static double limitAbsMin(double value, double minAbs){
+		return limit(value, Double.NEGATIVE_INFINITY, -minAbs, minAbs, Double.POSITIVE_INFINITY);
+	}
+	
 	public static double limitAbs(double value, double minAbs, double maxAbs){
 		return limit(value, -maxAbs, -minAbs, minAbs, maxAbs);
 	}

@@ -31,6 +31,7 @@ public class DistanceMotionProfile {
 	private boolean isForward;
 	private double Vmax;
 	private double finalDistance;
+	private double minVelocity;
 
 	/**
 	 * 
@@ -42,6 +43,7 @@ public class DistanceMotionProfile {
 	 */
 	public DistanceMotionProfile(double finalDistance, double maxVelocity, double minVelocity, double acceleration, double deceleration){
 		this.finalDistance = finalDistance;
+		this.minVelocity = minVelocity;
 		isForward = finalDistance > 0;
 		Vmax = maxVelocity * (isForward? 1 : -1);
 		a = acceleration * (isForward? 1 : -1);
@@ -121,7 +123,7 @@ public class DistanceMotionProfile {
 		default:
 			throw new Error("You're fucked up mate. How is it not TRIANGLE or TRAPEZOID?!?!?!?!?!?!");
 		}
-		return outV;
+		return Misc.limitAbsMin(outV, minVelocity); // Do not allow speed under minVelocity
 	}
 	
 
