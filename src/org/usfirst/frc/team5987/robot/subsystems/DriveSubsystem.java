@@ -25,7 +25,7 @@ public class DriveSubsystem extends Subsystem {
 	private static double kD = 0;
 	private static double kF = 0;
 	// Gyro PID
-	private static double gyroKp = 0.1; 
+	private static double gyroKp = 0.007;
 	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
 	/**
@@ -169,24 +169,36 @@ public class DriveSubsystem extends Subsystem {
 		return gyroPID.getOutput(getAngle(), desiredAngle);
 	}
 	
-	/**
-	 * Set the desired velocity for the right motors (to make it move run updatePID() periodically) 
-	 * @param velocity velocity in METERS/SEC
-	 */
-	public void setRightSetpoint(double velocity){
-		double error = velocity - getRightSpeed();
-		ntRightError.setDouble(error);
-		rightPID.setSetpoint(velocity);
-	}
 	
 	/**
-	 * Set the desired velocity for the left motors (to make it move run updatePID() periodically) 
-	 * @param velocity velocity in METERS/SEC
+	 * Set the desired velocity for the both motors (to make it move use updatePID()  and set speed methods periodically) 
+	 * @param rightVelocity desired velocity for the right motors METERS/SEC
+	 * @param leftVelocity desired velocity for the left motors METERS/SEC
 	 */
-	public void setLeftSetpoint(double velocity){
-		double error = velocity - getLeftSpeed();
-		ntLeftError.setDouble(error);
-		leftPID.setSetpoint(velocity);
+	public void setSetpoints(double leftVelocity, double rightVelocity){
+		double rightOut; // normalized output [METERS/SEC]
+		double leftOut;  // normalized output [METERS/SEC]
+		// normalization
+		if((Math.abs(rightVelocity) > MAX_VELOCITY) || (Math.abs(leftVelocity) > MAX_VELOCITY)){
+			if(Math.abs(rightVelocity) > Math.abs(leftVelocity)){
+				rightOut = (rightVelocity / rightVelocity) * MAX_VELOCITY;
+				leftOut = (leftVelocity / rightVelocity) * MAX_VELOCITY;
+			}else{
+				leftOut = (leftVelocity / leftVelocity) * MAX_VELOCITY;
+				rightOut = (rightVelocity / leftVelocity) * MAX_VELOCITY;
+			}
+		}else{
+			// no normalization needed
+			rightOut = rightVelocity;
+			leftOut  = leftVelocity;
+		}
+		double leftError = leftOut - getLeftSpeed();
+		ntLeftError.setDouble(leftError);
+		leftPID.setSetpoint(leftOut);
+		
+		double rightError = rightOut - getRightSpeed();
+		ntRightError.setDouble(rightError);
+		rightPID.setSetpoint(rightOut);
 	}
 	
 	/**

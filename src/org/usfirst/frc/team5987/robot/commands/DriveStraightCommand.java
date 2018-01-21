@@ -77,8 +77,7 @@ public class DriveStraightCommand extends Command {
     	double speed = mp.getV(avgDistance);
     	double gyroFix = Robot.driveSubsystem.getGyroPID(angleToKeep);
     	
-    	Robot.driveSubsystem.setRightSetpoint(speed + gyroFix);
-    	Robot.driveSubsystem.setLeftSetpoint(speed - gyroFix);
+    	Robot.driveSubsystem.setSetpoints(speed - gyroFix, speed + gyroFix);
     	Robot.driveSubsystem.updatePID();
     	
     	rightDistanceError = finalDistance - rightDistance;
@@ -87,7 +86,7 @@ public class DriveStraightCommand extends Command {
     	ntRightDistanceError.setDouble(leftDistanceError);
     	
     }
-
+    
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
     	boolean rightOk = Math.abs(rightDistanceError) < MIN_DISTANCE_ERROR;
