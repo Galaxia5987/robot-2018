@@ -8,7 +8,7 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
-import org.usfirst.frc.team5987.robot.commands.liftCommand;
+import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSetpoint.setDouble(0);
-		SmartDashboard.putData(new liftCommand());
+		SmartDashboard.putData(new LiftCommand());
 	}
 
 	/**
