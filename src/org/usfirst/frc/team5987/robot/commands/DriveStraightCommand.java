@@ -33,20 +33,6 @@ public class DriveStraightCommand extends Command {
 	private double rightDistanceError;
 	private double leftDistanceError;
 	
-    public DriveStraightCommand(double distance) {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	angleToKeep = Robot.driveSubsystem.getAngle();
-    	this.finalDistance = distance;
-    	mp = new TimeMotionProfile(
-    			this.finalDistance,
-    			DriveSubsystem.MAX_VELOCITY,
-    			DriveSubsystem.ACCELERATION,
-    			DriveSubsystem.DECCELERATION
-    			);
-		requires(Robot.driveSubsystem);
-    }
-    
     public DriveStraightCommand(double distance, double angleToKeep) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -60,6 +46,11 @@ public class DriveStraightCommand extends Command {
     			);
 		requires(Robot.driveSubsystem);
     }
+    
+	public DriveStraightCommand(double distance) {
+		this(distance, Robot.driveSubsystem.getAngle());
+    }
+    
 
     // Called just before this Command runs the first time
     protected void initialize() {
