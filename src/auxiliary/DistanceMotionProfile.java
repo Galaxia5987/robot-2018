@@ -1,8 +1,9 @@
 package auxiliary;
 
 
+
 /**
- * @author Dor
+ * @author Dor Brekhman
  * Velocity(distance) Motion Profile that is based on TimeMotionProfile
  */
 public class DistanceMotionProfile {
@@ -35,7 +36,7 @@ public class DistanceMotionProfile {
 
 	/**
 	 * 
-	 * @param finalDistance distance from target [METERS]
+	 * @param finalDistance distance from target [METERS] - positive if going forward, otherwise negative
 	 * @param maxVelocity the maximum velocity the robot can drive [METERS/SEC] - ABSOLUTE
 	 * @param minVelocity the minimum velocity the robot can move [METERS/SEC] - ABSOLUTE
 	 * @param acceleration [METERS/SEC^2] - ABSOLUTE
@@ -81,49 +82,81 @@ public class DistanceMotionProfile {
 			throw new Error("You're fucked up mate. How is it not TRIANGLE or TRAPEZOID?!?!?!?!?!?!");
 		}
 	}
+	
 	/**
 	 * 
-	 * @param x distance after start [METER]
+	 * @param x distance after start [METER] - can be positive or negative
 	 * @return the desired speed in that distance (x)
 	 */
 	public double getV(double x){
+		// if the distance is before the starting distance (0), return the minimum velocity
+		if(finalDistance > 0){
+			if(x < 0){
+				return minVelocity;
+			}
+		}else{
+			if(x > 0){
+				return -minVelocity;
+			}
+		}
+		
 		double outV;
-		double dir = isForward ? 1:-1;
-		double absDist = Math.abs(finalDistance);
+		double dir = isForward ? 1 : -1;
+		double absTotalDist = Math.abs(finalDistance);
 		double A = Math.abs(a);
 		double D = Math.abs(d);
-		x = Math.abs(x); 
-		
-		assert VmaxTime > 0;
+		double absX = Math.abs(x);
 		Vmax = Math.abs(Vmax);
+		
+		
 		switch(type){
 		case TRIANGLE:
-			double vertexDist = Math.abs((VmaxTime * Vmax) / 2); // absolute
-			if(absDist < vertexDist){
-				outV = Math.sqrt(2 * a * x);
+			// distance when going from acceleration to deceleration, absolute
+			double vertexDist = Math.abs((VmaxTime * Vmax) / 2);
+			// acceleration function
+			if(absX < vertexDist){
+				outV = Math.sqrt(2 * A * absX);
+			// deceleration function
 			}else{
-				outV = Math.sqrt((Vmax*Vmax) + D * (VmaxTime * Vmax) - 2 * D * x);
+				outV = Math.sqrt(Math.abs((Vmax*Vmax) + D * (VmaxTime * Vmax) - 2 * D * absX));
+				 // in case of overshoot, change direction (go back)
+				if(absX > absTotalDist)
+					outV = -outV;
 			}
+			// return minus velocity if going backwards
 			outV *= dir;
 			break;
 			
 		case TRAPEZOID:
 			double accelerationEndDist = Math.abs((Vmax * Vmax) / (2 * A)); // absolute
-			double decelerationStartDist = Math.abs(finalDistance) - Math.abs((Vmax * Vmax) / (2 * D)); // absolute
-			if(absDist < accelerationEndDist){
-				outV = Math.sqrt(2 * A * x);
-			}else if(absDist < decelerationStartDist){
+			double decelerationStartDist = Math.abs(absTotalDist) - Math.abs((Vmax * Vmax) / (2 * D)); // absolute
+			// acceleration function
+			if(absX < accelerationEndDist){
+				outV = Math.sqrt(2 * A * absX);
+			// constant velocity (max velocity) function
+			}else if(absX < decelerationStartDist){
 				outV = Vmax; 
+			// deceleration function
 			}else{
-				outV = Math.sqrt(2 * D * finalDistance - 2 * D * x);
+				outV = Math.sqrt(Math.abs(2 * D * absTotalDist - 2 * D * absX));
+				// in case of overshoot, change direction (go back)
+				if(absX > absTotalDist)
+					outV = -outV;
 			}
+			// return minus velocity if going backwards
 			outV *= dir;
 			break;
 			
 		default:
 			throw new Error("You're fucked up mate. How is it not TRIANGLE or TRAPEZOID?!?!?!?!?!?!");
 		}
-		return Misc.limitAbsMin(outV, minVelocity); // Do not allow speed under minVelocity
+		
+		// If |outV| is less than minVelocity return +- minVelocity 
+		return Misc.limitAbsMin(outV, minVelocity);
+	}
+	public MPTypes getType() {
+		// TODO Auto-generated method stub
+		return type;
 	}
 	
 
