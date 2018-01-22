@@ -44,6 +44,7 @@ public class DriveSubsystem extends Subsystem {
 	 * ABSOLUTE, METER/SEC^2
 	 */
 	public static final double DECCELERATION = 1;
+	public static final double ROTATION_RADIUS = 1;
 	/**
 	 * Mapping between 0-5V to METER for the analog input
 	 */
