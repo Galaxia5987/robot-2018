@@ -17,10 +17,6 @@ public class DriveStraightCommand extends Command {
 	 * Error to stop in METER
 	 */
 	public static final double MIN_DISTANCE_ERROR = 0.05;
-	/**
-	 * 
-	 * @param distance desired distance for driving in METER
-	 */
 	private DistanceMotionProfile mp;
 	private MiniPID anglePID;
 	private double initRightDistance;
@@ -33,6 +29,11 @@ public class DriveStraightCommand extends Command {
 	private double rightDistanceError;
 	private double leftDistanceError;
 	
+	/**
+	 * 
+	 * @param distance desired distance, distance from target
+	 * @param angleToKeep The fixed angle the robot will be heading to
+	 */
     public DriveStraightCommand(double distance, double angleToKeep) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -48,6 +49,10 @@ public class DriveStraightCommand extends Command {
 		requires(Robot.driveSubsystem);
     }
     
+    /**
+     * The robot will keep (heading to) it's starting angle
+     * @param distance
+     */
 	public DriveStraightCommand(double distance) {
 		this(distance, Robot.driveSubsystem.getAngle());
     }
@@ -72,6 +77,7 @@ public class DriveStraightCommand extends Command {
     	Robot.driveSubsystem.setSetpoints(speed - gyroFix, speed + gyroFix);
     	Robot.driveSubsystem.updatePID();
     	
+    	// debug distance error in NetworkTables
     	rightDistanceError = finalDistance - rightDistance;
     	ntLeftDistanceError.setDouble(rightDistanceError);
     	leftDistanceError = finalDistance - leftDistance;
@@ -81,6 +87,7 @@ public class DriveStraightCommand extends Command {
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	// finish when both sides have reached targets
     	boolean rightOk = Math.abs(rightDistanceError) < MIN_DISTANCE_ERROR;
     	boolean leftOk = Math.abs(leftDistanceError) < MIN_DISTANCE_ERROR;
         return rightOk && leftOk;
@@ -88,6 +95,7 @@ public class DriveStraightCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	// stop at the end
     	Robot.driveSubsystem.setLeftSpeed(0);
     	Robot.driveSubsystem.setRightSpeed(0);
     }
@@ -95,6 +103,7 @@ public class DriveStraightCommand extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	// allow other commands to interrupt this one
     	end();
     	this.cancel();
     }
