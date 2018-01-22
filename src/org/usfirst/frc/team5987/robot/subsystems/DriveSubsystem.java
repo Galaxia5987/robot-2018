@@ -268,6 +268,13 @@ public class DriveSubsystem extends Subsystem {
 	}
     
 	/**
+	 * Get the angle of the navX
+	 * @return angle in RADIANS
+	 */
+    public double getAngleRadians(){
+    	return Math.toRadians(getAngle());
+    }
+	/**
 	 * 
 	 * @return true if the robot's on the cable bump on the center of the arena (in the null territory)
 	 */
