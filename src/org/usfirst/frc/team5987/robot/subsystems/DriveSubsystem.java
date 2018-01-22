@@ -33,6 +33,10 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public static final double MAX_VELOCITY = 2;
 	/**
+	 * ABSOLUTE, METER/SEC
+	 */
+	public static final double MIN_VELOCITY = 0.2;
+	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
 	public static final double ACCELERATION = 1;

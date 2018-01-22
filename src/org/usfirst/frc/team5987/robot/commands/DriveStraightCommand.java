@@ -4,7 +4,7 @@ import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 import auxiliary.MiniPID;
-import auxiliary.TimeMotionProfile;
+import auxiliary.DistanceMotionProfile;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -14,14 +14,14 @@ import edu.wpi.first.networktables.NetworkTableEntry;
  */
 public class DriveStraightCommand extends Command {
 	/**
-	 * Error to stop in METERS
+	 * Error to stop in METER
 	 */
 	public static final double MIN_DISTANCE_ERROR = 0.05;
 	/**
 	 * 
 	 * @param distance desired distance for driving in METER
 	 */
-	private TimeMotionProfile mp;
+	private DistanceMotionProfile mp;
 	private MiniPID anglePID;
 	private double initRightDistance;
 	private double initLeftDistance;
@@ -38,9 +38,10 @@ public class DriveStraightCommand extends Command {
         // eg. requires(chassis);
     	this.angleToKeep = angleToKeep;
     	this.finalDistance = distance;
-    	mp = new TimeMotionProfile(
+    	mp = new DistanceMotionProfile(
     			this.finalDistance,
     			DriveSubsystem.MAX_VELOCITY,
+    			DriveSubsystem.MIN_VELOCITY,
     			DriveSubsystem.ACCELERATION,
     			DriveSubsystem.DECCELERATION
     			);
