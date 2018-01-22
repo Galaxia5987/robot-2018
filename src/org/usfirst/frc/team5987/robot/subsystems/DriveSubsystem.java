@@ -179,7 +179,7 @@ public class DriveSubsystem extends Subsystem {
 	
 	
 	/**
-	 * Set the desired velocity for the both motors (to make it move use updatePID()  and set speed methods periodically) 
+	 * Set the desired velocity for the both motors (to make it move use {@link #updatePID()}  and set speed methods periodically) 
 	 * @param rightVelocity desired velocity for the right motors METERS/SEC
 	 * @param leftVelocity desired velocity for the left motors METERS/SEC
 	 */

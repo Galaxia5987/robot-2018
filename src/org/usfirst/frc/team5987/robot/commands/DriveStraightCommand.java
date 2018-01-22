@@ -50,8 +50,8 @@ public class DriveStraightCommand extends Command {
     }
     
     /**
-     * The robot will keep (heading to) it's starting angle
-     * @param distance
+     * The robot will keep (heading to) its starting angle
+     * @param distance desired distance, distance from target
      */
 	public DriveStraightCommand(double distance) {
 		this(distance, Robot.driveSubsystem.getAngle());
