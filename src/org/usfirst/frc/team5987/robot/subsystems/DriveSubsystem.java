@@ -77,12 +77,14 @@ public class DriveSubsystem extends Subsystem {
 	// NT error for debugging PIDF constants
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
+
 	// Gyro NT constants
 	NetworkTableEntry ntGyroKp = driveTable.getEntry("Gyro kP");
 	NetworkTableEntry ntGyroKi = driveTable.getEntry("Gyro kI");
 	NetworkTableEntry ntGyroKd = driveTable.getEntry("Gyro kD");
 	// NT error for debugging gyro PID
 	NetworkTableEntry ntGyroError = driveTable.getEntry("Gyro Error");
+	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
@@ -170,7 +172,9 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public double getGyroPID(double desiredAngle){
 		ntGetGyroPID();
-		return gyroPID.getOutput(getAngle(), desiredAngle);
+		double out = gyroPID.getOutput(getAngle(), desiredAngle);
+		ntGyroPIDOut.setDouble(out);
+		return out;
 	}
 	
 	
