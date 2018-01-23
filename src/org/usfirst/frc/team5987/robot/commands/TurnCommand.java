@@ -47,15 +47,28 @@ public class TurnCommand extends Command {
     	requires(Robot.driveSubsystem);
     }
     
+    /**
+     * 
+     * @param ntAngle NetworkTableEntry instance to get the angle from, when the command starts
+     * @param isRelative if true, rotate relative to the starting angle of the robot
+     */
     public TurnCommand(NetworkTableEntry ntAngle, boolean isRelative){
     	this.ntAngle  = ntAngle;
     	this.isRelative = isRelative;
     }
+    
+    /**
+     * 
+     * @param ntAngle NetworkTableEntry instance to get the angle from when the command starts
+     * @param isRelative NetworkTableEntry instance to get the isRelative variable from, when the command starts. <br>
+     * If the isRelative NetworkTableEntry is set to true the robot will rotate relative to its starting angle.
+     */
     public TurnCommand(NetworkTableEntry ntAngle, NetworkTableEntry ntIsRelative){
     	this.ntAngle  = ntAngle;
     	this.ntIsRelative = ntIsRelative;
     	
     }
+    
     // Called just before this Command runs the first time
     protected void initialize() {
     	if(ntAngle != null)
@@ -94,14 +107,14 @@ public class TurnCommand extends Command {
     }
     
     /**
-     * @return how many DEGREES the robot has turned.
+     * @return how many DEGREES the robot has turned since the begging of the command.
      */
     private double getDeltaAngle(){
     	return Robot.driveSubsystem.getAngleRadians() - startAngle;
     }
     
     /**
-     * @return the distance one of the wheels has passed on the perimeter of the rotation circle (circumference).
+     * @return the distance one of the wheels has passed on the perimeter of the rotation circle (circumference) since the begging of the command.
      */
     private double getDeltaDistance(){
     	return getDeltaAngle() * DriveSubsystem.ROTATION_RADIUS;
