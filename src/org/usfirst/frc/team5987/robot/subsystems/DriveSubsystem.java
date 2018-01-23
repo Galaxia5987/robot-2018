@@ -82,15 +82,6 @@ public class DriveSubsystem extends Subsystem {
 		SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
 		DifferentialDrive differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
 		// Initialize the PIDF constants in the NetworkTable
-		/**
-		 * Gets the PIDF constants from the NetworkTable
-		 */
-		private void ntGetPID() {
-			kP = ntKp.getDouble(kP);
-			kI = ntKi.getDouble(kI);
-			kD = ntKd.getDouble(kD);
-			kF = ntKf.getDouble(kF);
-		}
 
 		ntGetPID();
 		ntKp.setDouble(kP);
@@ -102,7 +93,17 @@ public class DriveSubsystem extends Subsystem {
 		rightPID = new MiniPID(kP, kI, kD, kF);
 		leftPID = new MiniPID(kP, kI, kD, kF);
 	}
-
+	
+	/**
+	 * Gets the PIDF constants from the NetworkTable
+	 */
+	private void ntGetPID() {
+		kP = ntKp.getDouble(kP);
+		kI = ntKi.getDouble(kI);
+		kD = ntKd.getDouble(kD);
+		kF = ntKf.getDouble(kF);
+	}
+	
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());

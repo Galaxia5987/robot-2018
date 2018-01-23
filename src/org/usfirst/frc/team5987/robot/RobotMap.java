@@ -25,17 +25,17 @@ public class RobotMap {
 
 	
 	/*--------------------------DRIVE-------------------------------*/
-	public static final int driveRightRearMotor = 10; // TODO: CHANGE!
-	public static final int driveRightFrontMotor = 11; // TODO: CHANGE!
-	public static final int driveLeftRearMotor = 12; // TODO: CHANGE!
-	public static final int driveLeftFrontMotor = 13; // TODO: CHANGE!
+	public static final int driveRightRearMotor = 3; // Test chassis
+	public static final int driveRightFrontMotor = 2;  // Test chassis
+	public static final int driveLeftRearMotor = 7;  // Test chassis
+	public static final int driveLeftFrontMotor = 6;  // Test chassis
 	
-	public static final int driveRightEncoderChannelA = 2; // TODO: CHANGE!
-	public static final int driveRightEncoderChannelB = 3; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelA = 4; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelB = 5; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelA = 2;  // Test chassis
+	public static final int driveRightEncoderChannelB = 3;  // Test chassis
+	public static final int driveLeftEncoderChannelA = 0;  // Test chassis
+	public static final int driveLeftEncoderChannelB = 1;  // Test chassis
 	
-	public static final int driveEncoderDistancePerPulse = 1 * 1; // TODO: CHANGE!
+	public static final double driveEncoderDistancePerPulse = distancePerPulse(1440, 0.2032); // Test chassis
 	
 	public static final int backUltrasonic = 0; // TODO: CHANGE!
 	public static int bumpSensor = 8; // TODO: CHANGE!
@@ -66,4 +66,15 @@ public class RobotMap {
 	public static final int intakeSolenoid2 = 66666;
 	/*--------------------------------------------------------------*/
 	
+	
+	/**
+	 * Calculate the distance per pulse
+	 * @param pulsesPerRevolution how many pulses in full rotation
+	 * @param diameter in METER
+	 * @return distance passed in one pulse
+	 */
+	public static double distancePerPulse(double pulsesPerRevolution, double diameter){
+		double perimeter = diameter * Math.PI;
+		return perimeter / pulsesPerRevolution;
+	}
 }
