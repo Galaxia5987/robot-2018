@@ -73,9 +73,10 @@ import numpy as np
 import math
 from networktables import NetworkTables
 
-
+cam = cv2.VideoCapture(camera)
 class Vision:
-    def __init__(self):
+    def __init__(self,surfix=''):
+        self.surfix=surfix
         """
         Summary: Start camera, read and analyze first frame.
         Parameters:
@@ -98,7 +99,7 @@ class Vision:
         """
         self.focal = 638.6086956521739
         self.target_height = 41
-        self.cam = cv2.VideoCapture(camera)
+        self.cam = cam
         self.distance = 0
         # self.cam.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0)
         # self.cam.set(cv2.CAP_PROP_AUTOFOCUS, 0)
@@ -121,7 +122,7 @@ class Vision:
         NetworkTables.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
         self.table = NetworkTables.getTable("SmartDashboard")
         # Reads the latest values of the files
-        file = open('Values.val', 'r')
+        file = open('Values_'+self.surfix+'.val', 'r')
         execution = file.read()
         exec(execution)
         file.close()
@@ -178,7 +179,7 @@ class Vision:
 
     def set_range(self):
         # Retrieves the range written in "Ace" which was written there by Range Finder 3.0
-        file = open("Ace.acpf", 'r')
+        file = open("Colors_"+self.surfix+".val", 'r')
         exec(file.read())
         file.close()
 
@@ -305,6 +306,8 @@ class Vision:
         self.degrees=rad/math.pi*180
         self.set_item('Switch Degrees',self.degrees)
         return self.degrees
+
+
     def get_distance(self):
         """
         Finds the distance using the real target height and its pixel representation
@@ -332,9 +335,12 @@ class Vision:
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
+global boxes
 global stop
 stop = False
-vision = Vision()
+vision = Vision(0)
+boxes = Vision(1)
+
 # -------Getting The Stream Ready------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 from flask import Flask, render_template, Response
@@ -356,6 +362,7 @@ def video_feed():
 def gen():
     global stop
     global vision
+    global boxes
     while not stop:
         jpg = cv2.imencode('.jpg', vision.show_frame)[1].tostring()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
@@ -367,31 +374,56 @@ def gen():
 def get_frame():
     global stop
     global vision
+    global boxes
     while not stop:
-        _, vision.frame = vision.cam.read()
-        cv2.line(vision.show_frame,(int(vision.frame.shape[1]/2),0),(int(vision.frame.shape[1]/2),vision.frame.shape[0]),(0,0,0))
-        vision.show_frame = vision.frame.copy()
+        if vision.get_item('Switch Mode', True):
+            _, vision.frame = vision.cam.read()
+            cv2.line(vision.show_frame,(int(vision.frame.shape[1]/2),0),(int(vision.frame.shape[1]/2),vision.frame.shape[0]),(0,0,0))
+            vision.show_frame = vision.frame.copy()
 
 
 def analyse():
     global stop
     global vision
+    global boxes
     while not stop:
-        vision.filter_hsv()
-        #vision.dirode()
-        _, contours, _ = cv2.findContours(vision.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-        vision.contours = list(contours)
-        vision.get_contours()
-        #print(len(vision.contours))
-        if len(vision.contours) > 0:
-            vision.sees_target = True
-            vision.set_item("Sees target", vision.sees_target)
-            vision.find_center()
-            vision.get_two()
-            vision.draw_contours()
-            if hasattr(vision,'center'):
-                vision.get_angle()
-                print(vision.get_distance())
+        if vision.get_item('Target Mode', 1) is 1:
+            vision.filter_hsv()
+            #vision.dirode()
+            _, contours, _ = cv2.findContours(vision.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            vision.contours = list(contours)
+            vision.get_contours()
+            #print(len(vision.contours))
+            if len(vision.contours) > 0:
+                vision.sees_target = True
+                vision.set_item("Sees target", vision.sees_target)
+                vision.find_center()
+                vision.get_two()
+                vision.draw_contours()
+                if hasattr(vision,'center'):
+                    vision.get_angle()
+                    print(vision.get_distance())
+        elif vision.get_item('Target Mode',1) is 2:
+            boxes.filter_hsv()
+            # vision.dirode()
+            _, contours, _ = cv2.findContours(boxes.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            boxes.contours = list(contours)
+            boxes.get_contours()
+            # print(len(vision.contours))
+            if len(boxes.contours) > 0:
+                boxes.sees_target = True
+                boxes.set_item("Sees target", boxes.sees_target)
+                boxes.find_center()
+                boxes.get_two()
+                boxes.draw_contours()
+                if hasattr(boxes, 'center'):
+                    boxes.get_angle()
+                    print(boxes.get_distance())
+
+        #elif vision.get_item('Target Mode', 1) is 3:
+
+
+
 def show():
     global stop
     global vision

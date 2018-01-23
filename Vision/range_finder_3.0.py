@@ -23,7 +23,7 @@ while True:
     frame=cv2.bitwise_and(frame,frame,mask=target1)
     key= cv2.waitKey(1) & 0xFF
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    if key == ord('q'):
+    if key in range(48,60):
         for row in hsv:
             for pixel in row:
                 # Goes through every pixel in the frame and finds the lowest and highest values
@@ -40,7 +40,8 @@ while True:
                         maxS=pixel[1]
                     if pixel[2] > maxV:
                         maxV=pixel[2]
-        file=open("Ace.acpf",'w')
+        surfix=str(key-48)
+        file=open("Colors_"+surfix+".val",'w')
         file.write("self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH,minS,minV,maxH,maxS,maxV))
         file.close()
         break
