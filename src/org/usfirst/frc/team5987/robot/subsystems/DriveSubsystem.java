@@ -4,6 +4,7 @@ import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.MiniPID;
+import auxiliary.Misc;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -184,22 +185,9 @@ public class DriveSubsystem extends Subsystem {
 	 * @param leftVelocity desired velocity for the left motors METERS/SEC
 	 */
 	public void setSetpoints(double leftVelocity, double rightVelocity){
-		double rightOut; // normalized output [METERS/SEC]
-		double leftOut;  // normalized output [METERS/SEC]
-		// normalization
-		if((Math.abs(rightVelocity) > MAX_VELOCITY) || (Math.abs(leftVelocity) > MAX_VELOCITY)){
-			if(Math.abs(rightVelocity) > Math.abs(leftVelocity)){
-				rightOut = (rightVelocity / rightVelocity) * MAX_VELOCITY;
-				leftOut = (leftVelocity / rightVelocity) * MAX_VELOCITY;
-			}else{
-				leftOut = (leftVelocity / leftVelocity) * MAX_VELOCITY;
-				rightOut = (rightVelocity / leftVelocity) * MAX_VELOCITY;
-			}
-		}else{
-			// no normalization needed
-			rightOut = rightVelocity;
-			leftOut  = leftVelocity;
-		}
+		double outs[] = Misc.normalize(rightVelocity, rightVelocity, MAX_VELOCITY);
+		double rightOut = outs[0];
+		double leftOut = outs[1];
 		double leftError = leftOut - getLeftSpeed();
 		ntLeftError.setDouble(leftError);
 		leftPID.setSetpoint(leftOut);

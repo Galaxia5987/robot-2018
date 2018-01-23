@@ -35,4 +35,31 @@ public class Misc {
 	public static double limitAbs(double value, double minAbs, double maxAbs){
 		return limit(value, -maxAbs, -minAbs, minAbs, maxAbs);
 	}
+	
+	/**
+	 * Prevents from exceeding max velocity
+	 * @param rightOutput
+	 * @param leftOutput
+	 * @param maxOutput
+	 * @return {normalizedRight, normalizedLeft}
+	 */
+	public static double[] normalize(double rightOutput, double leftOutput, double maxOutput){
+		double rightOut; // normalized output
+		double leftOut;  // normalized output
+		// normalization
+		if((Math.abs(rightOutput) > maxOutput) || (Math.abs(leftOutput) > maxOutput)){
+			if(Math.abs(rightOutput) > Math.abs(leftOutput)){
+				rightOut = (rightOutput / rightOutput) * maxOutput;
+				leftOut = (leftOutput / rightOutput) * maxOutput;
+			}else{
+				leftOut = (leftOutput / leftOutput) * maxOutput;
+				rightOut = (rightOutput / leftOutput) * maxOutput;
+			}
+		}else{
+			// no normalization needed
+			rightOut = rightOutput;
+			leftOut  = leftOutput;
+		}
+		return new double[]{rightOut, leftOut};
+	}
 }
