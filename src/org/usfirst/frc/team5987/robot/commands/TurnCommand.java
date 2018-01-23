@@ -5,6 +5,7 @@ import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 import auxiliary.DistanceMotionProfile;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.networktables.NetworkTableEntry;
 
 /**
  *
@@ -28,6 +29,10 @@ public class TurnCommand extends Command {
 	private static final double MIN_DEGREES_ERROR = 3; 
 	
 	private DistanceMotionProfile mp;
+	private boolean isRelative;
+	private double angle;
+	private NetworkTableEntry ntAngle = null;
+	private NetworkTableEntry ntIsRelative = null;
 	
 	/**
 	 * 
@@ -37,6 +42,27 @@ public class TurnCommand extends Command {
     public TurnCommand(double angle, boolean isRelative) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	this.isRelative = isRelative;
+    	this.angle = angle;
+    	requires(Robot.driveSubsystem);
+    }
+    
+    public TurnCommand(NetworkTableEntry ntAngle, boolean isRelative){
+    	this.ntAngle  = ntAngle;
+    	this.isRelative = isRelative;
+    }
+    public TurnCommand(NetworkTableEntry ntAngle, NetworkTableEntry ntIsRelative){
+    	this.ntAngle  = ntAngle;
+    	this.ntIsRelative = ntIsRelative;
+    	
+    }
+    // Called just before this Command runs the first time
+    protected void initialize() {
+    	if(ntAngle != null)
+    		angle = ntAngle.getDouble(0);
+    	if(ntIsRelative != null)
+    		isRelative = ntIsRelative.getBoolean(true);
+    	
     	startAngle = Robot.driveSubsystem.getAngle();
     	
     	if(isRelative){
@@ -45,13 +71,13 @@ public class TurnCommand extends Command {
     		double currentAngle = startAngle % 360 ; // (angle % 360deg) = angle from 0 to 360
     		double oneWay = angle - currentAngle; // not passing through 0deg
     		double orAnother = angle + (360 - currentAngle); // passing through 0deg
-    		double gonnaGetYa; // optimal way
+    		double gonnaCatchYa; // optimal way
     		if(Math.abs(oneWay) < Math.abs(orAnother)){
-    			gonnaGetYa = oneWay; 
+    			gonnaCatchYa = oneWay; 
     		}else{
-    			gonnaGetYa = orAnother;
+    			gonnaCatchYa = orAnother;
     		}
-    		desiredAngle = gonnaGetYa;
+    		desiredAngle = gonnaCatchYa;
     	}
 		// convert to radians
 		this.desiredAngle = Math.toRadians(this.desiredAngle);
@@ -63,9 +89,8 @@ public class TurnCommand extends Command {
     			DriveSubsystem.MAX_VELOCITY,
     			DriveSubsystem.MIN_VELOCITY,
     			DriveSubsystem.ACCELERATION,
-    			DriveSubsystem.DECCELERATION);
-    	
-    	requires(Robot.driveSubsystem);
+    			DriveSubsystem.DECCELERATION
+    			);
     }
     
     /**
@@ -80,11 +105,8 @@ public class TurnCommand extends Command {
      */
     private double getDeltaDistance(){
     	return getDeltaAngle() * DriveSubsystem.ROTATION_RADIUS;
-    } 
-    // Called just before this Command runs the first time
-    protected void initialize() {
     }
-
+    
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double out = mp.getV(getDeltaDistance());
