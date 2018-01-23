@@ -45,13 +45,13 @@ public class TurnCommand extends Command {
     		double currentAngle = startAngle % 360 ; // (angle % 360deg) = angle from 0 to 360
     		double oneWay = angle - currentAngle; // not passing through 0deg
     		double orAnother = angle + (360 - currentAngle); // passing through 0deg
-    		double gonnaCatchYa; // optimal way
+    		double gonnaGetYa; // optimal way
     		if(Math.abs(oneWay) < Math.abs(orAnother)){
-    			gonnaCatchYa = oneWay; 
+    			gonnaGetYa = oneWay; 
     		}else{
-    			gonnaCatchYa = orAnother;
+    			gonnaGetYa = orAnother;
     		}
-    		desiredAngle = gonnaCatchYa;
+    		desiredAngle = gonnaGetYa;
     	}
 		// convert to radians
 		this.desiredAngle = Math.toRadians(this.desiredAngle);
