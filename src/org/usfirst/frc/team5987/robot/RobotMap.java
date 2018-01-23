@@ -35,7 +35,7 @@ public class RobotMap {
 	public static final int driveLeftEncoderChannelA = 0;  // Test chassis
 	public static final int driveLeftEncoderChannelB = 1;  // Test chassis
 	
-	public static final double driveEncoderDistancePerPulse = distancePerPulse(1440, 0.2032); // Test chassis
+	public static final double driveEncoderDistancePerPulse = distancePerPulse(1440, inchToMeter(8)); // Test chassis
 	
 	public static final int backUltrasonic = 0; // TODO: CHANGE!
 	public static int bumpSensor = 8; // TODO: CHANGE!
@@ -76,5 +76,12 @@ public class RobotMap {
 	public static double distancePerPulse(double pulsesPerRevolution, double diameter){
 		double perimeter = diameter * Math.PI;
 		return perimeter / pulsesPerRevolution;
+	}
+	
+	/**
+	 * convert INCHES to METERS
+	 */
+	public static double inchToMeter(double inch){
+		return inch * 0.0254;
 	}
 }
