@@ -3,11 +3,10 @@ package org.usfirst.frc.team5987.robot.commands;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
-import auxiliary.MiniPID;
 import auxiliary.DistanceMotionProfile;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
@@ -18,93 +17,132 @@ public class DriveStraightCommand extends Command {
 	 */
 	public static final double MIN_DISTANCE_ERROR = 0.05;
 	private DistanceMotionProfile mp;
-	private MiniPID anglePID;
 	private double initRightDistance;
 	private double initLeftDistance;
 	private double angleToKeep;
 	private double finalDistance;
 	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
+	NetworkTableEntry ntAngleToKeep;
+	NetworkTableEntry ntFinalDistance;
 	NetworkTableEntry ntRightDistanceError = driveTable.getEntry("Right Distance Error");
 	NetworkTableEntry ntLeftDistanceError = driveTable.getEntry("Left Distance Error");
 	private double rightDistanceError;
 	private double leftDistanceError;
-	
+
 	/**
 	 * 
-	 * @param distance desired distance, distance from target
-	 * @param angleToKeep The fixed angle the robot will be heading to
+	 * @param distance
+	 *            desired distance, distance from target
+	 * @param angleToKeep
+	 *            The fixed angle the robot will be heading to
 	 */
-    public DriveStraightCommand(double distance, double angleToKeep) {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	this.angleToKeep = angleToKeep;
-    	this.finalDistance = distance;
-    	mp = new DistanceMotionProfile(
-    			this.finalDistance,
-    			DriveSubsystem.MAX_VELOCITY,
-    			DriveSubsystem.MIN_VELOCITY,
-    			DriveSubsystem.ACCELERATION,
-    			DriveSubsystem.DECCELERATION
-    			);
+	public DriveStraightCommand(double distance, double angleToKeep) {
+		// Use requires() here to declare subsystem dependencies
+		// eg. requires(chassis);
+		this.angleToKeep = angleToKeep;
+		this.finalDistance = distance;
+		constructMotionProfile();
 		requires(Robot.driveSubsystem);
-    }
-    
-    /**
-     * The robot will keep (heading to) its starting angle
-     * @param distance desired distance, distance from target
-     */
+	}
+
+	/**
+	 * Uses values from the Shuffleboard.
+	 * @param distance
+	 *            desired distance, distance from target
+	 * @param angleToKeep
+	 *            The fixed angle the robot will be heading to
+	 */
+	public DriveStraightCommand(NetworkTableEntry distance, NetworkTableEntry angleToKeep) {
+		this.ntAngleToKeep = angleToKeep;
+		this.ntFinalDistance = distance;
+		requires(Robot.driveSubsystem);
+	}
+
+	/**
+	 * The robot will keep (heading to) its starting angle
+	 * 
+	 * @param distance
+	 *            desired distance, distance from target
+	 */
 	public DriveStraightCommand(double distance) {
 		this(distance, Robot.driveSubsystem.getAngle());
-    }
-    
+		requires(Robot.driveSubsystem);
+	}
+	
+	/**
+	 * The robot will keep (heading to) its starting angle. Uses values from the Shuffleboard.
+	 * 
+	 * @param distance
+	 *            desired distance, distance from target
+	 */
+	public DriveStraightCommand(NetworkTableEntry ntDistance) {
+		this.ntFinalDistance = ntDistance;
+		requires(Robot.driveSubsystem);
+	}
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    	initRightDistance = Robot.driveSubsystem.getRightDistance();
-    	initLeftDistance = Robot.driveSubsystem.getLeftDistance();
-    }
+	/**
+	 * Constructs the motion profiler for the driving command.
+	 */
+	public void constructMotionProfile() {
+		mp = new DistanceMotionProfile(finalDistance, DriveSubsystem.MAX_VELOCITY, DriveSubsystem.MIN_VELOCITY,
+				DriveSubsystem.ACCELERATION, DriveSubsystem.DECCELERATION);
+	}
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	double leftDistance = Robot.driveSubsystem.getLeftDistance() - initLeftDistance;
-    	double rightDistance = Robot.driveSubsystem.getRightDistance() - initRightDistance;
-    	double avgDistance = (leftDistance + rightDistance) / 2;
-    	
-    	// calculate new output based on the MotionProfile and the gyro
-    	double speed = mp.getV(avgDistance);
-    	double gyroFix = Robot.driveSubsystem.getGyroPID(angleToKeep);
-    	
-    	Robot.driveSubsystem.setSetpoints(speed - gyroFix, speed + gyroFix);
-    	Robot.driveSubsystem.updatePID();
-    	
-    	// debug distance error in NetworkTables
-    	rightDistanceError = finalDistance - rightDistance;
-    	ntLeftDistanceError.setDouble(rightDistanceError);
-    	leftDistanceError = finalDistance - leftDistance;
-    	ntRightDistanceError.setDouble(leftDistanceError);
-    	
-    }
-    
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	// finish when both sides have reached targets
-    	boolean rightOk = Math.abs(rightDistanceError) < MIN_DISTANCE_ERROR;
-    	boolean leftOk = Math.abs(leftDistanceError) < MIN_DISTANCE_ERROR;
-        return rightOk && leftOk;
-    }
+	// Called just before this Command runs the first time
+	protected void initialize() {
+		if (ntAngleToKeep != null) {
+			angleToKeep = ntAngleToKeep.getDouble(0);
+		}
+		if (ntFinalDistance != null) {
+			finalDistance = ntFinalDistance.getDouble(0);
+		}
+		initRightDistance = Robot.driveSubsystem.getRightDistance();
+		initLeftDistance = Robot.driveSubsystem.getLeftDistance();
 
-    // Called once after isFinished returns true
-    protected void end() {
-    	// stop at the end
-    	Robot.driveSubsystem.setLeftSpeed(0);
-    	Robot.driveSubsystem.setRightSpeed(0);
-    }
+		constructMotionProfile();
+	}
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-    	// allow other commands to interrupt this one
-    	end();
-    	this.cancel();
-    }
+	// Called repeatedly when this Command is scheduled to run
+	protected void execute() {
+		double leftDistance = Robot.driveSubsystem.getLeftDistance() - initLeftDistance;
+		double rightDistance = Robot.driveSubsystem.getRightDistance() - initRightDistance;
+		double avgDistance = (leftDistance + rightDistance) / 2;
+
+		// calculate new output based on the MotionProfile and the gyro
+		double speed = mp.getV(avgDistance);
+		double gyroFix = Robot.driveSubsystem.getGyroPID(angleToKeep);
+
+		Robot.driveSubsystem.setSetpoints(speed - gyroFix, speed + gyroFix);
+		Robot.driveSubsystem.updatePID();
+
+		// debug distance error in NetworkTables
+		rightDistanceError = finalDistance - rightDistance;
+		ntLeftDistanceError.setDouble(rightDistanceError);
+		leftDistanceError = finalDistance - leftDistance;
+		ntRightDistanceError.setDouble(leftDistanceError);
+
+	}
+
+	// Make this return true when this Command no longer needs to run execute()
+	protected boolean isFinished() {
+		// finish when both sides have reached targets
+		boolean rightOk = Math.abs(rightDistanceError) < MIN_DISTANCE_ERROR;
+		boolean leftOk = Math.abs(leftDistanceError) < MIN_DISTANCE_ERROR;
+		return rightOk && leftOk;
+	}
+
+	// Called once after isFinished returns true
+	protected void end() {
+		// stop at the end
+		Robot.driveSubsystem.setLeftSpeed(0);
+		Robot.driveSubsystem.setRightSpeed(0);
+	}
+
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	protected void interrupted() {
+		// allow other commands to interrupt this one
+		end();
+		this.cancel();
+	}
 }

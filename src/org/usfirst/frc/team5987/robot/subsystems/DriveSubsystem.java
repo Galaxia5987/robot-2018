@@ -5,15 +5,14 @@ import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.MiniPID;
 import auxiliary.Misc;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  *@author Dor Brekhman
@@ -21,10 +20,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class DriveSubsystem extends Subsystem {
 	/***********************CONSTANTS************************/
 	// PIDF constants for controlling velocity for wheels
-	private static double kP = 0; 
-	private static double kI = 0; 
-	private static double kD = 0;
-	private static double kF = 1.8;
+	private static double kP = 0.15; 
+	private static double kI = 0.001; 
+	private static double kD = 0.04;
+	private static double kF = 0.4;
 	// Gyro PID
 	private static double gyroKp = 0;
 	private static double gyroKi = 0; 
@@ -52,8 +51,8 @@ public class DriveSubsystem extends Subsystem {
 	public static final double ultransonicMeterFactor = 1.024;
 	/*******************************************************/
 	
-	private static final boolean rightInverted = false; // inverts the right motors & right encoder
-	private static final boolean leftInverted = true; // inverts the left motors & left encoder
+	private static final boolean rightInverted = true; // inverts the right motors & right encoder
+	private static final boolean leftInverted = false; // inverts the left motors & left encoder
 	
 	private static final Victor driveRightRearMotor = new Victor(RobotMap.driveRightRearMotor);
 	private static final Victor driveRightFrontMotor = new Victor(RobotMap.driveRightFrontMotor);
@@ -87,6 +86,8 @@ public class DriveSubsystem extends Subsystem {
 	// NT error for debugging gyro PID
 	NetworkTableEntry ntGyroError = driveTable.getEntry("Gyro Error");
 	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
+	NetworkTableEntry ntRightSpeed = driveTable.getEntry("Right Velocity");
+	NetworkTableEntry ntLeftSpeed = driveTable.getEntry("Left Velocity");
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
@@ -191,10 +192,12 @@ public class DriveSubsystem extends Subsystem {
 		double leftOut = outs[1];
 		double leftError = leftOut - getLeftSpeed();
 		ntLeftError.setDouble(leftError);
+		ntLeftSpeed.setDouble(getLeftSpeed());
 		leftPID.setSetpoint(leftOut);
 		
 		double rightError = rightOut - getRightSpeed();
 		ntRightError.setDouble(rightError);
+		ntRightSpeed.setDouble(getRightSpeed());
 		rightPID.setSetpoint(rightOut);
 	}
 	

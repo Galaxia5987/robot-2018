@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.liftCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
@@ -32,14 +34,16 @@ import com.kauailabs.navx.frc.AHRS;
  * project.
  */
 public class Robot extends TimedRobot {
-	NetworkTable liftTable;
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
-	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
-	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
+	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
+	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
+	NetworkTableEntry ntSetpoint = liftTable.getEntry("Setpoint");
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 	
 	Command m_autonomousCommand;
@@ -57,7 +61,10 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSetpoint.setDouble(0);
+//		ntLeftSP.setDouble(0.7);
+//		ntRightSP.setDouble(0.7);
 		SmartDashboard.putData(new liftCommand());
+		SmartDashboard.putData(new DriveStraightCommand(4));
 	}
 
 	/**
@@ -121,7 +128,7 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
-		driveSubsystem.setSetpoints(1, 1);
+//		driveSubsystem.setSetpoints(1, 1);
 	}
 
 	/**
@@ -132,6 +139,7 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
 		driveSubsystem.updatePID();
+//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(0), ntRightSP.getDouble(0));
 	}
 
 	/**
