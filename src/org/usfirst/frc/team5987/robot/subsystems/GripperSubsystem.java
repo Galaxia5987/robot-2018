@@ -17,7 +17,7 @@ public class GripperSubsystem extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	Victor leftWheel = new Victor(RobotMap.gripperWheelLeft);
-	DigitalInput beamSensor = new DigitalInput(RobotMap.beamChannel);
+	DigitalInput beamSensor = new DigitalInput(RobotMap.proximityChannel);
 	Victor rightWheel = new Victor(RobotMap.gripperWheelRight);
     public void initDefaultCommand() {
 

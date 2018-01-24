@@ -24,15 +24,15 @@ public class DriveSubsystem extends Subsystem {
 	private static double kP = 0; 
 	private static double kI = 0; 
 	private static double kD = 0;
-	private static double kF = 0;
+	private static double kF = 1.8;
 	// Gyro PID
-	private static double gyroKp = 0.007;
+	private static double gyroKp = 0;
 	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double MAX_VELOCITY = 2;
+	public static final double MAX_VELOCITY = 1;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
@@ -40,11 +40,12 @@ public class DriveSubsystem extends Subsystem {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double ACCELERATION = 1;
+	public static final double ACCELERATION = 1.2;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DECCELERATION = 1;
+	public static final double DECCELERATION = 1.2;
+	public static final double ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
 	 * Mapping between 0-5V to METER for the analog input
 	 */

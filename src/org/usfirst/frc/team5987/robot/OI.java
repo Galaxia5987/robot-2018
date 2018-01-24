@@ -6,12 +6,6 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team5987.robot;
-import org.usfirst.frc.team5987.robot.commands.liftCommand;
-
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
@@ -33,7 +27,7 @@ public class OI {
 	
 
 	public OI() {
-		y.whenPressed(new DriveStraightCommand(1));
+		y.whenPressed(new DriveStraightCommand(4));
 		a.whenPressed(new ClimbCommand(false));
 		b.whenPressed(new OpenHooksCommand(true));
 		x.whenPressed(new OpenHooksCommand(false));
