@@ -4,6 +4,7 @@ import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.MiniPID;
+import auxiliary.Misc;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -25,13 +26,17 @@ public class DriveSubsystem extends Subsystem {
 	private static double kD = 0;
 	private static double kF = 0;
 	// Gyro PID
-	private static double gyroKp = 0.1; 
+	private static double gyroKp = 0.007;
 	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
 	public static final double MAX_VELOCITY = 2;
+	/**
+	 * ABSOLUTE, METER/SEC
+	 */
+	public static final double MIN_VELOCITY = 0.2;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
@@ -73,12 +78,14 @@ public class DriveSubsystem extends Subsystem {
 	// NT error for debugging PIDF constants
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
+
 	// Gyro NT constants
 	NetworkTableEntry ntGyroKp = driveTable.getEntry("Gyro kP");
 	NetworkTableEntry ntGyroKi = driveTable.getEntry("Gyro kI");
 	NetworkTableEntry ntGyroKd = driveTable.getEntry("Gyro kD");
 	// NT error for debugging gyro PID
 	NetworkTableEntry ntGyroError = driveTable.getEntry("Gyro Error");
+	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
@@ -166,27 +173,28 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public double getGyroPID(double desiredAngle){
 		ntGetGyroPID();
-		return gyroPID.getOutput(getAngle(), desiredAngle);
+		double out = gyroPID.getOutput(getAngle(), desiredAngle);
+		ntGyroPIDOut.setDouble(out);
+		return out;
 	}
 	
-	/**
-	 * Set the desired velocity for the right motors (to make it move run updatePID() periodically) 
-	 * @param velocity velocity in METERS/SEC
-	 */
-	public void setRightSetpoint(double velocity){
-		double error = velocity - getRightSpeed();
-		ntRightError.setDouble(error);
-		rightPID.setSetpoint(velocity);
-	}
 	
 	/**
-	 * Set the desired velocity for the left motors (to make it move run updatePID() periodically) 
-	 * @param velocity velocity in METERS/SEC
+	 * Set the desired velocity for the both motors (to make it move use {@link #updatePID()}  and set speed methods periodically) 
+	 * @param rightVelocity desired velocity for the right motors METERS/SEC
+	 * @param leftVelocity desired velocity for the left motors METERS/SEC
 	 */
-	public void setLeftSetpoint(double velocity){
-		double error = velocity - getLeftSpeed();
-		ntLeftError.setDouble(error);
-		leftPID.setSetpoint(velocity);
+	public void setSetpoints(double leftVelocity, double rightVelocity){
+		double outs[] = Misc.normalize(rightVelocity, rightVelocity, MAX_VELOCITY);
+		double rightOut = outs[0];
+		double leftOut = outs[1];
+		double leftError = leftOut - getLeftSpeed();
+		ntLeftError.setDouble(leftError);
+		leftPID.setSetpoint(leftOut);
+		
+		double rightError = rightOut - getRightSpeed();
+		ntRightError.setDouble(rightError);
+		rightPID.setSetpoint(rightOut);
 	}
 	
 	/**
@@ -247,6 +255,13 @@ public class DriveSubsystem extends Subsystem {
 		return Robot.navx.getAngle();
 	}
     
+	/**
+	 * Get the angle of the navX
+	 * @return angle in RADIANS
+	 */
+    public double getAngleRadians(){
+    	return Math.toRadians(getAngle());
+    }
 	/**
 	 * 
 	 * @return true if the robot's on the cable bump on the center of the arena (in the null territory)

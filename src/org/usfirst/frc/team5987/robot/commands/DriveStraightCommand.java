@@ -4,7 +4,7 @@ import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 import auxiliary.MiniPID;
-import auxiliary.TimeMotionProfile;
+import auxiliary.DistanceMotionProfile;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -14,14 +14,10 @@ import edu.wpi.first.networktables.NetworkTableEntry;
  */
 public class DriveStraightCommand extends Command {
 	/**
-	 * Error to stop in METERS
+	 * Error to stop in METER
 	 */
 	public static final double MIN_DISTANCE_ERROR = 0.05;
-	/**
-	 * 
-	 * @param distance desired distance for driving in METER
-	 */
-	private TimeMotionProfile mp;
+	private DistanceMotionProfile mp;
 	private MiniPID anglePID;
 	private double initRightDistance;
 	private double initLeftDistance;
@@ -33,33 +29,34 @@ public class DriveStraightCommand extends Command {
 	private double rightDistanceError;
 	private double leftDistanceError;
 	
-    public DriveStraightCommand(double distance) {
+	/**
+	 * 
+	 * @param distance desired distance, distance from target
+	 * @param angleToKeep The fixed angle the robot will be heading to
+	 */
+    public DriveStraightCommand(double distance, double angleToKeep) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	angleToKeep = Robot.driveSubsystem.getAngle();
+    	this.angleToKeep = angleToKeep;
     	this.finalDistance = distance;
-    	mp = new TimeMotionProfile(
+    	mp = new DistanceMotionProfile(
     			this.finalDistance,
     			DriveSubsystem.MAX_VELOCITY,
+    			DriveSubsystem.MIN_VELOCITY,
     			DriveSubsystem.ACCELERATION,
     			DriveSubsystem.DECCELERATION
     			);
 		requires(Robot.driveSubsystem);
     }
     
-    public DriveStraightCommand(double distance, double angleToKeep) {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	this.angleToKeep = angleToKeep;
-    	this.finalDistance = distance;
-    	mp = new TimeMotionProfile(
-    			this.finalDistance,
-    			DriveSubsystem.MAX_VELOCITY,
-    			DriveSubsystem.ACCELERATION,
-    			DriveSubsystem.DECCELERATION
-    			);
-		requires(Robot.driveSubsystem);
+    /**
+     * The robot will keep (heading to) its starting angle
+     * @param distance desired distance, distance from target
+     */
+	public DriveStraightCommand(double distance) {
+		this(distance, Robot.driveSubsystem.getAngle());
     }
+    
 
     // Called just before this Command runs the first time
     protected void initialize() {
@@ -77,19 +74,20 @@ public class DriveStraightCommand extends Command {
     	double speed = mp.getV(avgDistance);
     	double gyroFix = Robot.driveSubsystem.getGyroPID(angleToKeep);
     	
-    	Robot.driveSubsystem.setRightSetpoint(speed + gyroFix);
-    	Robot.driveSubsystem.setLeftSetpoint(speed - gyroFix);
+    	Robot.driveSubsystem.setSetpoints(speed - gyroFix, speed + gyroFix);
     	Robot.driveSubsystem.updatePID();
     	
+    	// debug distance error in NetworkTables
     	rightDistanceError = finalDistance - rightDistance;
     	ntLeftDistanceError.setDouble(rightDistanceError);
     	leftDistanceError = finalDistance - leftDistance;
     	ntRightDistanceError.setDouble(leftDistanceError);
     	
     }
-
+    
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	// finish when both sides have reached targets
     	boolean rightOk = Math.abs(rightDistanceError) < MIN_DISTANCE_ERROR;
     	boolean leftOk = Math.abs(leftDistanceError) < MIN_DISTANCE_ERROR;
         return rightOk && leftOk;
@@ -97,6 +95,7 @@ public class DriveStraightCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	// stop at the end
     	Robot.driveSubsystem.setLeftSpeed(0);
     	Robot.driveSubsystem.setRightSpeed(0);
     }
@@ -104,6 +103,7 @@ public class DriveStraightCommand extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	// allow other commands to interrupt this one
     	end();
     	this.cancel();
     }
