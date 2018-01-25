@@ -89,6 +89,7 @@ public class LiftTalonSubsystem extends Subsystem {
 	}
 	
     public void initDefaultCommand() {
+    
     }
     
     private static double getDistanceToTicks(double diameter, double ticksPerRevolution, double factor){
@@ -96,7 +97,7 @@ public class LiftTalonSubsystem extends Subsystem {
     }
     
     public void setSetpoint(double height) {
-    	setpoint = height;
+    	setpoint = height * TICKS_PER_METER;
     }
     
     private void setPosition(){
