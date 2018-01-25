@@ -25,8 +25,8 @@ public class DriveToBumpCommand extends Command {
     protected void initialize() {
     	ntIRMethod.setString("White");
     	ntSeesTarget.setBoolean(false);
-    	Robot.driveSubsystem.setLeftSetpoint(0.3);
-	    Robot.driveSubsystem.setRightSetpoint(0.3);
+    	Robot.driveSubsystem.setSetpoints(0.3, 0.3);
+	    
     }
 
     protected void execute() {
