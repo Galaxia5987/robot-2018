@@ -74,6 +74,7 @@ import math
 from networktables import NetworkTables
 
 cam = cv2.VideoCapture(camera)
+
 class Vision:
     def __init__(self,surfix=''):
         self.surfix=surfix
@@ -338,7 +339,7 @@ global vision
 global boxes
 global stop
 stop = False
-vision = Vision(0)
+vision = Vision('0')
 boxes = Vision(1)
 
 # -------Getting The Stream Ready------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
