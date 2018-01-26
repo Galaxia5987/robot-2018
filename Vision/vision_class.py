@@ -1,6 +1,7 @@
 # ------------launch options------------------------------------------------------
 from clint.textui import colored
 import sys
+from flask import Flask, render_template, Response
 
 camera = 0
 if '-h' in sys.argv or '--help' in sys.argv:
@@ -71,72 +72,39 @@ print('IP: ' + colored.green(ip))
 import cv2
 import numpy as np
 import math
-from networktables import NetworkTables
+from networktables import NetworkTable
 
 cam = cv2.VideoCapture(camera)
 
+stop = False
+
 class Vision:
+    global stop
     def __init__(self,surfix=''):
         self.surfix=surfix
-        """
-        Summary: Start camera, read and analyze first frame.
-        Parameters:
-            * cam : The camera the code will use. Set to 0 if there's only one connected, check ports if more than one.
-            Usually, a USB attached camera will have a bigger port than native ones.
-            * frame : A numpy array. The frame the camera captured. All contours and hulls will be drawn on it.
-            * hsv : The conversion of the values in frame from BGR to HSV, since our code operates on it.
-            * mask : The pixels found within a preset range.
-            * contours : A numpy array, converted to a list for easy of use. Stores the x and y values of all the contours.
-            * hulls : A list of hulls, empty until the hull() function is called.
-            * centers_x : A list of the x values of all centers, empty until the find_center() function is called.
-            * centers_y : A list of the y values of all centers, empty until the find_center() function is called.
-            * center : The average point of all centers of all contours.
-            * font: The font we'll write the text on the frame with.
-            * calibaration: A boolean that says whether we want to calibrate the distance function.
-            * stream: The stream we may send to a server.
-            * filter_funcions: The dictionary of functions by which we can calibrate and filter contours. The first variable in
-            the tuple is the string command, the second one is whether it needs to be average'd.
-            * sees_target: A boolean that says whether the target was found.
-        """
-        self.focal = 638.6086956521739
-        self.target_height = 41
         self.cam = cam
+
         self.distance = 0
-        # self.cam.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0)
-        # self.cam.set(cv2.CAP_PROP_AUTOFOCUS, 0)
-        # self.cam.set(cv2.CAP_PROP_SETTINGS, 1)
-        _, self.frame = self.cam.read()
+        self.angle = 0
+        self.sees_target = False
+
         try:
-            self.show_frame = self.frame.copy()
+            self.get_frame()
         except AttributeError:
             print(colored.red('ERROR: Camera Not Connected or In Use'))
             exit(13)
 
-        self.hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
-        self.set_range()
-        self.sees_target = False
-        """
-        Summary: Get SmartDashboard. 
-        # Currently unavailable. Instead, create and read a file where all values are stored.
-        # BTW, why is this one a different color?
-        """
-        NetworkTables.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
-        self.table = NetworkTables.getTable("SmartDashboard")
-        # Reads the latest values of the files
-        file = open('Values_'+self.surfix+'.val', 'r')
-        execution = file.read()
-        exec(execution)
-        file.close()
-        # Sends all values to SmartDashboard
-        self.set_item("Command", self.command_s)
-        self.set_item("Draw contours", self.draw_contours_b)
-        self.set_item("Draw hulls", self.draw_hulls_b)
-        self.set_item("DiRode iterations", self._iterations_i)
-        self.set_item("Find center", self.find_center_b)
+        self.check_files()
+        self.init_values()
 
-        self.set_item("Sees target", self.sees_target)
+        NetworkTable.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
+        self.table = NetworkTable.getTable("SmartDashboard")
+        # Sends all values to SmartDashboard
+        self.assign_values()
+        self.surfix = surfix
 
         self.filter_hsv()
+        self.dirode()
         _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         self.contours = list(contours)
         self.hulls = []
@@ -178,6 +146,77 @@ class Vision:
                 res = self.table.getBoolean(key, default_value)
         return res
 
+    def assign_values(self):
+        values = open("Values_"+self.surfix+".val", 'r')
+        exec(values.read())
+        values = values.readlines()
+        for value in values:
+            value = value.split("=")
+            key = value[0].split(".")[1]
+            value = eval(value[1])
+            self.set_item(key, value)
+            flags = NetworkTable.getFlags(self.table, key)
+
+    def range_finder(self):
+        minH = 255
+        minS = 255
+        minV = 255
+        maxH = 0
+        maxS = 0
+        maxV = 0
+        height, width, _ = self.frame.shape
+        target = np.zeros((height, width, 1), dtype=np.uint8)
+        target[int(height / 3):int(2 * height / 3), int(2 * width / 6):int(4 * width / 6)] = 255
+        target1 = target
+        target = np.zeros((height, width, 1), dtype=np.uint8)
+        target[int(2 * height / 5):int(3 * height / 5), int(2 * width / 5):int(3 * width / 5)] = 255
+        while True:
+            self.get_frame()
+            self.filter_hsv()
+            key = cv2.waitKey(1) & 0xFF
+            for row in self.hsv:
+                for pixel in row:
+                    # Goes through every pixel in the frame and finds the lowest and highest values
+                    if not pixel.all() == 0:
+                        if pixel[0] < minH:
+                            minH = pixel[0]
+                        if pixel[1] < minS:
+                            minS = pixel[1]
+                        if pixel[2] < minV:
+                            minV = pixel[2]
+                        if pixel[0] > maxH:
+                            maxH = pixel[0]
+                        if pixel[1] > maxS:
+                            maxS = pixel[1]
+                        if pixel[2] > maxV:
+                            maxV = pixel[2]
+            if key is ord('q'):
+                cv2.destroyAllWindows()
+                break
+        file = open("Colors_" + self.surfix + ".val", 'w')
+        file.write(
+            "self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH, minS, minV, maxH, maxS, maxV))
+        file.close()
+
+    def check_files(self):
+        try:
+            colors = open("Colors_"+self.surfix+".val", 'r')
+        except FileNotFoundError:
+            self.range_finder()
+
+        try:
+            values = open("Values_"+self.surfix+".val", 'r')
+        except FileNotFoundError:
+            self.surfix = '0'
+            self.assign_values()
+
+    def init_values(self):
+        # Reads the latest values of the files
+        file = open('Values_' + self.surfix + '.val', 'r')
+        execution = file.read()
+        exec(execution)
+        file.close()
+
     def set_range(self):
         # Retrieves the range written in "Ace" which was written there by Range Finder 3.0
         file = open("Colors_"+self.surfix+".val", 'r')
@@ -186,6 +225,7 @@ class Vision:
 
     def filter_hsv(self):
         self.hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
+        self.set_range()
         self.mask = cv2.inRange(self.hsv, self.lower_range, self.upper_range)
         # toilet paper
         # mask_white = cv2.inRange(self.hsv, self.lower_white_range, self.upper_white_range)
@@ -332,120 +372,68 @@ class Vision:
         self.set_item('Switch Distance',self.distance)
         return self.distance
 
+        self.app = Flask(__name__)
+
+        @app.route('/')
+        def index():
+            return render_template('index.html')
+
+        @app.route('/video_feed')
+        def video_feed():
+            return Response(self.gen(),
+                        mimetype='multipart/x-mixed-replace; boundary=frame')
+
+    def gen(self):
+        while not stop:
+            jpg = cv2.imencode('.jpg', vision.show_frame)[1].tostring()
+            yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
+            key = cv2.waitKey(1)
+
+    def get_frame(self):
+        while not stop:
+            _, self.frame = self.cam.read()
+            self.show_frame = self.frame.copy()
+
+    def analyse(self):
+        while not stop:
+            self.filter_hsv()
+            self.dirode()
+            _, contours, _ = cv2.findContours(vision.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            self.contours = list(contours)
+            self.get_contours()
+            if len(self.contours) > 0:
+                self.sees_target = True
+                self.set_item("Sees target", vision.sees_target)
+                self.find_center()
+                self.get_two()
+                self.draw_contours()
+                if hasattr(self, 'center'):
+                    self.get_distance()
+                    self.get_angle()
+
+    def show(self):
+        if is_stream:
+            self.app.run(host=ip, debug=False)
+        if is_local:
+            while not stop:
+                cv2.imshow('Frame', self.show_frame)
+                cv2.imshow('Mask', self.mask)
+                vision.key = cv2.waitKey(1)
+                if vision.key is ord('q'):
+                    cv2.destroyAllWindows()
+                    stop = True
 
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-global boxes
-global stop
-stop = False
-vision = Vision('0')
-boxes = Vision(1)
-
-# -------Getting The Stream Ready------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-from flask import Flask, render_template, Response
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
-def gen():
-    global stop
-    global vision
-    global boxes
-    while not stop:
-        jpg = cv2.imencode('.jpg', vision.show_frame)[1].tostring()
-        yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
-        key = cv2.waitKey(1)
-
-
-# --------------Setting Up The Thread Functions-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def get_frame():
-    global stop
-    global vision
-    global boxes
-    while not stop:
-        if vision.get_item('Switch Mode', True):
-            _, vision.frame = vision.cam.read()
-            cv2.line(vision.show_frame,(int(vision.frame.shape[1]/2),0),(int(vision.frame.shape[1]/2),vision.frame.shape[0]),(0,0,0))
-            vision.show_frame = vision.frame.copy()
-
-
-def analyse():
-    global stop
-    global vision
-    global boxes
-    while not stop:
-        if vision.get_item('Target Mode', 1) is 1:
-            vision.filter_hsv()
-            #vision.dirode()
-            _, contours, _ = cv2.findContours(vision.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-            vision.contours = list(contours)
-            vision.get_contours()
-            #print(len(vision.contours))
-            if len(vision.contours) > 0:
-                vision.sees_target = True
-                vision.set_item("Sees target", vision.sees_target)
-                vision.find_center()
-                vision.get_two()
-                vision.draw_contours()
-                if hasattr(vision,'center'):
-                    vision.get_angle()
-                    print(vision.get_distance())
-        elif vision.get_item('Target Mode',1) is 2:
-            boxes.filter_hsv()
-            # vision.dirode()
-            _, contours, _ = cv2.findContours(boxes.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-            boxes.contours = list(contours)
-            boxes.get_contours()
-            # print(len(vision.contours))
-            if len(boxes.contours) > 0:
-                boxes.sees_target = True
-                boxes.set_item("Sees target", boxes.sees_target)
-                boxes.find_center()
-                boxes.get_two()
-                boxes.draw_contours()
-                if hasattr(boxes, 'center'):
-                    boxes.get_angle()
-                    print(boxes.get_distance())
-
-        #elif vision.get_item('Target Mode', 1) is 3:
-
-
-
-def show():
-    global stop
-    global vision
-    if is_stream:
-        app.run(host=ip, debug=False)
-    if is_local:
-        while not stop:
-            cv2.imshow('Frame', vision.show_frame)
-            cv2.imshow('Mask', vision.mask)
-            vision.key = cv2.waitKey(1)
-            if vision.key is ord('q'):
-                cv2.destroyAllWindows()
-                stop = True
-
+vision = Vision('Switch')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
 
-threading._start_new_thread(get_frame, ())
-threading._start_new_thread(analyse, ())
-show()
+threading._start_new_thread(vision.get_frame, ())
+threading._start_new_thread(vision.analyse, ())
+vision.show()
 if not is_local and not is_stream:
     _ = input('Press ' + colored.cyan('Enter') + ' To End It All')
 stop = True

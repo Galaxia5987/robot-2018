@@ -4,3 +4,5 @@ self.draw_hulls_b = True
 self.dirode_iterations_i = 2
 self.find_center_b = True
 self._iterations_i=3
+self.focal = 638.6086956521739
+self.target_height = 41
