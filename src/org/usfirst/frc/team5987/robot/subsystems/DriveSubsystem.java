@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
+
 	public enum DriveStates{
 		/**
 		 * Normal state, enables manual set speed
@@ -24,12 +25,24 @@ public class DriveSubsystem extends Subsystem {
 		RUNNING,
 		/**
 		 * Prevents the robot from falling. <br>
-		 * Takes control of the robot when the robot is tipping
+		 * Takes control of the robot when the robot is tipping and move fast forward or backwards
 		 */
 		BALANCING
 	}
 	private DriveStates state = DriveStates.RUNNING;
+	
 	/***********************CONSTANTS************************/
+	private static final double FRONT_WHEELS_TO_CENTER_OF_MASS_DISTANCE = 1;
+	private static final double REAR_WHEELS_TO_CENTER_OF_MASS_DISTANCE = 1;
+	/**
+	 *  Safety factor for the tipping angle. <br>
+	 *  If you want to decrease the falling angle (more safe), make this LESS THAN 1
+	 */
+	private static final double FALLING_ANGLE_SAFETY_FACTOR = 0.8;
+	/**
+	 * The (absolute) speed to drive when balancing 
+	 */
+	private static final double BALANCE_DRIVE_SPEED = 1;
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0; 
 	private static double kI = 0; 
@@ -173,8 +186,7 @@ public class DriveSubsystem extends Subsystem {
 		double rightOut = rightPID.getOutput(getRightSpeed());
 		double leftOut = leftPID.getOutput(getLeftSpeed());
 		
-		setRightSpeed(rightOut);
-		setLeftSpeed(leftOut);
+		setSpeed(leftOut, rightOut);
 	}
 	
 	/**
@@ -220,22 +232,53 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	/**
-	 * Set the speed of the two right motors
-	 * @param speed between -1 and 1
+	 * Set the speed of the drive motors
+	 * @param leftSpeed between -1 and 1
+	 * @param rightSpeed between -1 and 1
 	 */
-	public void setRightSpeed(double speed) {
-		driveRightRearMotor.set(speed);
-		driveRightFrontMotor.set(speed);
+	public void setSpeed(double leftSpeed, double rightSpeed) {
+		switch(state){
+		default:
+		case RUNNING:
+			break;
+			
+		case BALANCING:
+			leftSpeed = getBalanceDriveSpeed();
+			rightSpeed = getBalanceDriveSpeed();
+			break;
+			
+		}
+		
+		driveRightRearMotor.set(rightSpeed);
+		driveRightFrontMotor.set(rightSpeed);
+		driveLeftRearMotor.set(leftSpeed);
+		driveLeftFrontMotor.set(leftSpeed);
+		
+		if(shouldBalance()){
+			state = DriveStates.BALANCING;
+		}else{
+			state = DriveStates.RUNNING;
+		}
 	}
 	
-	/**
-	 * Set the speed of the two left motors
-	 * @param speed between -1 and 1
-	 */
-	public void setLeftSpeed(double speed) {
-		driveLeftRearMotor.set(speed);
-		driveLeftFrontMotor.set(speed);
+	private boolean shouldBalance() {
+		double massHeight =  Robot.liftSubsystem.getCenterOfMassHeight();
+		double fallingAngle;
+		// TODO: check if tipping angle is positive when tipping forward
+		if(getTippingAngle() > 0){ // tipping forward
+		// TODO: Check if atan2 arguments should be reversed
+			fallingAngle = Math.toDegrees(Math.atan2(FRONT_WHEELS_TO_CENTER_OF_MASS_DISTANCE, massHeight)) * FALLING_ANGLE_SAFETY_FACTOR;
+		}else{ // tipping backwards
+			fallingAngle = Math.toDegrees(Math.atan2(REAR_WHEELS_TO_CENTER_OF_MASS_DISTANCE, massHeight)) * FALLING_ANGLE_SAFETY_FACTOR;
+		}
+		return Math.abs(getTippingAngle()) > fallingAngle;
 	}
+
+	private double getBalanceDriveSpeed() {
+		// TODO Auto-generated method stub
+		return getTippingAngle() > 0 ? BALANCE_DRIVE_SPEED : -BALANCE_DRIVE_SPEED;
+	}
+
 	
 	/**
 	 * Get the speed of the right wheels

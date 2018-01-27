@@ -1,0 +1,152 @@
+[1mdiff --git a/src/org/usfirst/frc/team5987/robot/subsystems/DriveSubsystem.java b/src/org/usfirst/frc/team5987/robot/subsystems/DriveSubsystem.java[m
+[1mindex e35ff24..83f689e 100644[m
+[1m--- a/src/org/usfirst/frc/team5987/robot/subsystems/DriveSubsystem.java[m
+[1m+++ b/src/org/usfirst/frc/team5987/robot/subsystems/DriveSubsystem.java[m
+[36m@@ -17,6 +17,7 @@[m [mimport edu.wpi.first.networktables.NetworkTableInstance;[m
+  *@author Dor Brekhman[m
+  */[m
+ public class DriveSubsystem extends Subsystem {[m
+[32m+[m
+ 	public enum DriveStates{[m
+ 		/**[m
+ 		 * Normal state, enables manual set speed[m
+[36m@@ -24,12 +25,24 @@[m [mpublic class DriveSubsystem extends Subsystem {[m
+ 		RUNNING,[m
+ 		/**[m
+ 		 * Prevents the robot from falling. <br>[m
+[31m-		 * Takes control of the robot when the robot is tipping[m
+[32m+[m		[32m * Takes control of the robot when the robot is tipping and move fast forward or backwards[m
+ 		 */[m
+ 		BALANCING[m
+ 	}[m
+ 	private DriveStates state = DriveStates.RUNNING;[m
+[32m+[m[41m	[m
+ 	/***********************CONSTANTS************************/[m
+[32m+[m	[32mprivate static final double FRONT_WHEELS_TO_CENTER_OF_MASS_DISTANCE = 1;[m
+[32m+[m	[32mprivate static final double REAR_WHEELS_TO_CENTER_OF_MASS_DISTANCE = 1;[m
+[32m+[m	[32m/**[m
+[32m+[m	[32m *  Safety factor for the tipping angle. <br>[m
+[32m+[m	[32m *  If you want to decrease the falling angle (more safe), make this LESS_THAN 1[m
+[32m+[m	[32m */[m
+[32m+[m	[32mprivate static final double FALLING_ANGLE_SAFETY_FACTOR = 0.8;[m
+[32m+[m	[32m/**[m
+[32m+[m	[32m * The (absolute) speed to drive when balancing[m[41m [m
+[32m+[m	[32m */[m
+[32m+[m	[32mprivate static final double BALANCE_DRIVE_SPEED = 1;[m
+ 	// PIDF constants for controlling velocity for wheels[m
+ 	private static double kP = 0; [m
+ 	private static double kI = 0; [m
+[36m@@ -173,8 +186,7 @@[m [mpublic class DriveSubsystem extends Subsystem {[m
+ 		double rightOut = rightPID.getOutput(getRightSpeed());[m
+ 		double leftOut = leftPID.getOutput(getLeftSpeed());[m
+ 		[m
+[31m-		setRightSpeed(rightOut);[m
+[31m-		setLeftSpeed(leftOut);[m
+[32m+[m		[32msetSpeed(leftOut, rightOut);[m
+ 	}[m
+ 	[m
+ 	/**[m
+[36m@@ -220,22 +232,52 @@[m [mpublic class DriveSubsystem extends Subsystem {[m
+ 	}[m
+ 	[m
+ 	/**[m
+[31m-	 * Set the speed of the two right motors[m
+[31m-	 * @param speed between -1 and 1[m
+[32m+[m	[32m * Set the speed of the drive motors[m
+[32m+[m	[32m * @param leftSpeed between -1 and 1[m
+[32m+[m	[32m * @param rightSpeed between -1 and 1[m
+ 	 */[m
+[31m-	public void setRightSpeed(double speed) {[m
+[31m-		driveRightRearMotor.set(speed);[m
+[31m-		driveRightFrontMotor.set(speed);[m
+[32m+[m	[32mpublic void setSpeed(double leftSpeed, double rightSpeed) {[m
+[32m+[m		[32mswitch(state){[m
+[32m+[m		[32mdefault:[m
+[32m+[m		[32mcase RUNNING:[m
+[32m+[m			[32mbreak;[m
+[32m+[m[41m			[m
+[32m+[m		[32mcase BALANCING:[m
+[32m+[m			[32mleftSpeed = getBalanceDriveSpeed();[m
+[32m+[m			[32mrightSpeed = getBalanceDriveSpeed();[m
+[32m+[m			[32mbreak;[m
+[32m+[m[41m			[m
+[32m+[m		[32m}[m
+[32m+[m[41m		[m
+[32m+[m		[32mdriveRightRearMotor.set(rightSpeed);[m
+[32m+[m		[32mdriveRightFrontMotor.set(rightSpeed);[m
+[32m+[m		[32mdriveLeftRearMotor.set(leftSpeed);[m
+[32m+[m		[32mdriveLeftFrontMotor.set(leftSpeed);[m
+[32m+[m[41m		[m
+[32m+[m		[32mif(shouldBalance()){[m
+[32m+[m			[32mstate = DriveStates.BALANCING;[m
+[32m+[m		[32m}else{[m
+[32m+[m			[32mstate = DriveStates.RUNNING;[m
+[32m+[m		[32m}[m
+ 	}[m
+ 	[m
+[31m-	/**[m
+[31m-	 * Set the speed of the two left motors[m
+[31m-	 * @param speed between -1 and 1[m
+[31m-	 */[m
+[31m-	public void setLeftSpeed(double speed) {[m
+[31m-		driveLeftRearMotor.set(speed);[m
+[31m-		driveLeftFrontMotor.set(speed);[m
+[32m+[m	[32mprivate boolean shouldBalance() {[m
+[32m+[m		[32mdouble massHeight =  Robot.liftSubsystem.getRobotsCenterOfMassHeight();[m
+[32m+[m		[32mdouble fallingAngle;[m
+[32m+[m		[32m// TODO: check if tipping angle is positive when tipping forward[m
+[32m+[m		[32mif(getTippingAngle() > 0){ // tipping forward[m
+[32m+[m			[32mfallingAngle = Math.atan2(FRONT_WHEELS_TO_CENTER_OF_MASS_DISTANCE, massHeight) * FALLING_ANGLE_SAFETY_FACTOR;[m
+[32m+[m		[32m}else{ // tipping backwards[m
+[32m+[m			[32mfallingAngle = Math.atan2(REAR_WHEELS_TO_CENTER_OF_MASS_DISTANCE, massHeight) * FALLING_ANGLE_SAFETY_FACTOR;[m
+[32m+[m		[32m}[m
+[32m+[m		[32mreturn Math.abs(getTippingAngle()) > fallingAngle;[m
+ 	}[m
+[32m+[m
+[32m+[m	[32mprivate double getBalanceDriveSpeed() {[m
+[32m+[m		[32m// TODO Auto-generated method stub[m
+[32m+[m		[32mreturn getTippingAngle() > 0 ? BALANCE_DRIVE_SPEED : -BALANCE_DRIVE_SPEED;[m
+[32m+[m	[32m}[m
+[32m+[m
+ 	[m
+ 	/**[m
+ 	 * Get the speed of the right wheels[m
+[1mdiff --git a/src/org/usfirst/frc/team5987/robot/subsystems/LiftSubsystem.java b/src/org/usfirst/frc/team5987/robot/subsystems/LiftSubsystem.java[m
+[1mindex fca17af..de54d1e 100644[m
+[1m--- a/src/org/usfirst/frc/team5987/robot/subsystems/LiftSubsystem.java[m
+[1m+++ b/src/org/usfirst/frc/team5987/robot/subsystems/LiftSubsystem.java[m
+[36m@@ -26,6 +26,18 @@[m [mpublic class LiftSubsystem extends Subsystem {[m
+ 	private static final double topPID[] = {1, 0, 0};[m
+ 	private static final double bottomPID[] = {0.5, 0, 0};[m
+ 	/**[m
+[32m+[m	[32m * The height of the mass center when the lift is at its top[m
+[32m+[m	[32m */[m
+[32m+[m	[32mpublic static final double MAX_ROBOT_MASS_CENTER_HEIGHT = 1; //TODO: change![m
+[32m+[m	[32m/**[m
+[32m+[m	[32m * The height of the mass center when the lift is at its bottom[m
+[32m+[m	[32m */[m
+[32m+[m	[32mpublic static final double MIN_ROBOT_MASS_CENTER_HEIGHT = 0.5; //TODO: change![m
+[32m+[m	[32m/**[m
+[32m+[m	[32m * The height from the bottom of the lift[m
+[32m+[m	[32m */[m
+[32m+[m	[32mpublic static final double MAX_LIFT_HEIGHT = 2; //TODO: change![m
+[32m+[m	[32m/**[m
+ 	 * Decreasing rate for the output (substructs this from the setpoint every iteration)[m
+ 	 */[m
+ 	private static final double ZERO_RATE = 0.005;[m
+[36m@@ -184,6 +196,15 @@[m [mpublic class LiftSubsystem extends Subsystem {[m
+     public void resetEncoder(){[m
+     	offset = getAbsoluteEncoderHeight();[m
+     }[m
+[32m+[m[41m    [m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * Get the height of the robot's center mass.[m[41m [m
+[32m+[m[32m     */[m
+[32m+[m	[32mpublic double getRobotsCenterOfMassHeight() {[m
+[32m+[m		[32m// TODO Auto-generated method stub[m
+[32m+[m		[32mdouble m = (MAX_ROBOT_MASS_CENTER_HEIGHT - MIN_ROBOT_MASS_CENTER_HEIGHT) / MAX_LIFT_HEIGHT;[m
+[32m+[m		[32mreturn m*getHeight() + MIN_ROBOT_MASS_CENTER_HEIGHT;[m
+[32m+[m	[32m}[m
+    [m
+ }[m
+ [m

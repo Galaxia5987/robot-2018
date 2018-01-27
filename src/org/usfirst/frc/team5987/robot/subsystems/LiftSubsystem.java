@@ -26,6 +26,18 @@ public class LiftSubsystem extends Subsystem {
 	private static final double topPID[] = {1, 0, 0};
 	private static final double bottomPID[] = {0.5, 0, 0};
 	/**
+	 * The height of the mass center when the lift is at its top
+	 */
+	public static final double MAX_ROBOT_MASS_CENTER_HEIGHT = 1; //TODO: change!
+	/**
+	 * The height of the mass center when the lift is at its bottom
+	 */
+	public static final double MIN_ROBOT_MASS_CENTER_HEIGHT = 0.5; //TODO: change!
+	/**
+	 * The height from the bottom of the lift
+	 */
+	public static final double MAX_LIFT_HEIGHT = 2; //TODO: change!
+	/**
 	 * Decreasing rate for the output (substructs this from the setpoint every iteration)
 	 */
 	private static final double ZERO_RATE = 0.005;
@@ -175,7 +187,7 @@ public class LiftSubsystem extends Subsystem {
     	boolean rawVal = hallEffectTop.get();
     	return TOP_HULL_REVERSED ? !rawVal : rawVal;
     }
-    
+ 
     public boolean isDown() {
     	boolean rawVal = hallEffectBottom.get();
     	return BOTTOM_HULL_REVERSED ? !rawVal : rawVal;
@@ -184,6 +196,15 @@ public class LiftSubsystem extends Subsystem {
     public void resetEncoder(){
     	offset = getAbsoluteEncoderHeight();
     }
+    
+    /**
+     * Get the height of the robot's center mass. 
+     */
+	public double getCenterOfMassHeight() {
+		// TODO Auto-generated method stub
+		double m = (MAX_ROBOT_MASS_CENTER_HEIGHT - MIN_ROBOT_MASS_CENTER_HEIGHT) / MAX_LIFT_HEIGHT;
+		return m*getHeight() + MIN_ROBOT_MASS_CENTER_HEIGHT;
+	}
    
 }
 
