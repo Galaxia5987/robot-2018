@@ -17,7 +17,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
-	public enum DriveStates{
+	public static enum DriveStates{
 		/**
 		 * Normal state, enables manual set speed
 		 */
