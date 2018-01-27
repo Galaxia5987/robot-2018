@@ -7,7 +7,6 @@ import auxiliary.MiniPID;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.networktables.NetworkTable;
@@ -18,6 +17,18 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
+	public enum DriveStates{
+		/**
+		 * Normal state, enables manual set speed
+		 */
+		RUNNING,
+		/**
+		 * Prevents the robot from falling. <br>
+		 * Takes control of the robot when the robot is tipping
+		 */
+		BALANCING
+	}
+	private DriveStates state = DriveStates.RUNNING;
 	/***********************CONSTANTS************************/
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0; 
@@ -66,6 +77,8 @@ public class DriveSubsystem extends Subsystem {
 	
 	// Creates a new NetworkTable
 	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	NetworkTableEntry ntBalanceEnabled = driveTable.getEntry("Balance Enabled");
+	NetworkTableEntry ntTippingAngle = driveTable.getEntry("Tipping Angle");
 	// NT PIDF constants
 	NetworkTableEntry ntKp = driveTable.getEntry("kP");
 	NetworkTableEntry ntKi = driveTable.getEntry("kI");
@@ -115,6 +128,10 @@ public class DriveSubsystem extends Subsystem {
 		rightPID = new MiniPID(kP, kI, kD, kF);
 		leftPID = new MiniPID(kP, kI, kD, kF);
 		gyroPID = new MiniPID(gyroKp, gyroKi, gyroKd);
+	}
+	
+	public DriveStates getState(){
+		return state;
 	}
 	
 	/*TODO ADD DriveJoystickCommand TODO*/
@@ -260,6 +277,13 @@ public class DriveSubsystem extends Subsystem {
 		return Robot.navx.getAngle();
 	}
     
+    /**
+     * 
+     * @return the pitch angle in DEGREES
+     */
+    public double getTippingAngle(){
+    	return Robot.navx.getPitch();
+    }
 	/**
 	 * 
 	 * @return true if the robot's on the cable bump on the center of the arena (in the null territory)
