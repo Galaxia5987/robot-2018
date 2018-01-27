@@ -43,11 +43,14 @@ public class Robot extends TimedRobot {
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
+	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
 	NetworkTableEntry ntSetpoint = liftTable.getEntry("Setpoint");
+	
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
+
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -64,7 +67,7 @@ public class Robot extends TimedRobot {
 		ntLeftSP.setDouble(0);
 		ntRightSP.setDouble(0);
 		SmartDashboard.putData(new liftCommand());
-		SmartDashboard.putData(new DriveStraightCommand(-1.5));
+		SmartDashboard.putData(new DriveStraightCommand(-2));
 	}
 
 	/**
@@ -138,6 +141,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
+		ntAngle.setDouble(driveSubsystem.getAngle());
 //		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
 //		driveSubsystem.setSetpoints(-0.3, -1);
 	}

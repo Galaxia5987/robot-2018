@@ -15,7 +15,7 @@ public class DriveStraightCommand extends Command {
 	/**
 	 * Error to stop in METER
 	 */
-	public static final double MIN_DISTANCE_ERROR = 0.005;
+	public static final double MIN_DISTANCE_ERROR = 0.01;
 	private DistanceMotionProfile mp;
 	private double initRightDistance;
 	private double initLeftDistance;
@@ -117,7 +117,7 @@ public class DriveStraightCommand extends Command {
 		// calculate new output based on the MotionProfile and the gyro
 		double speed = mp.getV(avgDistance);
 		double gyroFix = Robot.driveSubsystem.getGyroPID(angleToKeep);
-
+		
 		Robot.driveSubsystem.setSetpoints(speed - gyroFix, speed + gyroFix);
 		Robot.driveSubsystem.updatePID();
 

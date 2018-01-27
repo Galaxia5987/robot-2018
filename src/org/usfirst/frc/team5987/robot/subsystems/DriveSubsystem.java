@@ -25,9 +25,10 @@ public class DriveSubsystem extends Subsystem {
 	private static double kD = 0.04;
 	private static double kF = 0.4;
 	// Gyro PID
-	private static double gyroKp = 0;
+	private static double gyroKp = 0.008;
 	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
+	private static final boolean GYRO_REVERSED = true;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
@@ -35,7 +36,7 @@ public class DriveSubsystem extends Subsystem {
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double MIN_VELOCITY = 0.12;
+	public static final double MIN_VELOCITY = 0.2;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
@@ -49,10 +50,10 @@ public class DriveSubsystem extends Subsystem {
 	 * Mapping between 0-5V to METER for the analog input
 	 */
 	public static final double ultransonicMeterFactor = 1.024;
-	/*******************************************************/
-	
 	private static final boolean rightInverted = true; // inverts the right motors & right encoder
 	private static final boolean leftInverted = false; // inverts the left motors & left encoder
+	/*******************************************************/
+	
 	
 	private static final Victor driveRightRearMotor = new Victor(RobotMap.driveRightRearMotor);
 	private static final Victor driveRightFrontMotor = new Victor(RobotMap.driveRightFrontMotor);
@@ -256,7 +257,8 @@ public class DriveSubsystem extends Subsystem {
 	 * @return angle in DEGREES
 	 */
     public double getAngle() {
-		return Robot.navx.getAngle();
+		double rawAngle = Robot.navx.getAngle();
+		return GYRO_REVERSED ? -rawAngle : rawAngle;
 	}
     
 	/**
