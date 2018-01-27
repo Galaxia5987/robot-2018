@@ -1,0 +1,1 @@
+self.lower_range,self.upper_range = (0,0,0),(0,0,255)

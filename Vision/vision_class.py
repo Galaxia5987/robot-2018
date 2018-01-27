@@ -81,6 +81,7 @@ stop = False
 class Vision:
     global stop
     def __init__(self,surfix=''):
+        print("Initializing...")
         self.surfix=surfix
         self.cam = cam
 
@@ -89,18 +90,20 @@ class Vision:
         self.sees_target = False
 
         try:
-            self.get_frame()
+            _, self.frame = self.cam.read()
         except AttributeError:
             print(colored.red('ERROR: Camera Not Connected or In Use'))
             exit(13)
-
-        self.check_files()
-        self.init_values()
+        self.show_frame = self.frame.copy()
 
         NetworkTable.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
         self.table = NetworkTable.getTable("SmartDashboard")
+
+        self.check_files()
+        self.set_range()
+        self.init_values()
+
         # Sends all values to SmartDashboard
-        self.assign_values()
         self.surfix = surfix
 
         self.filter_hsv()
@@ -111,6 +114,7 @@ class Vision:
         self.centers = []
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.stream = []
+        print("Initialization complete.")
 
     def set_item(self, key, value):
         """
@@ -146,17 +150,6 @@ class Vision:
                 res = self.table.getBoolean(key, default_value)
         return res
 
-    def assign_values(self):
-        values = open("Values_"+self.surfix+".val", 'r')
-        exec(values.read())
-        values = values.readlines()
-        for value in values:
-            value = value.split("=")
-            key = value[0].split(".")[1]
-            value = eval(value[1])
-            self.set_item(key, value)
-            flags = NetworkTable.getFlags(self.table, key)
-
     def range_finder(self):
         minH = 255
         minS = 255
@@ -170,10 +163,12 @@ class Vision:
         target1 = target
         target = np.zeros((height, width, 1), dtype=np.uint8)
         target[int(2 * height / 5):int(3 * height / 5), int(2 * width / 5):int(3 * width / 5)] = 255
+        target2 = target
         while True:
-            self.get_frame()
+            _, self.frame = self.cam.read()
             self.filter_hsv()
-            key = cv2.waitKey(1) & 0xFF
+            self.frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
+            key = cv2.waitKey(1)
             for row in self.hsv:
                 for pixel in row:
                     # Goes through every pixel in the frame and finds the lowest and highest values
@@ -190,6 +185,7 @@ class Vision:
                             maxS = pixel[1]
                         if pixel[2] > maxV:
                             maxV = pixel[2]
+            cv2.imshow("Frame", self.frame)
             if key is ord('q'):
                 cv2.destroyAllWindows()
                 break
@@ -200,32 +196,37 @@ class Vision:
 
     def check_files(self):
         try:
-            colors = open("Colors_"+self.surfix+".val", 'r')
+            _ = open("Colors_"+self.surfix+".val", 'r')
         except FileNotFoundError:
             self.range_finder()
 
         try:
-            values = open("Values_"+self.surfix+".val", 'r')
+            _ = open("Values_"+self.surfix+".val", 'r')
         except FileNotFoundError:
             self.surfix = '0'
-            self.assign_values()
+            self.init_values()
 
     def init_values(self):
         # Reads the latest values of the files
-        file = open('Values_' + self.surfix + '.val', 'r')
-        execution = file.read()
-        exec(execution)
-        file.close()
+        values = open("Values_" + self.surfix + ".val", 'r')
+        exec(values.read())
+        values = values.readlines()
+        for value in values:
+            value = value.split("=")
+            key = value[0].split(".")[1]
+            value = eval(value[1])
+            self.set_item(key, value)
+        print("Values: Initialized.")
 
     def set_range(self):
         # Retrieves the range written in "Ace" which was written there by Range Finder 3.0
-        file = open("Colors_"+self.surfix+".val", 'r')
-        exec(file.read())
-        file.close()
+        colors = open("Colors_"+self.surfix+".val", 'r')
+        exec(colors.read())
+        colors.close()
+        print("Range: Calibarated.")
 
     def filter_hsv(self):
         self.hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
-        self.set_range()
         self.mask = cv2.inRange(self.hsv, self.lower_range, self.upper_range)
         # toilet paper
         # mask_white = cv2.inRange(self.hsv, self.lower_white_range, self.upper_white_range)
@@ -299,6 +300,7 @@ class Vision:
                             self.hulls.append(cv2.convexHull(c, returnPoints=False))
                 # Updates the contour list
                 self.contours = possible_fit
+        print("Contours: Received.")
 
     def area(self, c):
         return cv2.contourArea(c)
@@ -390,11 +392,14 @@ class Vision:
             key = cv2.waitKey(1)
 
     def get_frame(self):
+        global stop
         while not stop:
             _, self.frame = self.cam.read()
             self.show_frame = self.frame.copy()
+            print("Frame: Received.")
 
     def analyse(self):
+        global stop
         while not stop:
             self.filter_hsv()
             self.dirode()
@@ -402,6 +407,7 @@ class Vision:
             self.contours = list(contours)
             self.get_contours()
             if len(self.contours) > 0:
+                print("Analyzing...")
                 self.sees_target = True
                 self.set_item("Sees target", vision.sees_target)
                 self.find_center()
@@ -410,8 +416,10 @@ class Vision:
                 if hasattr(self, 'center'):
                     self.get_distance()
                     self.get_angle()
+                print("Analysis complete.")
 
     def show(self):
+        global stop
         if is_stream:
             self.app.run(host=ip, debug=False)
         if is_local:
@@ -426,7 +434,7 @@ class Vision:
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-vision = Vision('Switch')
+vision = Vision('White_Line')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
@@ -434,6 +442,12 @@ import threading
 threading._start_new_thread(vision.get_frame, ())
 threading._start_new_thread(vision.analyse, ())
 vision.show()
+
+# while not stop:
+#    vision.get_frame()
+#    vision.analyse()
+#    vision.show()
+
 if not is_local and not is_stream:
     _ = input('Press ' + colored.cyan('Enter') + ' To End It All')
 stop = True
