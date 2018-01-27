@@ -356,6 +356,8 @@ class Vision:
         height=0
         some=len(self.contours)
         for cont in self.contours:
+            min_box = cv2.boxPoints(cv2.minAreaRect(cont))
+
             def order(box):
                 box = list(box)
                 bottom = []
@@ -384,7 +386,6 @@ class Vision:
 
                 return top_left, top_right, bottom_left, bottom_right
 
-            min_box = cv2.boxPoints(cv2.minAreaRect(c))
 
             top_left, _, bottom_left, _ = order(min_box)
             temp_h = top_left - bottom_left
@@ -408,8 +409,8 @@ global vision
 global boxes
 global stop
 stop = False
-vision = Vision(0)
-boxes = Vision(1)
+vision = Vision('0')
+#boxes = Vision('1')
 
 # -------Getting The Stream Ready------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
