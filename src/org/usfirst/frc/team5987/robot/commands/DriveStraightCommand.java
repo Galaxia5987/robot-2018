@@ -15,7 +15,7 @@ public class DriveStraightCommand extends Command {
 	/**
 	 * Error to stop in METER
 	 */
-	public static final double MIN_DISTANCE_ERROR = 0.05;
+	public static final double MIN_DISTANCE_ERROR = 0.005;
 	private DistanceMotionProfile mp;
 	private double initRightDistance;
 	private double initLeftDistance;
@@ -24,10 +24,11 @@ public class DriveStraightCommand extends Command {
 	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
 	NetworkTableEntry ntAngleToKeep;
 	NetworkTableEntry ntFinalDistance;
-	NetworkTableEntry ntRightDistanceError = driveTable.getEntry("Right Distance Error");
-	NetworkTableEntry ntLeftDistanceError = driveTable.getEntry("Left Distance Error");
-	private double rightDistanceError;
-	private double leftDistanceError;
+	NetworkTableEntry ntDistanceError = driveTable.getEntry("Distance Error");
+	NetworkTableEntry ntMPoutput = driveTable.getEntry("MP Output");
+	private double DistanceError;
+	
+	
 
 	/**
 	 * 
@@ -84,7 +85,9 @@ public class DriveStraightCommand extends Command {
 	 * Constructs the motion profiler for the driving command.
 	 */
 	public void constructMotionProfile() {
-		mp = new DistanceMotionProfile(finalDistance, DriveSubsystem.MAX_VELOCITY, DriveSubsystem.MIN_VELOCITY,
+		mp = new DistanceMotionProfile(
+				finalDistance,
+				DriveSubsystem.MAX_VELOCITY, DriveSubsystem.MIN_VELOCITY,
 				DriveSubsystem.ACCELERATION, DriveSubsystem.DECCELERATION);
 	}
 
@@ -100,6 +103,9 @@ public class DriveStraightCommand extends Command {
 		initLeftDistance = Robot.driveSubsystem.getLeftDistance();
 
 		constructMotionProfile();
+//		double minV = finalDistance > 0 ? 0.4 : -0.4;
+//		Robot.driveSubsystem.setRightSpeed(minV);
+//		Robot.driveSubsystem.setLeftSpeed(minV);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -116,19 +122,18 @@ public class DriveStraightCommand extends Command {
 		Robot.driveSubsystem.updatePID();
 
 		// debug distance error in NetworkTables
-		rightDistanceError = finalDistance - rightDistance;
-		ntLeftDistanceError.setDouble(rightDistanceError);
-		leftDistanceError = finalDistance - leftDistance;
-		ntRightDistanceError.setDouble(leftDistanceError);
+		ntMPoutput.setDouble(speed);
+		
+		DistanceError = finalDistance - avgDistance;
+		ntDistanceError .setDouble(DistanceError);
 
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
 		// finish when both sides have reached targets
-		boolean rightOk = Math.abs(rightDistanceError) < MIN_DISTANCE_ERROR;
-		boolean leftOk = Math.abs(leftDistanceError) < MIN_DISTANCE_ERROR;
-		return rightOk && leftOk;
+		return Math.abs(DistanceError) < MIN_DISTANCE_ERROR;
+
 	}
 
 	// Called once after isFinished returns true
@@ -136,13 +141,14 @@ public class DriveStraightCommand extends Command {
 		// stop at the end
 		Robot.driveSubsystem.setLeftSpeed(0);
 		Robot.driveSubsystem.setRightSpeed(0);
+		Robot.driveSubsystem.setSetpoints(0, 0);
 	}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
 		// allow other commands to interrupt this one
-		end();
-		this.cancel();
+//		end();
+//		this.cancel();
 	}
 }

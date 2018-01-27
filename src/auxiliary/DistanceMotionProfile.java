@@ -108,7 +108,7 @@ public class DistanceMotionProfile {
 		double absX = Math.abs(x);
 		Vmax = Math.abs(Vmax);
 		
-		
+		boolean inDecceleration = false;
 		switch(type){
 		case TRIANGLE:
 			// distance when going from acceleration to deceleration, absolute
@@ -118,6 +118,7 @@ public class DistanceMotionProfile {
 				outV = Math.sqrt(2 * A * absX);
 			// deceleration function
 			}else{
+				inDecceleration = true;
 				outV = Math.sqrt(Math.abs((Vmax*Vmax) + D * (VmaxTime * Vmax) - 2 * D * absX));
 				 // in case of overshoot, change direction (go back)
 				if(absX > absTotalDist)
@@ -138,6 +139,7 @@ public class DistanceMotionProfile {
 				outV = Vmax; 
 			// deceleration function
 			}else{
+				inDecceleration = true;
 				outV = Math.sqrt(Math.abs(2 * D * absTotalDist - 2 * D * absX));
 				// in case of overshoot, change direction (go back)
 				if(absX > absTotalDist)
@@ -151,8 +153,13 @@ public class DistanceMotionProfile {
 			throw new Error("You're fucked up mate. How is it not TRIANGLE or TRAPEZOID?!?!?!?!?!?!");
 		}
 		
-		// If |outV| is less than minVelocity return +- minVelocity 
-		return Misc.limitAbsMin(outV, minVelocity);
+		if(!inDecceleration){
+			// If |outV| is less than minVelocity return +- minVelocity 
+			return Misc.limitAbsMin(outV, minVelocity);
+		}else{
+			return outV;
+		}
+
 	}
 	public MPTypes getType() {
 		// TODO Auto-generated method stub

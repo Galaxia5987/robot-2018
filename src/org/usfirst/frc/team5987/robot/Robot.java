@@ -61,10 +61,10 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSetpoint.setDouble(0);
-//		ntLeftSP.setDouble(0.7);
-//		ntRightSP.setDouble(0.7);
+		ntLeftSP.setDouble(0);
+		ntRightSP.setDouble(0);
 		SmartDashboard.putData(new liftCommand());
-		SmartDashboard.putData(new DriveStraightCommand(4));
+		SmartDashboard.putData(new DriveStraightCommand(-1.5));
 	}
 
 	/**
@@ -138,8 +138,8 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
-		driveSubsystem.updatePID();
-//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(0), ntRightSP.getDouble(0));
+//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
+//		driveSubsystem.setSetpoints(-0.3, -1);
 	}
 
 	/**

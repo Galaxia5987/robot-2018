@@ -12,8 +12,6 @@ public class Misc {
 	public static double limit(double value, double maxNegative, double minNegative, double minPositive, double maxPositive){
 		if(value < maxNegative)
 			return maxNegative;
-		else if(value == 0)
-			return 0;
 		else if(between(value, minNegative, 0))
 			return minNegative;
 		else if(between(value, 0, minPositive))
@@ -43,7 +41,7 @@ public class Misc {
 	 * @param maxOutput
 	 * @return {normalizedRight, normalizedLeft}
 	 */
-	public static double[] normalize(double rightOutput, double leftOutput, double maxOutput){
+	public static double[] normalize(double leftOutput, double rightOutput, double maxOutput){
 		double rightOut; // normalized output
 		double leftOut;  // normalized output
 		// normalization
@@ -60,6 +58,6 @@ public class Misc {
 			rightOut = rightOutput;
 			leftOut  = leftOutput;
 		}
-		return new double[]{rightOut, leftOut};
+		return new double[]{leftOut, rightOut};
 	}
 }

@@ -21,7 +21,7 @@ public class DriveSubsystem extends Subsystem {
 	/***********************CONSTANTS************************/
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0.15; 
-	private static double kI = 0.001; 
+	private static double kI = 0.002; 
 	private static double kD = 0.04;
 	private static double kF = 0.4;
 	// Gyro PID
@@ -35,15 +35,15 @@ public class DriveSubsystem extends Subsystem {
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double MIN_VELOCITY = 0.2;
+	public static final double MIN_VELOCITY = 0.12;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double ACCELERATION = 1.2;
+	public static final double ACCELERATION = 0.4;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DECCELERATION = 1.2;
+	public static final double DECCELERATION = 0.4;
 	public static final double ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
 	 * Mapping between 0-5V to METER for the analog input
@@ -187,9 +187,9 @@ public class DriveSubsystem extends Subsystem {
 	 * @param leftVelocity desired velocity for the left motors METERS/SEC
 	 */
 	public void setSetpoints(double leftVelocity, double rightVelocity){
-		double outs[] = Misc.normalize(rightVelocity, rightVelocity, MAX_VELOCITY);
-		double rightOut = outs[0];
-		double leftOut = outs[1];
+		double outs[] = Misc.normalize(leftVelocity, rightVelocity, MAX_VELOCITY);
+		double leftOut = outs[0];
+		double rightOut = outs[1];
 		double leftError = leftOut - getLeftSpeed();
 		ntLeftError.setDouble(leftError);
 		ntLeftSpeed.setDouble(getLeftSpeed());
