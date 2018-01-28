@@ -15,7 +15,6 @@ package org.usfirst.frc.team5987.robot;
  */
 public class RobotMap {
 
-	/*--------------------------------MOTORS----------------------------------*/
 
 	/*---------------CLIMB-----------------*/
 	public static int climbRightServo = 8; // TODO: CHANGE!
@@ -23,16 +22,18 @@ public class RobotMap {
 	public static int climbMotor = 10; // TODO: CHANGE!
 	/*-------------------------------------*/
 
+
+
 	/*----------------DRIVE----------------*/
-	public static final int driveRightRearMotor = 4; // TODO: CHANGE!
-	public static final int driveRightFrontMotor = 5; // TODO: CHANGE!
-	public static final int driveLeftRearMotor = 6; // TODO: CHANGE!
-	public static final int driveLeftFrontMotor = 7; // TODO: CHANGE!
+	public static final int driveRightRearMotor = 3; // TODO: CHANGE!
+	public static final int driveRightFrontMotor = 2; // TODO: CHANGE!
+	public static final int driveLeftRearMotor = 7; // TODO: CHANGE!
+	public static final int driveLeftFrontMotor = 6; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 	/*---------------GRIPPER---------------*/
-	public static int gripperWheelLeft = 2; // TODO: CHANGE!
-	public static int gripperWheelRight = 3; // TODO: CHANGE!
+	public static int gripperWheelLeft = 5; // TODO: CHANGE!
+	public static int gripperWheelRight = 4; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 	/*----------------LIFT-----------------*/
@@ -51,12 +52,12 @@ public class RobotMap {
 	/*-------------------------------------*/
 
 	/*----------------DRIVE----------------*/
-	public static final int driveRightEncoderChannelA = 2; // TODO: CHANGE!
-	public static final int driveRightEncoderChannelB = 3; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelA = 4; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelB = 5; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelA = 3; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelB = 2; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelA = 1; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelB = 0; // TODO: CHANGE!
 
-	public static final int driveEncoderDistancePerPulse = 1 * 1; // TODO:
+	public static final double driveEncoderDistancePerPulse = 0.00133; // TODO:
 																	// CHANGE!
 
 	public static final int backUltrasonic = 0; // TODO: CHANGE!
@@ -69,21 +70,17 @@ public class RobotMap {
 	/*-------------------------------------*/
 
 	/*----------------LIFT-----------------*/
-	public static int liftEncoderPortA = 0;
-	public static int liftEncoderPortB = 1;
+	public static int liftEncoderPortA = 4;
+	public static int liftEncoderPortB = 5;
 
 	public static int liftHallEffectTop = 8;
 	public static int liftHallEffectBottom = 9;
 	/*-------------------------------------*/
 
-	/*-----------------------------------OTHERS----------------------------------*/
-	/*---------------CLIMB-----------------*/
-	
-	/*-------------------------------------*/
 	
 	/*----------------INTAKE---------------*/
-	public static final int intakeSolenoid1 = -1;
-	public static final int intakeSolenoid2 = -1;
+	public static final int intakeSolenoid1 = 0;
+	public static final int intakeSolenoid2 = 1;
 	/*-------------------------------------*/
 	
 }

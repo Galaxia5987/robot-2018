@@ -7,19 +7,18 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
-import org.usfirst.frc.team5987.robot.commands.LiftCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
-
-import org.usfirst.frc.team5987.robot.subsystems.IntakeSubsystem;
-
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.GripperSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
-
 import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -41,18 +40,24 @@ public class Robot extends TimedRobot {
 
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-	NetworkTable liftTable;
+	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
-	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
-	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
-	public static AHRS navx;
+	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
+	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
+	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
+	NetworkTableEntry ntSetpoint = liftTable.getEntry("Setpoint");
+	
+	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
+
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -60,13 +65,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		navx.reset();
 		m_oi = new OI();
-		navx = new AHRS(SPI.Port.kMXP);
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		SmartDashboard.putData(new DriveStraightCommand(-2));
 		ntSetpoint.setDouble(0);
-		SmartDashboard.putData(new LiftCommand());
 	}
 
 	/**
@@ -76,7 +81,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		driveSubsystem.setSetpoints(0, 0);
 	}
 
 	@Override
@@ -97,6 +102,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		navx.reset();
 		m_autonomousCommand = m_chooser.getSelected();
 
 		/*
@@ -126,9 +132,11 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		navx.reset(); // TODO: remove 
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+//		driveSubsystem.setSetpoints(1, 1);
 	}
 
 	/**
@@ -138,6 +146,9 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
+		ntAngle.setDouble(driveSubsystem.getAngle());
+//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
+//		driveSubsystem.setSetpoints(-0.3, -1);
 	}
 
 	/**

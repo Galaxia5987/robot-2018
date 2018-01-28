@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class GripperSubsystem extends Subsystem {
 
 	Victor leftWheel = new Victor(RobotMap.gripperWheelLeft);
+
 	Victor rightWheel = new Victor(RobotMap.gripperWheelRight);
 	AnalogInput proximitySensor = new AnalogInput(RobotMap.proximityChannel);
 	NetworkTable GripperTable = NetworkTableInstance.getDefault().getTable("GripperTable");
