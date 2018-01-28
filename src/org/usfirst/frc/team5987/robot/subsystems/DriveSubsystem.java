@@ -4,53 +4,55 @@ import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.MiniPID;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import auxiliary.Misc;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * @author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
 	/*********************** CONSTANTS ************************/
-	// PIDF constants for controlling velocity for wheels
-	private static double kP = 0;
-	private static double kI = 0;
-	private static double kD = 0;
-	private static double kF = 0;
 	// Gyro PID
 	private static double gyroKp = 0.007;
 	private static double gyroKi = 0;
+	// PIDF constants for controlling velocity for wheels
+	private static double kP = 0.15; 
+	private static double kI = 0.002; 
+	private static double kD = 0.04;
+	private static double kF = 0.4; 
 	private static double gyroKd = 0;
+	private static final boolean GYRO_REVERSED = true;
+	/**
+	 * ABSOLUTE, METER/SEC
+	 */
+	public static final double MAX_VELOCITY = 1;
 	/**
 	 * Absolute max velocity [m/s]
 	 */
-	public static final double MAX_VELOCITY = 2;
+	public static final double MIN_VELOCITY = 0.2;
 	/**
 	 * Absolute acceleration [m/s^2]
 	 */
-	public static final double ACCELERATION = 1;
+	public static final double ACCELERATION = 0.4;
 	/**
 	 * Absolute deccleration [m/s^2]
 	 */
-	public static final double DECCELERATION = 1;
+	public static final double DECCELERATION = 0.4;
+	public static final double ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
 	 * Mapping between 0-5V to METER for the analog input
 	 */
 	public static final double ultransonicMeterFactor = 1.024;
+	private static final boolean rightInverted = true; // inverts the right motors & right encoder
+	private static final boolean leftInverted = false; // inverts the left motors & left encoder
 	/*******************************************************/
-
-	private static final boolean rightInverted = false; // Inverts the right
-														// motors & right
-														// encoder
-	private static final boolean leftInverted = true; // Inverts the left motors
-														// & left encoder
 
 	private static final Victor driveRightRearMotor = new Victor(RobotMap.driveRightRearMotor);
 	private static final Victor driveRightFrontMotor = new Victor(RobotMap.driveRightFrontMotor);
@@ -80,12 +82,16 @@ public class DriveSubsystem extends Subsystem {
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
 	// Gyro NetworkTable constants
+
 	NetworkTableEntry ntGyroKp = driveTable.getEntry("Gyro kP");
 	NetworkTableEntry ntGyroKi = driveTable.getEntry("Gyro kI");
 	NetworkTableEntry ntGyroKd = driveTable.getEntry("Gyro kD");
 	// NetworkTable error for debugging gyro PID
 	NetworkTableEntry ntGyroError = driveTable.getEntry("Gyro Error");
-
+	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
+	NetworkTableEntry ntRightSpeed = driveTable.getEntry("Right Velocity");
+	NetworkTableEntry ntLeftSpeed = driveTable.getEntry("Left Velocity");
+	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
 	private static MiniPID gyroPID;
@@ -174,7 +180,9 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public double getGyroPID(double desiredAngle) {
 		ntGetGyroPID();
-		return gyroPID.getOutput(getAngle(), desiredAngle);
+		double out = gyroPID.getOutput(getAngle(), desiredAngle);
+		ntGyroPIDOut.setDouble(out);
+		return out;
 	}
 
 	/**
@@ -201,14 +209,6 @@ public class DriveSubsystem extends Subsystem {
 			rightOut = rightVelocity;
 			leftOut = leftVelocity;
 		}
-		double leftError = leftOut - getLeftSpeed();
-		ntLeftError.setDouble(leftError);
-		leftPID.setSetpoint(leftOut);
-
-		double rightError = rightOut - getRightSpeed();
-		ntRightError.setDouble(rightError);
-		rightPID.setSetpoint(rightOut);
-	}
 
 	/**
 	 * Set the speed of the two right motors
@@ -273,10 +273,19 @@ public class DriveSubsystem extends Subsystem {
 	 * 
 	 * @return angle [°]
 	 */
-	public double getAngle() {
-		return Robot.navx.getAngle();
+
+    public double getAngle() {
+		double rawAngle = Robot.navx.getAngle();
+		return GYRO_REVERSED ? -rawAngle : rawAngle;
 	}
 
+	/**
+	 * Get the angle of the navX
+	 * @return angle in RADIANS
+	 */
+    public double getAngleRadians(){
+    	return Math.toRadians(getAngle());
+    }
 	/**
 	 * 
 	 * @return whether the robot's on the cable bump on the center of the arena

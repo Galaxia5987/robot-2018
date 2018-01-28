@@ -8,11 +8,14 @@
 package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
 
+
 import org.usfirst.frc.team5987.robot.commands.GripperShootCommand;
 import org.usfirst.frc.team5987.robot.commands.GripperTakeCubeCommand;
 
 import org.usfirst.frc.team5987.robot.commands.IntakeSelenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeTakeCubeCommand;
+
+import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 
 import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
 
@@ -33,5 +36,9 @@ public class OI {
 	
 
 	public OI() {
+		y.whenPressed(new DriveStraightCommand(4));
+		a.whenPressed(new ClimbCommand(false));
+		b.whenPressed(new OpenHooksCommand(true));
+		x.whenPressed(new OpenHooksCommand(false));
 	}
 }
