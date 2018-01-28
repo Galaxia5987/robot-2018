@@ -81,7 +81,6 @@ stop = False
 class Vision:
     global stop
     def __init__(self,surfix=''):
-        print("Initializing...")
         self.surfix=surfix
         self.cam = cam
 
@@ -114,7 +113,16 @@ class Vision:
         self.centers = []
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.stream = []
-        print("Initialization complete.")
+        self.app = Flask(__name__)
+
+        @self.app.route('/')
+        def index():
+            return render_template('index.html')
+
+        @self.app.route('/video_feed')
+        def video_feed():
+            return Response(self.gen(),
+                        mimetype='multipart/x-mixed-replace; boundary=frame')
 
     def set_item(self, key, value):
         """
@@ -216,14 +224,12 @@ class Vision:
             key = value[0].split(".")[1]
             value = eval(value[1])
             self.set_item(key, value)
-        print("Values: Initialized.")
 
     def set_range(self):
         # Retrieves the range written in "Ace" which was written there by Range Finder 3.0
         colors = open("Colors_"+self.surfix+".val", 'r')
         exec(colors.read())
         colors.close()
-        print("Range: Calibarated.")
 
     def filter_hsv(self):
         self.hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
@@ -300,7 +306,6 @@ class Vision:
                             self.hulls.append(cv2.convexHull(c, returnPoints=False))
                 # Updates the contour list
                 self.contours = possible_fit
-        print("Contours: Received.")
 
     def area(self, c):
         return cv2.contourArea(c)
@@ -330,7 +335,6 @@ class Vision:
                 h_av = abs((h1 + h2) / 2)
                 dis = abs((self.centers[i][0] - self.centers[j][0]))
                 hd=(dis/h_av)
-                #print(hd,dif,self.centers[i],self.centers[j])
                 if dif * 0.75 < hd < dif * 1.25:  # <-- this specific line might be bugged and not tested yet so...
                     possible_fit = [self.contours[i], self.contours[j]]
                     self.center = (self.centers[i][0] - int((dis / 2)),int((self.centers[j][1]+self.centers[i][1])/2))
@@ -374,29 +378,19 @@ class Vision:
         self.set_item('Switch Distance',self.distance)
         return self.distance
 
-        self.app = Flask(__name__)
-
-        @app.route('/')
-        def index():
-            return render_template('index.html')
-
-        @app.route('/video_feed')
-        def video_feed():
-            return Response(self.gen(),
-                        mimetype='multipart/x-mixed-replace; boundary=frame')
-
     def gen(self):
         while not stop:
             jpg = cv2.imencode('.jpg', vision.show_frame)[1].tostring()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
             key = cv2.waitKey(1)
 
-    def get_frame(self):
+    def get_frame(self, once=False):
         global stop
         while not stop:
             _, self.frame = self.cam.read()
             self.show_frame = self.frame.copy()
-            print("Frame: Received.")
+            if once:
+                break
 
     def analyse(self):
         global stop
@@ -407,16 +401,14 @@ class Vision:
             self.contours = list(contours)
             self.get_contours()
             if len(self.contours) > 0:
-                print("Analyzing...")
                 self.sees_target = True
                 self.set_item("Sees target", vision.sees_target)
                 self.find_center()
-                self.get_two()
+                # self.get_two()
                 self.draw_contours()
                 if hasattr(self, 'center'):
                     self.get_distance()
                     self.get_angle()
-                print("Analysis complete.")
 
     def show(self):
         global stop
