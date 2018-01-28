@@ -25,7 +25,8 @@ public class DriveSubsystem extends Subsystem {
 	private static double kD = 0.04;
 	private static double kF = 0.4;
 	// Gyro PID
-	private static double gyroKp = 0.008;
+	private static double gyroKp = 0.015;
+//	private static double gyroKp = 0;
 	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
 	private static final boolean GYRO_REVERSED = true;

@@ -21,6 +21,7 @@ public class DriveStraightCommand extends Command {
 	private double initLeftDistance;
 	private double angleToKeep;
 	private double finalDistance;
+	private boolean keepSameAngle = false;
 	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
 	NetworkTableEntry ntAngleToKeep;
 	NetworkTableEntry ntFinalDistance;
@@ -66,7 +67,8 @@ public class DriveStraightCommand extends Command {
 	 *            desired distance, distance from target
 	 */
 	public DriveStraightCommand(double distance) {
-		this(distance, Robot.driveSubsystem.getAngle());
+		this(distance, 0);
+		keepSameAngle = true;
 		requires(Robot.driveSubsystem);
 	}
 	
@@ -99,6 +101,9 @@ public class DriveStraightCommand extends Command {
 		if (ntFinalDistance != null) {
 			finalDistance = ntFinalDistance.getDouble(0);
 		}
+		if(keepSameAngle)
+			angleToKeep = Robot.driveSubsystem.getAngle();
+		
 		initRightDistance = Robot.driveSubsystem.getRightDistance();
 		initLeftDistance = Robot.driveSubsystem.getLeftDistance();
 
@@ -117,6 +122,7 @@ public class DriveStraightCommand extends Command {
 		// calculate new output based on the MotionProfile and the gyro
 		double speed = mp.getV(avgDistance);
 		double gyroFix = Robot.driveSubsystem.getGyroPID(angleToKeep);
+//		gyroFix = 0; // TODO: remove (exterminate)
 		
 		Robot.driveSubsystem.setSetpoints(speed - gyroFix, speed + gyroFix);
 		Robot.driveSubsystem.updatePID();

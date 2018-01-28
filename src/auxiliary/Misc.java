@@ -42,22 +42,16 @@ public class Misc {
 	 * @return {normalizedRight, normalizedLeft}
 	 */
 	public static double[] normalize(double leftOutput, double rightOutput, double maxOutput){
-		double rightOut; // normalized output
-		double leftOut;  // normalized output
 		// normalization
+		double scale = 1;
 		if((Math.abs(rightOutput) > maxOutput) || (Math.abs(leftOutput) > maxOutput)){
 			if(Math.abs(rightOutput) > Math.abs(leftOutput)){
-				rightOut = (rightOutput / rightOutput) * maxOutput;
-				leftOut = (leftOutput / rightOutput) * maxOutput;
+				scale = maxOutput / Math.abs(rightOutput);
 			}else{
-				leftOut = (leftOutput / leftOutput) * maxOutput;
-				rightOut = (rightOutput / leftOutput) * maxOutput;
+				scale = maxOutput / Math.abs(leftOutput);
 			}
-		}else{
-			// no normalization needed
-			rightOut = rightOutput;
-			leftOut  = leftOutput;
 		}
-		return new double[]{leftOut, rightOut};
+
+		return new double[]{leftOutput * scale, rightOutput * scale};
 	}
 }

@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
 		ntLeftSP.setDouble(0);
 		ntRightSP.setDouble(0);
 		SmartDashboard.putData(new liftCommand());
-		SmartDashboard.putData(new DriveStraightCommand(-2));
+		SmartDashboard.putData(new DriveStraightCommand(-4, 0));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		driveSubsystem.setSetpoints(0, 0);
 	}
 
 	@Override
@@ -128,6 +128,7 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		navx.reset(); // TODO: remove 
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
