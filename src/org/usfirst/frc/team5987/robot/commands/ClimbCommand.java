@@ -29,7 +29,8 @@ public class ClimbCommand extends Command {
 
 	/**
 	 * Constructor
-	 * @param turnOn - Whether the climbing mechanism should work.
+	 * 
+	 * @param turnOn - whether the climbing mechanism should work.
 	 */
 	public ClimbCommand(boolean turnOn) {
 		// Use requires() here to declare subsystem dependencies
@@ -40,22 +41,23 @@ public class ClimbCommand extends Command {
 
 	/**
 	 * Constructs the climb command.
-	 * @param turnOn - Whether the climbing mechanism should work.
-	 * @param climbSpeed - Climbing speed of the robot.
+	 * 
+	 * @param turnOn - whether the climbing mechanism should work.
+	 * @param climbSpeed - climbing speed of the robot.
 	 */
 	public ClimbCommand(boolean turnOn, double climbSpeed) {
 		requires(Robot.climbSubsystem);
 		this.doesGoUp = turnOn;
-		this.climbSpeed = climbSpeed;
+		this.setClimbSpeed(climbSpeed);
 	}
-
+	
 	// Called just before this Command runs the first time
 	protected void initialize() {
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double speed = doesGoUp ? climbSpeed : 0;
+		double speed = doesGoUp ? getClimbSpeed() : 0;
 		Robot.climbSubsystem.setClimbSpeed(speed);
 	}
 

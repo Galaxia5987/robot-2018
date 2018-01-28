@@ -3,7 +3,7 @@ package org.usfirst.frc.team5987.robot.commands;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- * Will lower the intake and elevator, then drives forward and pulls in  the block
+ * Will lower the intake and elevator, then drives forward and pulls in the block
  * @author Paulo Khayat
  */
 public class CommandGroup_TakeCube extends CommandGroup {

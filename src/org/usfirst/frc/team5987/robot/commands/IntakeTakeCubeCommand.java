@@ -1,9 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
-import org.usfirst.frc.team5987.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -21,13 +19,9 @@ public class IntakeTakeCubeCommand extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		if (Robot.liftSubsystem.isDown())
-			Robot.intakeSubsystem.setSpeed(wheelSpeed, -wheelSpeed); // TODO:
-																		// check
-																		// the
-																		// actual
-																		// directions
+			Robot.intakeSubsystem.setSpeed(wheelSpeed, -wheelSpeed); // TODO: check the actual directions
 		else
-			this.cancel();
+			cancel();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
