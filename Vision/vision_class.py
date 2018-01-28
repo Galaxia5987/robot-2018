@@ -8,19 +8,19 @@ if '-h' in sys.argv or '--help' in sys.argv:
     print(
         colored.cyan('Usage: ') + 'python3 vision_class.py [-s / --stream] [-l / --local] [-p / --port {camera port}]  '
                                   '[-nts / --networktables-server {networktable ip address}]')
-    exit(0)
+    exit(0)  #shows the help page if -h argument is present
 
-if '-s' in sys.argv or '--stream' in sys.argv:
+if '-s' in sys.argv or '--stream' in sys.argv: #checks for the stream argument
     is_stream = True
 else:
     is_stream = False
 
-if '-l' in sys.argv or '--local' in sys.argv:
+if '-l' in sys.argv or '--local' in sys.argv: # checks for the local argument
     is_local = True
 else:
     is_local = False
 
-if '-p' in sys.argv or '--port' in sys.argv:
+if '-p' in sys.argv or '--port' in sys.argv: #checks for the port argument and sets the port as the argument after it
     try:
         try:
             index = sys.argv.index('-p')
@@ -33,7 +33,7 @@ if '-p' in sys.argv or '--port' in sys.argv:
 else:
     camera = 0
 
-if '-nts' in sys.argv or '--networktables-server' in sys.argv:
+if '-nts' in sys.argv or '--networktables-server' in sys.argv: #sets the netwrorktables server as the argument after this one
     try:
         index = sys.argv.index('-nts')
     except:
@@ -80,7 +80,7 @@ stop = False
 
 class Vision:
     global stop
-    def __init__(self,surfix=''):
+    def __init__(self,surfix=''): # the surfix is for all the value files this class will use
         self.surfix=surfix
         self.cam = cam
 
@@ -88,39 +88,38 @@ class Vision:
         self.angle = 0
         self.sees_target = False
 
-        try:
-            _, self.frame = self.cam.read()
+        try: # makes sure the camera works, if not, throws an error
+            self.get_frame(once=True)
         except AttributeError:
             print(colored.red('ERROR: Camera Not Connected or In Use'))
             exit(13)
-        self.show_frame = self.frame.copy()
 
         NetworkTable.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
-        self.table = NetworkTable.getTable("SmartDashboard")
+        self.table = NetworkTable.getTable("SmartDashboard") # initialize smartdashboard
 
-        self.check_files()
-        self.set_range()
-        self.init_values()
+        self.check_files() # make sure the files with the surfix exist, if not, create them
+        self.set_range() # set the hsv range
+        self.init_values() # set all the values
 
         # Sends all values to SmartDashboard
         self.surfix = surfix
 
-        self.filter_hsv()
-        self.dirode()
-        _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        self.filter_hsv() # convert image from bgr to hsv
+        self.dirode() # dialate and erode
+        _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE) # get the contours
         self.contours = list(contours)
-        self.hulls = []
-        self.centers = []
+        self.hulls = [] # start a list of hulls, if needed
+        self.centers = [] # start a list of centers, if needed
         self.font = cv2.FONT_HERSHEY_SIMPLEX
-        self.stream = []
-        self.app = Flask(__name__)
+        self.stream = [] # empty stream
+        self.app = Flask(__name__) # the app used for streaming
 
         @self.app.route('/')
-        def index():
+        def index():#returns the HTML template (lower case 't')
             return render_template('index.html')
 
         @self.app.route('/video_feed')
-        def video_feed():
+        def video_feed(): #initiate the feed
             return Response(self.gen(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
@@ -159,6 +158,7 @@ class Vision:
         return res
 
     def range_finder(self):
+        # start from the highest and lowest values
         minH = 255
         minS = 255
         minV = 255
@@ -168,15 +168,14 @@ class Vision:
         height, width, _ = self.frame.shape
         target = np.zeros((height, width, 1), dtype=np.uint8)
         target[int(height / 3):int(2 * height / 3), int(2 * width / 6):int(4 * width / 6)] = 255
-        target1 = target
+        target1 = target # crop the frame
         target = np.zeros((height, width, 1), dtype=np.uint8)
         target[int(2 * height / 5):int(3 * height / 5), int(2 * width / 5):int(3 * width / 5)] = 255
         target2 = target
         while True:
-            _, self.frame = self.cam.read()
+            self.get_frame(once=True)
             self.filter_hsv()
-            self.frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
-            key = cv2.waitKey(1)
+            self.show_frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
             for row in self.hsv:
                 for pixel in row:
                     # Goes through every pixel in the frame and finds the lowest and highest values
@@ -193,10 +192,9 @@ class Vision:
                             maxS = pixel[1]
                         if pixel[2] > maxV:
                             maxV = pixel[2]
-            cv2.imshow("Frame", self.frame)
-            if key is ord('q'):
-                cv2.destroyAllWindows()
-                break
+                    self.show(once=True)
+            break
+        # write the newfound values onto a file with the correct surfix
         file = open("Colors_" + self.surfix + ".val", 'w')
         file.write(
             "self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH, minS, minV, maxH, maxS, maxV))
@@ -234,9 +232,6 @@ class Vision:
     def filter_hsv(self):
         self.hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
         self.mask = cv2.inRange(self.hsv, self.lower_range, self.upper_range)
-        # toilet paper
-        # mask_white = cv2.inRange(self.hsv, self.lower_white_range, self.upper_white_range)
-        # self.mask = cv2.bitwise_or(mask_white, mask_green)
 
     def draw_contours(self):
         # Draws contours on the frame, if asked so on SmartDashboard
@@ -364,6 +359,7 @@ class Vision:
         return (np.sqrt(4 * cv2.contourArea(c) / np.pi)) / (cv2.minEnclosingCircle(c)[1] * 2)
 
     def get_two(self):
+        # gets the two closest contours
         dif = (10+(5.26))/41
         possible_fit = []
         for i in range(0, len(self.centers)-1):
@@ -405,7 +401,7 @@ class Vision:
         for cont in self.contours:
             min_box = cv2.boxPoints(cv2.minAreaRect(cont))
 
-            def order(box):
+            def order(box):#gets the 4 extreme points of the min area rect and sorts them
                 box = list(box)
                 bottom = []
 
@@ -463,6 +459,21 @@ class Vision:
             if once:
                 break
 
+    def show(self, once=False):
+        global stop
+        if is_stream:
+            self.app.run(host=ip, debug=False)
+        if is_local:
+            while not stop:
+                cv2.imshow('Frame', self.show_frame)
+                cv2.imshow('Mask', self.mask)
+                vision.key = cv2.waitKey(1)
+                if vision.key is ord('q'):
+                    cv2.destroyAllWindows()
+                    stop = True
+                if once:
+                    break
+
     def analyse(self):
         global stop
         while not stop:
@@ -481,19 +492,6 @@ class Vision:
                     self.get_distance()
                     self.get_angle()
 
-    def show(self):
-        global stop
-        if is_stream:
-            self.app.run(host=ip, debug=False)
-        if is_local:
-            while not stop:
-                cv2.imshow('Frame', self.show_frame)
-                cv2.imshow('Mask', self.mask)
-                vision.key = cv2.waitKey(1)
-                if vision.key is ord('q'):
-                    cv2.destroyAllWindows()
-                    stop = True
-
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
@@ -502,6 +500,7 @@ vision = Vision('White_Line')
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
 
+vision.range_finder()
 threading._start_new_thread(vision.get_frame, ())
 threading._start_new_thread(vision.analyse, ())
 vision.show()
