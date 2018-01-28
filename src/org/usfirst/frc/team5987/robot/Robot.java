@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.commands.liftCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
@@ -68,6 +69,9 @@ public class Robot extends TimedRobot {
 		ntRightSP.setDouble(0);
 		SmartDashboard.putData(new liftCommand());
 		SmartDashboard.putData(new DriveStraightCommand(-4, 0));
+		boolean RELATIVE = true;
+		boolean ABSOLUTE = false;
+		SmartDashboard.putData(new TurnCommand(0, ABSOLUTE));
 	}
 
 	/**

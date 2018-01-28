@@ -4,12 +4,13 @@ import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 import auxiliary.DistanceMotionProfile;
+import auxiliary.Misc;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * TODO: fix absolute angle
  */
 public class DriveStraightCommand extends Command {
 	/**
@@ -21,13 +22,14 @@ public class DriveStraightCommand extends Command {
 	private double initLeftDistance;
 	private double angleToKeep;
 	private double finalDistance;
-	private boolean keepSameAngle = false;
+	private boolean keepStartingAngle = false;
 	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
 	NetworkTableEntry ntAngleToKeep;
 	NetworkTableEntry ntFinalDistance;
 	NetworkTableEntry ntDistanceError = driveTable.getEntry("Distance Error");
 	NetworkTableEntry ntMPoutput = driveTable.getEntry("MP Output");
 	private double DistanceError;
+	NetworkTableEntry ntShowAngleToKeep = driveTable.getEntry("Show Angle To Keep");
 	
 	
 
@@ -43,6 +45,7 @@ public class DriveStraightCommand extends Command {
 		// eg. requires(chassis);
 		this.angleToKeep = angleToKeep;
 		this.finalDistance = distance;
+		keepStartingAngle = false;
 		constructMotionProfile();
 		requires(Robot.driveSubsystem);
 	}
@@ -57,6 +60,7 @@ public class DriveStraightCommand extends Command {
 	public DriveStraightCommand(NetworkTableEntry distance, NetworkTableEntry angleToKeep) {
 		this.ntAngleToKeep = angleToKeep;
 		this.ntFinalDistance = distance;
+		keepStartingAngle = false;
 		requires(Robot.driveSubsystem);
 	}
 
@@ -68,7 +72,7 @@ public class DriveStraightCommand extends Command {
 	 */
 	public DriveStraightCommand(double distance) {
 		this(distance, 0);
-		keepSameAngle = true;
+		keepStartingAngle = true;
 		requires(Robot.driveSubsystem);
 	}
 	
@@ -80,6 +84,7 @@ public class DriveStraightCommand extends Command {
 	 */
 	public DriveStraightCommand(NetworkTableEntry ntDistance) {
 		this.ntFinalDistance = ntDistance;
+		keepStartingAngle = true;
 		requires(Robot.driveSubsystem);
 	}
 
@@ -101,9 +106,13 @@ public class DriveStraightCommand extends Command {
 		if (ntFinalDistance != null) {
 			finalDistance = ntFinalDistance.getDouble(0);
 		}
-		if(keepSameAngle)
+		if(keepStartingAngle){
 			angleToKeep = Robot.driveSubsystem.getAngle();
-		
+		}else{
+			double start = Robot.driveSubsystem.getAngle();
+			angleToKeep = Misc.absoluteToRelativeAngle(angleToKeep, start) + start;
+		}
+		ntShowAngleToKeep.setDouble(angleToKeep);
 		initRightDistance = Robot.driveSubsystem.getRightDistance();
 		initLeftDistance = Robot.driveSubsystem.getLeftDistance();
 

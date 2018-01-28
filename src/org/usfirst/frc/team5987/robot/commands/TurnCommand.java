@@ -4,7 +4,9 @@ import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 import auxiliary.DistanceMotionProfile;
+import auxiliary.Misc;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 /**
@@ -26,13 +28,16 @@ public class TurnCommand extends Command {
 	/**
 	 * If the absolute angle error is less than that, the command will stop
 	 */
-	private static final double MIN_DEGREES_ERROR = 3; 
-	
+	private static final double MIN_DEGREES_ERROR = 1; 
+	private static final double TURN_CONTROL_FACTOR = 2;
 	private DistanceMotionProfile mp;
 	private boolean isRelative;
 	private double angle;
 	private NetworkTableEntry ntAngle = null;
 	private NetworkTableEntry ntIsRelative = null;
+	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
+	NetworkTableEntry ntMPoutput = driveTable.getEntry("MP Output");
+	NetworkTableEntry ntRotationDegreesError = driveTable.getEntry("Rotation Degrees Error");
 	
 	/**
 	 * 
@@ -81,16 +86,7 @@ public class TurnCommand extends Command {
     	if(isRelative){
     		this.desiredAngle = angle;
     	}else{
-    		double currentAngle = startAngle % 360 ; // (angle % 360deg) = angle from 0 to 360
-    		double oneWay = angle - currentAngle; // not passing through 0deg
-    		double orAnother = angle + (360 - currentAngle); // passing through 0deg
-    		double gonnaCatchYa; // optimal way
-    		if(Math.abs(oneWay) < Math.abs(orAnother)){
-    			gonnaCatchYa = oneWay; 
-    		}else{
-    			gonnaCatchYa = orAnother;
-    		}
-    		desiredAngle = gonnaCatchYa;
+    		desiredAngle = Misc.absoluteToRelativeAngle(angle, startAngle);
     	}
 		// convert to radians
 		this.desiredAngle = Math.toRadians(this.desiredAngle);
@@ -122,21 +118,24 @@ public class TurnCommand extends Command {
     
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double out = mp.getV(getDeltaDistance());
-    	Robot.driveSubsystem.setSetpoints(out, -out);
+    	double out = mp.getV(getDeltaDistance()) * TURN_CONTROL_FACTOR;
+    	ntMPoutput.setDouble(out);
+    	Robot.driveSubsystem.setSetpoints(-out, out);
     	Robot.driveSubsystem.updatePID();
     	degreesError = Math.toDegrees(desiredAngle - getDeltaAngle());
+    	ntRotationDegreesError.setDouble(degreesError);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(degreesError) < MIN_DEGREES_ERROR;
+        return (Math.abs(degreesError) < MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < DriveSubsystem.MIN_VELOCITY / 2 ;
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	Robot.driveSubsystem.setLeftSpeed(0);
     	Robot.driveSubsystem.setRightSpeed(0);
+    	Robot.driveSubsystem.setSetpoints(0, 0);
     }
 
     // Called when another command which requires one or more of the same

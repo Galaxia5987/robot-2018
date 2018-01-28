@@ -54,4 +54,17 @@ public class Misc {
 
 		return new double[]{leftOutput * scale, rightOutput * scale};
 	}
+	public static double absoluteToRelativeAngle(double absoluteAngle, double startAngle) {
+		// TODO Auto-generated method stub
+		double currentAngle = startAngle % 360 ; // (angle % 360deg) = angle from 0 to 360
+		double oneWay = absoluteAngle - currentAngle; // not passing through 0deg
+		double orAnother = absoluteAngle + (360 - currentAngle); // passing through 0deg
+		double gonnaCatchYa; // optimal way
+		if(Math.abs(oneWay) < Math.abs(orAnother)){
+			gonnaCatchYa = oneWay; 
+		}else{
+			gonnaCatchYa = orAnother;
+		}
+		return gonnaCatchYa;
+	}
 }
