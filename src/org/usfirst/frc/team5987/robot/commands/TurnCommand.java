@@ -2,6 +2,7 @@ package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem.PIDTypes;
 
 import auxiliary.DistanceMotionProfile;
 import auxiliary.Misc;
@@ -38,6 +39,7 @@ public class TurnCommand extends Command {
 	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
 	NetworkTableEntry ntMPoutput = driveTable.getEntry("MP Output");
 	NetworkTableEntry ntRotationDegreesError = driveTable.getEntry("Rotation Degrees Error");
+	private PIDTypes priorPIDType;
 	
 	/**
 	 * 
@@ -76,6 +78,8 @@ public class TurnCommand extends Command {
     
     // Called just before this Command runs the first time
     protected void initialize() {
+    	priorPIDType = Robot.driveSubsystem.getPIDType();
+    	Robot.driveSubsystem.setPIDType(DriveSubsystem.PIDTypes.TURN);
     	if(ntAngle != null)
     		angle = ntAngle.getDouble(0);
     	if(ntIsRelative != null)
@@ -136,6 +140,7 @@ public class TurnCommand extends Command {
     	Robot.driveSubsystem.setLeftSpeed(0);
     	Robot.driveSubsystem.setRightSpeed(0);
     	Robot.driveSubsystem.setSetpoints(0, 0);
+    	Robot.driveSubsystem.setPIDType(priorPIDType);
     }
 
     // Called when another command which requires one or more of the same
