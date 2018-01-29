@@ -6,18 +6,11 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team5987.robot;
-import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
-
-
-import org.usfirst.frc.team5987.robot.commands.GripperShootCommand;
+import org.usfirst.frc.team5987.robot.commands.CommandGroup_TakeCube;
 import org.usfirst.frc.team5987.robot.commands.GripperTakeCubeCommand;
-
 import org.usfirst.frc.team5987.robot.commands.IntakeSelenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeTakeCubeCommand;
-
-import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
-
-import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
+import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -33,12 +26,16 @@ public class OI {
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
+	Button select = new JoystickButton(xbox, 7);
+	Button start = new JoystickButton(xbox, 8);
 	
 
 	public OI() {
-		y.whenPressed(new DriveStraightCommand(4));
-		a.whenPressed(new ClimbCommand(false));
-		b.whenPressed(new OpenHooksCommand(true));
-		x.whenPressed(new OpenHooksCommand(false));
+		start.whenPressed(new IntakeSelenoidCommand(false));
+		select.whenPressed(new IntakeSelenoidCommand(true));
+		a.whenPressed(new LiftCommand(LiftCommand.liftStates.BOTTOM));
+		b.whenPressed(new IntakeTakeCubeCommand());
+		x.whenPressed(new GripperTakeCubeCommand());
+		y.whenPressed(new CommandGroup_TakeCube());
 	}
 }

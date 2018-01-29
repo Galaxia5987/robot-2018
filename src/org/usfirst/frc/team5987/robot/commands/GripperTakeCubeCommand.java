@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class GripperTakeCubeCommand extends Command {
-
+	private boolean canceled = false;
 	public GripperTakeCubeCommand() {
 		requires(Robot.gripperSubsystem);
 	}
@@ -17,12 +17,15 @@ public class GripperTakeCubeCommand extends Command {
 	}
 
 	protected void execute() {
-		Robot.gripperSubsystem.setSpeed(0.5, 0.5);
-		Robot.gripperSubsystem.ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
+		if (Robot.liftSubsystem.isDown() && !Robot.gripperSubsystem.isCubeInside()) {
+			Robot.gripperSubsystem.setSpeed(0.5, 0.5);
+			Robot.gripperSubsystem.ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
+		}
+		else canceled = true;
 	}
 
 	protected boolean isFinished() {
-		return Robot.gripperSubsystem.isCubeInside();
+		return Robot.gripperSubsystem.isCubeInside() || canceled;
 	}
 
 	protected void end() {

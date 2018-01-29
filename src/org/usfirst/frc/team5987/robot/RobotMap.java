@@ -25,15 +25,15 @@ public class RobotMap {
 
 
 	/*----------------DRIVE----------------*/
-	public static final int driveRightRearMotor = 3; // TODO: CHANGE!
-	public static final int driveRightFrontMotor = 2; // TODO: CHANGE!
+	public static final int driveRightRearMotor = 5; // TODO: CHANGE!
+	public static final int driveRightFrontMotor = 4; // TODO: CHANGE!
 	public static final int driveLeftRearMotor = 7; // TODO: CHANGE!
 	public static final int driveLeftFrontMotor = 6; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 	/*---------------GRIPPER---------------*/
-	public static int gripperWheelLeft = 5; // TODO: CHANGE!
-	public static int gripperWheelRight = 4; // TODO: CHANGE!
+	public static int gripperWheelLeft = 2; // TODO: CHANGE!
+	public static int gripperWheelRight = 3; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 	/*----------------LIFT-----------------*/
