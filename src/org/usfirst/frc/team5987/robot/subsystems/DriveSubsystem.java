@@ -209,6 +209,7 @@ public class DriveSubsystem extends Subsystem {
 			rightOut = rightVelocity;
 			leftOut = leftVelocity;
 		}
+		}
 
 	/**
 	 * Set the speed of the two right motors

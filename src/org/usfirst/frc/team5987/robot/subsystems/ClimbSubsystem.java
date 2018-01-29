@@ -80,7 +80,10 @@ public class ClimbSubsystem extends Subsystem {
 	public void setClimbSpeed(double speed) {
 		motor.set(speed);
 	}
-
+	
+	public double getClimbSpeed() {
+		return motor.getSpeed();
+	}
 	/**
 	 * Get the value from the limit switch to know whether the robot has reached
 	 * the top.

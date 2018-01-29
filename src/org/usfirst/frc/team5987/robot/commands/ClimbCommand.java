@@ -48,7 +48,7 @@ public class ClimbCommand extends Command {
 	public ClimbCommand(boolean turnOn, double climbSpeed) {
 		requires(Robot.climbSubsystem);
 		this.doesGoUp = turnOn;
-		this.setClimbSpeed(climbSpeed);
+		Robot.climbSubsystem.setClimbSpeed(climbSpeed);
 	}
 	
 	// Called just before this Command runs the first time
@@ -57,7 +57,7 @@ public class ClimbCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		double speed = doesGoUp ? getClimbSpeed() : 0;
+		double speed = (doesGoUp ? Robot.climbSubsystem.getClimbSpeed() : 0);
 		Robot.climbSubsystem.setClimbSpeed(speed);
 	}
 
