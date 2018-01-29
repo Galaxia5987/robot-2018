@@ -30,7 +30,7 @@ public class TurnCommand extends Command {
 	 * If the absolute angle error is less than that, the command will stop
 	 */
 	private static final double MIN_DEGREES_ERROR = 1; 
-	private static final double TURN_CONTROL_FACTOR = 2;
+	private static final double TURN_CONTROL_FACTOR = 1;
 	private DistanceMotionProfile mp;
 	private boolean isRelative;
 	private double angle;

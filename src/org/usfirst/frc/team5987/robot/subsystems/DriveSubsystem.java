@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *@author Dor Brekhman
@@ -24,10 +25,10 @@ public class DriveSubsystem extends Subsystem {
 	private static double kI = 0.002; 
 	private static double kD = 0.04;
 	private static double kF = 0.4;
-	private static double TurnKp = 0.15; 
-	private static double TurnKi = 0.002; 
+	private static double TurnKp = 0.3; 
+	private static double TurnKi = 0.004; 
 	private static double TurnKd = 0.04;
-	private static double TurnKf = 0.4;
+	private static double TurnKf = 0.7;
 	public enum PIDTypes{
 		STRAIGHT,
 		TURN
@@ -105,6 +106,7 @@ public class DriveSubsystem extends Subsystem {
 	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
 	NetworkTableEntry ntRightSpeed = driveTable.getEntry("Right Velocity");
 	NetworkTableEntry ntLeftSpeed = driveTable.getEntry("Left Velocity");
+	private NetworkTableEntry ntPIDType = driveTable.getEntry("PID Type");
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
@@ -131,6 +133,10 @@ public class DriveSubsystem extends Subsystem {
 		ntKi.setDouble(kI);
 		ntKd.setDouble(kD);
 		ntKf.setDouble(kF);
+		ntTurnKp.setDouble(TurnKp);
+		ntTurnKi.setDouble(TurnKi);
+		ntTurnKd.setDouble(TurnKd);
+		ntTurnKf.setDouble(TurnKf);
 		ntGetGyroPID();
 		ntGyroKp.setDouble(gyroKp);
 		ntGyroKi.setDouble(gyroKi);
@@ -189,10 +195,12 @@ public class DriveSubsystem extends Subsystem {
 		switch(pidType){
 		default:
 		case STRAIGHT:
+			ntPIDType.setString("STRAIGHT");
 			rightPID.setPID(kP, kI, kD, kF);
 			leftPID.setPID(kP, kI, kD, kF);
 			break;
 		case TURN:
+			ntPIDType.setString("TURN");
 			rightPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
 			leftPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
 			break;
