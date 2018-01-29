@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
@@ -57,6 +58,10 @@ public class Robot extends TimedRobot {
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+	
+
+	NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
 
 
 	/**
@@ -70,7 +75,8 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
-		SmartDashboard.putData(new TurnCommand(90, false));
+		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
+		SmartDashboard.putData(new TurnCommand(ntSwitchAngle, true));
 		ntSetpoint.setDouble(0);
 	}
 
