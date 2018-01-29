@@ -24,6 +24,15 @@ public class DriveSubsystem extends Subsystem {
 	private static double kI = 0.002; 
 	private static double kD = 0.04;
 	private static double kF = 0.4;
+	private static double TurnKp = 0.15; 
+	private static double TurnKi = 0.002; 
+	private static double TurnKd = 0.04;
+	private static double TurnKf = 0.4;
+	public enum PIDTypes{
+		STRAIGHT,
+		TURN
+	}
+	private PIDTypes pidType = PIDTypes.STRAIGHT;
 	// Gyro PID
 	private static double gyroKp = 0.015;
 //	private static double gyroKp = 0;
@@ -78,6 +87,11 @@ public class DriveSubsystem extends Subsystem {
 	NetworkTableEntry ntKi = driveTable.getEntry("kI");
 	NetworkTableEntry ntKd = driveTable.getEntry("kD");
 	NetworkTableEntry ntKf = driveTable.getEntry("kF");
+	// NT Turn PIDF constants
+	NetworkTableEntry ntTurnKp = driveTable.getEntry("Turn kP");
+	NetworkTableEntry ntTurnKi = driveTable.getEntry("Turn kI");
+	NetworkTableEntry ntTurnKd = driveTable.getEntry("Turn kD");
+	NetworkTableEntry ntTurnKf = driveTable.getEntry("Turn kF");
 	// NT error for debugging PIDF constants
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
@@ -142,6 +156,10 @@ public class DriveSubsystem extends Subsystem {
 		kI = ntKi.getDouble(kI);
 		kD = ntKd.getDouble(kD);
 		kF = ntKf.getDouble(kF);
+		TurnKp = ntTurnKp.getDouble(TurnKp);
+		TurnKi = ntTurnKi.getDouble(TurnKi);
+		TurnKd = ntTurnKd.getDouble(TurnKd);
+		TurnKf = ntTurnKf.getDouble(TurnKf);
 	}
 	
 	/**
@@ -153,6 +171,14 @@ public class DriveSubsystem extends Subsystem {
 		gyroKd = ntGyroKd.getDouble(gyroKd);
 	}
 	
+	public PIDTypes getPIDType(){
+		return pidType;
+	}
+	
+	public void setPIDType(PIDTypes newType){
+		pidType = newType;
+	}
+	
 	/**
 	 * Updates the PIDF control and moves the motors <br>
 	 * Controls the velocity according to <code>setRightSetpoint(..)</code> and <code>setLeftSetpoint(..)</code> <br>
@@ -160,9 +186,18 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public void updatePID(){
 		ntGetPID();
+		switch(pidType){
+		default:
+		case STRAIGHT:
+			rightPID.setPID(kP, kI, kD, kF);
+			leftPID.setPID(kP, kI, kD, kF);
+			break;
+		case TURN:
+			rightPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
+			leftPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
+			break;
+		}
 		
-		rightPID.setPID(kP, kI, kD, kF);
-		leftPID.setPID(kP, kI, kD, kF);
 		
 		double rightOut = rightPID.getOutput(getRightSpeed());
 		double leftOut = leftPID.getOutput(getLeftSpeed());
