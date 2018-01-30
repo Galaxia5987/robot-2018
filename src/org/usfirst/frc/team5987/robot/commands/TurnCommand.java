@@ -78,6 +78,10 @@ public class TurnCommand extends Command {
     
     // Called just before this Command runs the first time
     protected void initialize() {
+    	if(isFinished()) {
+    		this.end();
+    		this.cancel();
+    	}
     	priorPIDType = Robot.driveSubsystem.getPIDType();
     	Robot.driveSubsystem.setPIDType(DriveSubsystem.PIDTypes.TURN);
     	if(ntAngle != null)

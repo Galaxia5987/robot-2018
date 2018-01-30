@@ -17,7 +17,7 @@ public class DriveStraightCommand extends Command {
 	/**
 	 * Error to stop in METER
 	 */
-	public static final double MIN_DISTANCE_ERROR = 0.001;
+	public static final double MIN_DISTANCE_ERROR = 0.01;
 	private DistanceMotionProfile mp;
 	private double initRightDistance;
 	private double initLeftDistance;
