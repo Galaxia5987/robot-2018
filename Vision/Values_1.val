@@ -1,0 +1,8 @@
+self.command_s = "area,0,0"
+self.draw_contours_b = False
+self.draw_hulls_b = False
+self.dirode_iterations_i = 2
+self.find_center_b = False
+self._iterations_i=3
+self.focal = 638.6086956521739
+self.target_height = 0

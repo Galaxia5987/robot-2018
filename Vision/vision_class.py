@@ -72,7 +72,7 @@ print('IP: ' + colored.green(ip))
 import cv2
 import numpy as np
 import math
-from networktables import NetworkTable
+from networktables import NetworkTables
 
 cam = cv2.VideoCapture(camera)
 
@@ -94,8 +94,8 @@ class Vision:
             print(colored.red('ERROR: Camera Not Connected or In Use'))
             exit(13)
 
-        NetworkTable.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
-        self.table = NetworkTable.getTable("SmartDashboard") # initialize smartdashboard
+        NetworkTables.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
+        self.table = NetworkTables.getTable("SmartDashboard") # initialize smartdashboard
 
         self.check_files() # make sure the files with the surfix exist, if not, create them
         self.set_range() # set the hsv range
@@ -158,7 +158,6 @@ class Vision:
         return res
 
     def range_finder(self):
-        # start from the highest and lowest values
         minH = 255
         minS = 255
         minV = 255
@@ -176,24 +175,25 @@ class Vision:
             self.get_frame(once=True)
             self.filter_hsv()
             self.show_frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
-            for row in self.hsv:
-                for pixel in row:
-                    # Goes through every pixel in the frame and finds the lowest and highest values
-                    if not pixel.all() == 0:
-                        if pixel[0] < minH:
-                            minH = pixel[0]
-                        if pixel[1] < minS:
-                            minS = pixel[1]
-                        if pixel[2] < minV:
-                            minV = pixel[2]
-                        if pixel[0] > maxH:
-                            maxH = pixel[0]
-                        if pixel[1] > maxS:
-                            maxS = pixel[1]
-                        if pixel[2] > maxV:
-                            maxV = pixel[2]
-                    self.show(once=True)
-            break
+            if cv2.waitKey(1) is 13:    # if key is enter
+                for row in self.hsv:
+                    for pixel in row:
+                        # Goes through every pixel in the frame and finds the lowest and highest values
+                        if not pixel.all() == 0:
+                            if pixel[0] < minH:
+                                minH = pixel[0]
+                            if pixel[1] < minS:
+                                minS = pixel[1]
+                            if pixel[2] < minV:
+                                minV = pixel[2]
+                            if pixel[0] > maxH:
+                                maxH = pixel[0]
+                            if pixel[1] > maxS:
+                                maxS = pixel[1]
+                            if pixel[2] > maxV:
+                                maxV = pixel[2]
+                break
+            self.show(once=True)
         # write the newfound values onto a file with the correct surfix
         file = open("Colors_" + self.surfix + ".val", 'w')
         file.write(
@@ -209,8 +209,18 @@ class Vision:
         try:
             _ = open("Values_"+self.surfix+".val", 'r')
         except FileNotFoundError:
-            self.surfix = '0'
-            self.init_values()
+            file=open('Values_'+self.surfix+'.val','w+')
+            file.write(
+                'self.command_s = "area,0,0"\n'+
+                'self.draw_contours_b = False\n'+
+                'self.draw_hulls_b = False\n'+
+                'self.dirode_iterations_i = 2\n'+
+                'self.find_center_b = False\n'+
+                'self._iterations_i=3\n'+
+                'self.focal = 638.6086956521739\n'+
+                'self.target_height = 0'
+            )
+            file.close()
 
     def init_values(self):
         # Reads the latest values of the files
@@ -452,12 +462,14 @@ class Vision:
             key = cv2.waitKey(1)
 
     def get_frame(self, once=False):
-        global stop
-        while not stop:
+        if once:
             _, self.frame = self.cam.read()
             self.show_frame = self.frame.copy()
-            if once:
-                break
+        else:
+            global stop
+            while not stop:
+                _, self.frame = self.cam.read()
+                self.show_frame = self.frame.copy()
 
     def show(self, once=False):
         global stop
@@ -477,6 +489,10 @@ class Vision:
     def analyse(self):
         global stop
         while not stop:
+            if self.surfix is not self.get_item("Filter Mode",self.surfix):
+                self.surfix=self.get_item("Filter Mode",self.surfix)
+                self.check_files()
+                self.init_values()
             self.filter_hsv()
             self.dirode()
             _, contours, _ = cv2.findContours(vision.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -495,12 +511,11 @@ class Vision:
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-vision = Vision('White_Line')
+vision = Vision('1')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
 
-vision.range_finder()
 threading._start_new_thread(vision.get_frame, ())
 threading._start_new_thread(vision.analyse, ())
 vision.show()
