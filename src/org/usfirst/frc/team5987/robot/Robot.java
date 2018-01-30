@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(ntSwitchAngle, true));
 		SmartDashboard.putData(new TurnToTargetCommand(ntSwitchAngle));
-		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance, -1));
+		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
 		ntSetpoint.setDouble(0);
 	}
 
