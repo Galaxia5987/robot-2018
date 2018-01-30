@@ -7,10 +7,11 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
-import org.usfirst.frc.team5987.robot.commands.TurnToTargetCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
@@ -49,7 +50,7 @@ public class Robot extends TimedRobot {
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
-	NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
+	public static NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
@@ -62,9 +63,9 @@ public class Robot extends TimedRobot {
 
 	
 
-	NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
+	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
 
-	NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
+	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
 
 
 	/**
@@ -81,8 +82,9 @@ public class Robot extends TimedRobot {
 		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(ntSwitchAngle, true));
-		SmartDashboard.putData(new TurnToTargetCommand(ntSwitchAngle));
+		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
+		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		ntSetpoint.setDouble(0);
 	}
 
