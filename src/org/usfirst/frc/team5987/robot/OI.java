@@ -26,8 +26,8 @@ public class OI {
 	
 
 	public OI() {
-		b.whenPressed(new IntakeTakeCubeCommand());
-		x.whenPressed(new GripperTakeCubeCommand());
+		b.whileHeld(new ShootCubeCommand(0.5, false));
+		x.whileHeld(new ShootCubeCommand(-0.5, false));
 		y.whenPressed(new IntakeSelenoidCommand());
 		a.whenPressed(new CommandGroup_TakeCube());
 	}

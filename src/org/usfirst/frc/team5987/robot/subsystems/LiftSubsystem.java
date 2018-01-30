@@ -69,6 +69,7 @@ public class LiftSubsystem extends Subsystem {
 		ntBottomKp.setDouble(ntBottomKp.getDouble(bottomPID[0]));
 		ntBottomKi.setDouble(ntBottomKi.getDouble(bottomPID[1]));
 		ntBottomKd.setDouble(ntBottomKd.getDouble(bottomPID[2]));
+		ntHeight.setDouble(getHeight());
 		liftEncoder.setDistancePerPulse(LIFT_DISTANCE_PER_PULSE);
 	}
 
@@ -155,7 +156,8 @@ public class LiftSubsystem extends Subsystem {
 	}
 
 	public double getAbsoluteEncoderHeight() {
-		return liftEncoder.getDistance();
+		return ntHeight.getDouble(0);
+		// return liftEncoder.getDistance();
 	}
 
 	public double getHeight() {
