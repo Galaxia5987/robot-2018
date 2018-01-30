@@ -6,12 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team5987.robot;
-import org.usfirst.frc.team5987.robot.commands.CommandGroup_TakeCube;
-import org.usfirst.frc.team5987.robot.commands.GripperTakeCubeCommand;
-import org.usfirst.frc.team5987.robot.commands.IntakeSelenoidCommand;
-import org.usfirst.frc.team5987.robot.commands.IntakeTakeCubeCommand;
-import org.usfirst.frc.team5987.robot.commands.LiftCommand;
-
+import org.usfirst.frc.team5987.robot.commands.*;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -31,11 +26,9 @@ public class OI {
 	
 
 	public OI() {
-		start.whenPressed(new IntakeSelenoidCommand(false));
-		select.whenPressed(new IntakeSelenoidCommand(true));
-		a.whenPressed(new LiftCommand(LiftCommand.liftStates.BOTTOM));
 		b.whenPressed(new IntakeTakeCubeCommand());
 		x.whenPressed(new GripperTakeCubeCommand());
-		y.whenPressed(new CommandGroup_TakeCube());
+		y.whenPressed(new IntakeSelenoidCommand());
+		a.whenPressed(new CommandGroup_TakeCube());
 	}
 }

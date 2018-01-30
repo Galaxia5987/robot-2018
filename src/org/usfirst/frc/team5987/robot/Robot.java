@@ -147,6 +147,9 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
 		ntAngle.setDouble(driveSubsystem.getAngle());
+		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
+		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
+		liftSubsystem.ntBottomHall.setBoolean(liftSubsystem.isDown());
 //		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
 //		driveSubsystem.setSetpoints(-0.3, -1);
 	}

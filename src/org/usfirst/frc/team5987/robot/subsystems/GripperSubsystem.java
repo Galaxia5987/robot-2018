@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -52,6 +53,7 @@ public class GripperSubsystem extends Subsystem {
 	 * @return whether there is a cube in the gripper
 	 */
 	public boolean isCubeInside() {
+		ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
 		return voltage() >= 2.5;
 	}
 }

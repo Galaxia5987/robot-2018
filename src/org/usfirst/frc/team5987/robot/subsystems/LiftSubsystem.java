@@ -41,8 +41,8 @@ public class LiftSubsystem extends Subsystem {
 	NetworkTableEntry ntBottomKp = LiftTable.getEntry("Bottom kP");
 	NetworkTableEntry ntBottomKi = LiftTable.getEntry("Bottom kI");
 	NetworkTableEntry ntBottomKd = LiftTable.getEntry("Bottom kD");
-	NetworkTableEntry ntTopHall = LiftTable.getEntry("Top Hall");
-	NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
+	public NetworkTableEntry ntTopHall = LiftTable.getEntry("Top Hall");
+	public NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
 	NetworkTableEntry ntState = LiftTable.getEntry("State");
 	NetworkTableEntry ntError = LiftTable.getEntry("Error");
 

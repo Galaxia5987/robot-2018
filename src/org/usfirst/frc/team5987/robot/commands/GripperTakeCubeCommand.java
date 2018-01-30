@@ -14,12 +14,12 @@ public class GripperTakeCubeCommand extends Command {
 	}
 
 	protected void initialize() {
+		canceled = false;
 	}
 
 	protected void execute() {
 		if (Robot.liftSubsystem.isDown() && !Robot.gripperSubsystem.isCubeInside()) {
 			Robot.gripperSubsystem.setSpeed(0.5, 0.5);
-			Robot.gripperSubsystem.ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
 		}
 		else canceled = true;
 	}
@@ -33,5 +33,8 @@ public class GripperTakeCubeCommand extends Command {
 	}
 
 	protected void interrupted() {
+
+		Robot.gripperSubsystem.setSpeed(0, 0);
+		canceled = true;
 	}
 }
