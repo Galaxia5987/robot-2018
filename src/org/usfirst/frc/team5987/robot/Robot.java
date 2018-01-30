@@ -10,6 +10,7 @@ package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnToTargetCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
@@ -63,6 +64,8 @@ public class Robot extends TimedRobot {
 
 	NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
 
+	NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
+
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -76,7 +79,10 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
+		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(ntSwitchAngle, true));
+		SmartDashboard.putData(new TurnToTargetCommand(ntSwitchAngle));
+		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance, -1));
 		ntSetpoint.setDouble(0);
 	}
 
