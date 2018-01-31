@@ -1,0 +1,7 @@
+switch left: drive switchDist1, turn switchAngle, turn -switchAngle, drive NTdist, remain on angle 0
+switch right: drive switchDist1, turn -switchAngle, turn switchAngle, drive NTdist, remain on angle 0
+
+scale right, robot right: drive until find bump, turn 90, shoot cube(scaleIniHheight)
+scale left, robot left: drive until find bump, turn -90, shoot cube(scaleInitHeight)
+scale left, robot right: drive baseLine
+scale right, robot left: drive baseLine
