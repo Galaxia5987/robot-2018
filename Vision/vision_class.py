@@ -94,15 +94,12 @@ class Vision:
             print(colored.red('ERROR: Camera Not Connected or In Use'))
             exit(13)
 
-        NetworkTables.initialize(server="roboRIO-{team_number}-FRC.local".format(team_number=5987))
-        self.table = NetworkTables.getTable("SmartDashboard") # initialize smartdashboard
+        NetworkTables.initialize(server=nt_server)
+        self.table = NetworkTables.getTable("Vision") # initialize Vision networktables
 
         self.check_files() # make sure the files with the surfix exist, if not, create them
         self.set_range() # set the hsv range
         self.init_values() # set all the values
-
-        # Sends all values to SmartDashboard
-        self.surfix = surfix
 
         self.filter_hsv() # convert image from bgr to hsv
         self.dirode() # dialate and erode
@@ -157,57 +154,63 @@ class Vision:
                 res = self.table.getBoolean(key, default_value)
         return res
 
+    # def range_finder(self):
+    #     minH = 255
+    #     minS = 255
+    #     minV = 255
+    #     maxH = 0
+    #     maxS = 0
+    #     maxV = 0
+    #     height, width, _ = self.frame.shape
+    #     target = np.zeros((height, width, 1), dtype=np.uint8)
+    #     target[int(height / 3):int(2 * height / 3), int(2 * width / 6):int(4 * width / 6)] = 255
+    #     target1 = target # crop the frame
+    #     target = np.zeros((height, width, 1), dtype=np.uint8)
+    #     target[int(2 * height / 5):int(3 * height / 5), int(2 * width / 5):int(3 * width / 5)] = 255
+    #     target2 = target
+    #     while True:
+    #         self.get_frame(once=True)
+    #         hsv=cv2.cvtColor(self.frame,cv2.COLOR_BGR2HSV)
+    #         hsv = cv2.bitwise_and(hsv, hsv, mask=target1)
+    #         self.show_frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
+    #         if cv2.waitKey(1) is 13:    # if key is enter
+    #             for row in hsv:
+    #                 for pixel in row:
+    #                     # Goes through every pixel in the frame and finds the lowest and highest values
+    #                     if not pixel.all() == 0:
+    #                         if pixel[0] < minH:
+    #                             minH = pixel[0]
+    #                         if pixel[1] < minS:
+    #                             minS = pixel[1]
+    #                         if pixel[2] < minV:
+    #                             minV = pixel[2]
+    #                         if pixel[0] > maxH:
+    #                             maxH = pixel[0]
+    #                         if pixel[1] > maxS:
+    #                             maxS = pixel[1]
+    #                         if pixel[2] > maxV:
+    #                             maxV = pixel[2]
+    #             break
+    #         self.show(once=True)
+    #     # write the newfound values onto a file with the correct surfix
+    #     file = open("files/Colors_" + self.surfix + ".val", 'w')
+    #     file.write(
+    #         "self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH, minS, minV, maxH, maxS, maxV))
+    #     file.close()
+
+
     def range_finder(self):
-        minH = 255
-        minS = 255
-        minV = 255
-        maxH = 0
-        maxS = 0
-        maxV = 0
-        height, width, _ = self.frame.shape
-        target = np.zeros((height, width, 1), dtype=np.uint8)
-        target[int(height / 3):int(2 * height / 3), int(2 * width / 6):int(4 * width / 6)] = 255
-        target1 = target # crop the frame
-        target = np.zeros((height, width, 1), dtype=np.uint8)
-        target[int(2 * height / 5):int(3 * height / 5), int(2 * width / 5):int(3 * width / 5)] = 255
-        target2 = target
-        while True:
-            self.get_frame(once=True)
-            self.filter_hsv()
-            self.show_frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
-            if cv2.waitKey(1) is 13:    # if key is enter
-                for row in self.hsv:
-                    for pixel in row:
-                        # Goes through every pixel in the frame and finds the lowest and highest values
-                        if not pixel.all() == 0:
-                            if pixel[0] < minH:
-                                minH = pixel[0]
-                            if pixel[1] < minS:
-                                minS = pixel[1]
-                            if pixel[2] < minV:
-                                minV = pixel[2]
-                            if pixel[0] > maxH:
-                                maxH = pixel[0]
-                            if pixel[1] > maxS:
-                                maxS = pixel[1]
-                            if pixel[2] > maxV:
-                                maxV = pixel[2]
-                break
-            self.show(once=True)
-        # write the newfound values onto a file with the correct surfix
-        file = open("Colors_" + self.surfix + ".val", 'w')
-        file.write(
-            "self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH, minS, minV, maxH, maxS, maxV))
-        file.close()
+        pass
+
 
     def check_files(self):
         try:
-            _ = open("Colors_"+self.surfix+".val", 'r')
+            _ = open("files/Colors_"+self.surfix+".val", 'r')
         except FileNotFoundError:
             self.range_finder()
 
         try:
-            _ = open("Values_"+self.surfix+".val", 'r')
+            _ = open("files/Values_"+self.surfix+".val", 'r')
         except FileNotFoundError:
             file=open('Values_'+self.surfix+'.val','w+')
             file.write(
@@ -223,8 +226,11 @@ class Vision:
             file.close()
 
     def init_values(self):
+        color=open("files/Colors_"+self.surfix+".val",'r')
+        exec(color.read())
+        color.close()
         # Reads the latest values of the files
-        values = open("Values_" + self.surfix + ".val", 'r')
+        values = open("files/Values_" + self.surfix + ".val", 'r')
         exec(values.read())
         values = values.readlines()
         for value in values:
@@ -235,7 +241,7 @@ class Vision:
 
     def set_range(self):
         # Retrieves the range written in "Ace" which was written there by Range Finder 3.0
-        colors = open("Colors_"+self.surfix+".val", 'r')
+        colors = open("files/Colors_"+self.surfix+".val", 'r')
         exec(colors.read())
         colors.close()
 
@@ -457,7 +463,7 @@ class Vision:
 
     def gen(self):
         while not stop:
-            jpg = cv2.imencode('.jpg', vision.show_frame)[1].tostring()
+            jpg = cv2.imencode('.jpg', self.show_frame)[1].tostring()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
             key = cv2.waitKey(1)
 
@@ -478,9 +484,12 @@ class Vision:
         if is_local:
             while not stop:
                 cv2.imshow('Frame', self.show_frame)
-                cv2.imshow('Mask', self.mask)
-                vision.key = cv2.waitKey(1)
-                if vision.key is ord('q'):
+                try:
+                    cv2.imshow('Mask', self.mask)
+                except:
+                    pass
+                self.key = cv2.waitKey(1)
+                if self.key is ord('q'):
                     cv2.destroyAllWindows()
                     stop = True
                 if once:
@@ -495,14 +504,14 @@ class Vision:
                 self.init_values()
             self.filter_hsv()
             self.dirode()
-            _, contours, _ = cv2.findContours(vision.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
             self.contours = list(contours)
             self.get_contours()
             if len(self.contours) > 0:
                 self.sees_target = True
-                self.set_item("Sees target", vision.sees_target)
+                self.set_item("Sees target", self.sees_target)
                 self.find_center()
-                # self.get_two()
+                self.get_two()
                 self.draw_contours()
                 if hasattr(self, 'center'):
                     self.get_distance()
@@ -511,7 +520,7 @@ class Vision:
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-vision = Vision('1')
+vision = Vision('0')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading

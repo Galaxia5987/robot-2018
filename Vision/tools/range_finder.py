@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-cam = cv2.VideoCapture(1)
+cam = cv2.VideoCapture(0)
 cam.set(cv2.CAP_PROP_SETTINGS,1)
 minH=255
 minS=255
@@ -41,7 +41,7 @@ while True:
                     if pixel[2] > maxV:
                         maxV=pixel[2]
         surfix=str(key-48)
-        file=open("Colors_"+surfix+".val",'w')
+        file=open("files/Colors_"+surfix+".val",'w')
         file.write("self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH,minS,minV,maxH,maxS,maxV))
         file.close()
         break
