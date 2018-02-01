@@ -19,7 +19,11 @@ public class RobotMap {
 	/*---------------CLIMB-----------------*/
 	public static int climbRightServo = 8; // TODO: CHANGE!
 	public static int climbLeftServo = 9; // TODO: CHANGE!
+	
 	public static int climbMotor = 10; // TODO: CHANGE!
+	public static int climbPDP = 10;
+	
+	public static final int[] climbPDPs = new int[] {climbPDP}; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 
@@ -33,7 +37,11 @@ public class RobotMap {
 
 	/*---------------GRIPPER---------------*/
 	public static int gripperWheelLeft = 2; // TODO: CHANGE!
+	public static int gripperLeftPDP = 2; // TODO: CHANGE!
 	public static int gripperWheelRight = 3; // TODO: CHANGE!
+	public static int gripperRightPDP = 3; // TODO: CHANGE!
+	
+	public static final int[] gripperPDPs = new int[] {gripperLeftPDP, gripperRightPDP};
 	/*-------------------------------------*/
 
 	/*----------------LIFT-----------------*/
@@ -42,7 +50,11 @@ public class RobotMap {
 
 	/*----------------INTAKE---------------*/
 	public static final int intakeMotorLeft = 0;
+	public static int intakeLeftPDP = 0;
 	public static final int intakeMotorRight = 1;
+	public static int intakeRightPDP = 1;
+	
+	public static final int[] intakePDPs = new int[] {intakeLeftPDP, intakeRightPDP};
 	/*-------------------------------------*/
 
 	/*-----------------------------------SENSORS----------------------------------*/
