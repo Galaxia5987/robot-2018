@@ -123,6 +123,7 @@ public class TurnCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double out = mp.getV(getDeltaDistance()) * TURN_CONTROL_FACTOR;
+
     	ntMPoutput.setDouble(out);
     	Robot.driveSubsystem.setSetpoints(-out, out);
     	Robot.driveSubsystem.updatePID();

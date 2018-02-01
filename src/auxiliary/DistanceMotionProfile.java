@@ -44,8 +44,8 @@ public class DistanceMotionProfile {
 	 */
 	public DistanceMotionProfile(double finalDistance, double maxVelocity, double minVelocity, double acceleration, double deceleration){
 		this.finalDistance = finalDistance;
-		this.minVelocity = minVelocity;
 		isForward = finalDistance > 0;
+		this.minVelocity = minVelocity * (isForward? 1 : -1);
 		Vmax = maxVelocity * (isForward? 1 : -1);
 		a = acceleration * (isForward? 1 : -1);
 		d = deceleration * (isForward? -1 : 1);
@@ -96,7 +96,7 @@ public class DistanceMotionProfile {
 			}
 		}else{
 			if(x > 0){
-				return -minVelocity;
+				return minVelocity;
 			}
 		}
 		
@@ -155,10 +155,9 @@ public class DistanceMotionProfile {
 		
 		if(!inDecceleration){
 			// If |outV| is less than minVelocity return +- minVelocity 
-			return Misc.limitAbsMin(outV, minVelocity);
-		}else{
-			return outV;
-		}
+			if (Math.abs(outV) < Math.abs(minVelocity))
+				return minVelocity;
+		} return outV;
 
 	}
 	public MPTypes getType() {
