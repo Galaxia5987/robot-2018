@@ -26,6 +26,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	NetworkTable GripperTable = NetworkTableInstance.getDefault().getTable("GripperTable");
 	public NetworkTableEntry ntProximityVoltage = GripperTable.getEntry("Proximity Voltage");
 	public NetworkTableEntry ntSeesCube = GripperTable.getEntry("Sees Cube");
+	public NetworkTableEntry ntCurrent = GripperTable.getEntry("Current");
 	Timer downTimer = new Timer();
 
 	public void initDefaultCommand() {

@@ -156,9 +156,10 @@ public class Robot extends TimedRobot {
 		ntAngle.setDouble(driveSubsystem.getAngle());
 		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
+		//gripperSubsystem.ntCurrent.setDouble(PDP.getCurrent(RobotMap.gripperLeftPDP));
 		liftSubsystem.ntBottomHall.setBoolean(liftSubsystem.isDown());
 		
-		// clingyShiba.feed();
+		//clingyShiba.feed();
 //		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
 //		driveSubsystem.setSetpoints(-0.3, -1);
 	}

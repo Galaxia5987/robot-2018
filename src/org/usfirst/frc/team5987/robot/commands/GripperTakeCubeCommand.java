@@ -19,7 +19,7 @@ public class GripperTakeCubeCommand extends Command {
 
 	protected void execute() {
 		if (Robot.liftSubsystem.isDown() && !Robot.gripperSubsystem.isCubeInside()) {
-			Robot.gripperSubsystem.setSpeed(0.5, 0.5);
+			Robot.gripperSubsystem.setSpeed(0.3, 0.3);
 		}
 		else canceled = true;
 	}
