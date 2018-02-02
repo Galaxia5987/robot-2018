@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class ArriveToSwitchGroupCommand extends CommandGroup {
-
+	private static final double SWITCH_DISTANCE_ADDITION = -0.1;
     public ArriveToSwitchGroupCommand() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -27,6 +27,6 @@ public class ArriveToSwitchGroupCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	addSequential(new TurnToTargetGroupCommand());
-    	addSequential(new DriveStraightCommand(Robot.ntSwitchDistance));
+    	addSequential(new DriveStraightCommand(Robot.ntSwitchDistance, SWITCH_DISTANCE_ADDITION));
     }
 }
