@@ -11,13 +11,14 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * TODO: REMOVE (-) minus in ntDistance!!!
  * TODO: fix absolute angle
  */
 public class DriveStraightCommand extends Command {
 	/**
 	 * Error to stop in METER
 	 */
-	public static final double MIN_DISTANCE_ERROR = 0.001;
+	public static final double MIN_DISTANCE_ERROR = 0.01;
 	private DistanceMotionProfile mp;
 	private double initRightDistance;
 	private double initLeftDistance;
@@ -140,6 +141,8 @@ public class DriveStraightCommand extends Command {
 		}
 		if (ntFinalDistance != null) {
 			finalDistance = ntFinalDistance.getDouble(0);
+			// TODO: remove!!!!
+			finalDistance *= -1;
 		}
 		if(keepStartingAngle){
 			angleToKeep = Robot.driveSubsystem.getAngle();
