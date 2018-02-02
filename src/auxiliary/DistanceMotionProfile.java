@@ -150,7 +150,7 @@ public class DistanceMotionProfile {
 			break;
 			
 		default:
-			throw new Error("You're fucked up mate. How is it not TRIANGLE or TRAPEZOID?!?!?!?!?!?!");
+			throw new Error("You're fucked up mate. How is it not a TRIANGLE or TRAPEZOID?!?!?!?!?!?!");
 		}
 		
 		if(!inDecceleration){
