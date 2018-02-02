@@ -399,7 +399,7 @@ class Vision:
         angle from center
         """
         x_dif = self.center[0] - self.frame.shape[1]/2
-        rad=math.atan(x_dif / self.focal)
+        rad=math.atan(x_dif / self.focal)*-1 # because... math... apparently
         self.degrees=rad/math.pi*180
         self.set_item('Switch Degrees',self.degrees)
         return self.degrees
@@ -459,7 +459,7 @@ class Vision:
             distance=None
         self.distance=distance
         self.set_item('Switch Distance',self.distance)
-        return self.distance
+        return self.distance / 100 # for meters
 
     def gen(self):
         while not stop:
