@@ -83,15 +83,14 @@ public class AutoCommandGroup extends CommandGroup {
 				addSequential(DriveStraightCommand(distanceFromSwitch, finalAngleFromSwitch));
 
 			}
-			addSequential(putSwitch()); // TODO: Merge branch of putting the
-										// cube here and add the CommandGroup here.
+			addSequential(ArriveToSwitchGroupCommand()); // TODO: Merge branches of arriving to the Switch and add here.
+			addSequential(PutCubeOnSwitchGroupCommand()); // TODO: Merge branches of putting a Power Cube on the Switch and add here.
 		}
 
 		if (robotInitPosition != scalePosition) {
 			addSequential(DriveStraightCommand(autoLineDistance));
 		}
-
-		addSequential(putScale()); // TODO: Merge branch of arriving to the
-									// scale, then add this GroupCommand here.
+		addSequential(ArriveToScaleGroupCommand()); // TODO: Merge branch of arriving to the Scale and add here.
+		addSequential(PutCubeOnScaleGroupCommand()); // TODO: Merge branch of putting a Power Cube on the Scale and add here.
 	}
 }
