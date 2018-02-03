@@ -95,6 +95,6 @@ public class Line {
 	}
 	
 	public double getAngle() {
-		return Math.atan((B.get()[1]-A.get()[1])/(B.get()[0]-A.get()[0]));
+		return Math.atan((B.get()[1]-A.get()[1])/(B.get()[0]-A.get()[0])) + (A.get()[0] <= B.get()[0] ? 0: Math.PI);
 	}
 }

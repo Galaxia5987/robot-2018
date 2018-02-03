@@ -59,10 +59,10 @@ public class PathCommand extends Command {
     	SmartDashboard.putNumber("y", y);
     	SmartDashboard.putNumber("point x", pointX);
     	SmartDashboard.putNumber("point y", pointY);
-    	SmartDashboard.putNumber("point left", velocitys[0]);
-    	SmartDashboard.putNumber("point right", velocitys[1]);
+    	SmartDashboard.putNumber("velo left", velocitys[0]);
+    	SmartDashboard.putNumber("velo right", velocitys[1]);
     	
-    	Robot.driveSubsystem.updatePID();
+//    	Robot.driveSubsystem.updatePID();
     	
     }
 
