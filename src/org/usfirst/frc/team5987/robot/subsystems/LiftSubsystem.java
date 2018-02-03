@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author mow, paulo, Dor
  */
 public class LiftSubsystem extends Subsystem {
-	enum States {
+	public enum States {
 		MECHANISM_DISABLED, ZEROING, RUNNING
 	}
 
@@ -32,7 +32,7 @@ public class LiftSubsystem extends Subsystem {
 	private static final boolean TOP_HULL_REVERSED = true;
 	private static final boolean BOTTOM_HULL_REVERSED = false;
 	private double offset = 0;
-	private States state = States.MECHANISM_DISABLED;
+	public States state = States.MECHANISM_DISABLED;
 
 	public NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntTopKp = LiftTable.getEntry("Top kP");

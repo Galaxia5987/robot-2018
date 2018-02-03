@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
+import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem.States;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -44,13 +45,15 @@ public class IntakeSelenoidCommand extends Command {
 	protected void initialize() {
 		switch(chosen){
 		case TOGGLE:
-			Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
+			if (Robot.liftSubsystem.getHeight() >= 0.3 && Robot.liftSubsystem.state != States.MECHANISM_DISABLED && !Robot.intakeSubsystem.getSolenoid())
+				Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
 			break;
 		case OPEN:
 			Robot.intakeSubsystem.setSolenoid(true);
 			break;
 		case CLOSE:
-			Robot.intakeSubsystem.setSolenoid(false);
+			if (Robot.liftSubsystem.getHeight() >= 0.3 && Robot.liftSubsystem.state != States.MECHANISM_DISABLED)
+				Robot.intakeSubsystem.setSolenoid(false);
 			break;
 			
 		}
