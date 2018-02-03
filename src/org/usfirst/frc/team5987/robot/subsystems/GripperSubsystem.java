@@ -1,12 +1,15 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
+import auxiliary.SafeVictor;
+import auxiliary.Watch_Dogeable;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -15,15 +18,16 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * 
  * @author Paulo Khayat
  */
-public class GripperSubsystem extends Subsystem {
+public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 
-	Victor leftWheel = new Victor(RobotMap.gripperWheelLeft);
-
-	Victor rightWheel = new Victor(RobotMap.gripperWheelRight);
+	SafeVictor leftWheel = new SafeVictor(RobotMap.gripperWheelLeft);
+	SafeVictor rightWheel = new SafeVictor(RobotMap.gripperWheelRight);
 	AnalogInput proximitySensor = new AnalogInput(RobotMap.proximityChannel);
 	NetworkTable GripperTable = NetworkTableInstance.getDefault().getTable("GripperTable");
 	public NetworkTableEntry ntProximityVoltage = GripperTable.getEntry("Proximity Voltage");
 	public NetworkTableEntry ntSeesCube = GripperTable.getEntry("Sees Cube");
+	public NetworkTableEntry ntCurrent = GripperTable.getEntry("Current");
+	Timer downTimer = new Timer();
 
 	public void initDefaultCommand() {
 
@@ -52,6 +56,36 @@ public class GripperSubsystem extends Subsystem {
 	 * @return whether there is a cube in the gripper
 	 */
 	public boolean isCubeInside() {
+		ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
 		return voltage() >= 2.5;
+	}
+	
+	@Override
+	public void bork() {
+		leftWheel.disable();
+		rightWheel.disable();
+		downTimer.reset();
+		downTimer.start();
+	}
+
+	@Override
+	public void necromancy() {
+		leftWheel.enable();
+		rightWheel.enable();
+	}
+
+	@Override
+	public boolean wakeMeUp() {
+		if (downTimer.get() >= 3) {
+			downTimer.stop();
+			downTimer.reset();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean ded() {
+		return leftWheel.status() && rightWheel.status();
 	}
 }

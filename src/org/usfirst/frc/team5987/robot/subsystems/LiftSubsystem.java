@@ -41,8 +41,8 @@ public class LiftSubsystem extends Subsystem {
 	NetworkTableEntry ntBottomKp = LiftTable.getEntry("Bottom kP");
 	NetworkTableEntry ntBottomKi = LiftTable.getEntry("Bottom kI");
 	NetworkTableEntry ntBottomKd = LiftTable.getEntry("Bottom kD");
-	NetworkTableEntry ntTopHall = LiftTable.getEntry("Top Hall");
-	NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
+	public NetworkTableEntry ntTopHall = LiftTable.getEntry("Top Hall");
+	public NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
 	NetworkTableEntry ntState = LiftTable.getEntry("State");
 	NetworkTableEntry ntError = LiftTable.getEntry("Error");
 
@@ -69,6 +69,7 @@ public class LiftSubsystem extends Subsystem {
 		ntBottomKp.setDouble(ntBottomKp.getDouble(bottomPID[0]));
 		ntBottomKi.setDouble(ntBottomKi.getDouble(bottomPID[1]));
 		ntBottomKd.setDouble(ntBottomKd.getDouble(bottomPID[2]));
+		ntHeight.setDouble(getHeight());
 		liftEncoder.setDistancePerPulse(LIFT_DISTANCE_PER_PULSE);
 	}
 
@@ -155,7 +156,8 @@ public class LiftSubsystem extends Subsystem {
 	}
 
 	public double getAbsoluteEncoderHeight() {
-		return liftEncoder.getDistance();
+		return ntHeight.getDouble(0);
+		// return liftEncoder.getDistance();
 	}
 
 	public double getHeight() {

@@ -42,6 +42,11 @@ public class IntakeSubsystem extends Subsystem {
 			solenoid.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
+	
+	public boolean getSolenoid() {
+		if (solenoid.get() == DoubleSolenoid.Value.kForward) return true;
+		return false;
+	}
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.

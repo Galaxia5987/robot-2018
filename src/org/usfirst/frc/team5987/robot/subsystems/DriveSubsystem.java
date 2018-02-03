@@ -272,7 +272,7 @@ public class DriveSubsystem extends Subsystem {
 	/**
 	 * Get the angle of the navX
 	 * 
-	 * @return angle [°]
+	 * @return angle [degrees]
 	 */
 
     public double getAngle() {

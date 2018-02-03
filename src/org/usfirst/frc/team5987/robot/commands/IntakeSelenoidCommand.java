@@ -8,32 +8,53 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class IntakeSelenoidCommand extends Command {
-	boolean down;
-
+	private enum opMode {
+		TOGGLE,
+		OPEN,
+		CLOSE
+	}
+	private opMode chosen;
 	/**
 	 * A command that controls the solenoid moving the intake up.
+	 * If the constructor is left blank the intake will just toggle.
+	 * 
+	 * @author Paulo Khayat
+	 */
+	public IntakeSelenoidCommand() {
+		// Use requires() here to declare subsystem dependencies
+		// eg. requires(chassis);
+		chosen = opMode.TOGGLE;
+		requires(Robot.intakeSubsystem);
+	}
+	
+	/**
+	 * A command that controls the solenoid moving the intake up.
+	 * If the constructor is left blank the intake will just toggle.
 	 * 
 	 * @param toDown - Whether the intake should go down.
 	 * @author Paulo Khayat
 	 */
-	public IntakeSelenoidCommand(boolean toDown) {
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
-		requires(Robot.intakeSubsystem);
-		down = toDown;
+	public IntakeSelenoidCommand(boolean state){
+		if(state)
+			chosen = opMode.OPEN;
+		else
+			chosen = opMode.CLOSE;
 	}
-
 	// Called just before this Command runs the first time
 	protected void initialize() {
-
-		if (down) {
+		switch(chosen){
+		case TOGGLE:
+			Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
+			break;
+		case OPEN:
 			Robot.intakeSubsystem.setSolenoid(true);
-		} else {
+			break;
+		case CLOSE:
 			Robot.intakeSubsystem.setSolenoid(false);
+			break;
+			
 		}
-
 	}
-
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 
