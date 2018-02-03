@@ -135,7 +135,7 @@ public class LiftTalonSubsystem extends Subsystem {
     }
     
     /**
-     * Run this periodically with setSetpoint() in order to move the motors 
+     * Run this periodically with {@link #setSetpoint()} in order to move the motors 
      */
     public void update() {
     	switch(state){
@@ -181,6 +181,10 @@ public class LiftTalonSubsystem extends Subsystem {
     	return liftMotor.getSelectedSensorVelocity(0) * TICKS_PER_METER;
     }
 
-   
+    public void clearStickyFaults()
+    {
+    	liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+    }
+    
 }
 

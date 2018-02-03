@@ -11,15 +11,13 @@ import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
-
-import org.usfirst.frc.team5987.robot.subsystems.IntakeSubsystem;
-
-import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.GripperSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
-
+import org.usfirst.frc.team5987.robot.subsystems.LiftTalonSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -47,6 +45,7 @@ public class Robot extends TimedRobot {
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
+	public static final LiftTalonSubsystem liftTalonSubsystem = new LiftTalonSubsystem();
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
 	public static AHRS navx;
