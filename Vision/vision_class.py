@@ -387,7 +387,7 @@ class Vision:
                 hd=(dis/h_av)
                 if dif * 0.75 < hd < dif * 1.25:  # <-- this specific line might be bugged and not tested yet so...
                     possible_fit = [self.contours[i], self.contours[j]]
-                    self.center = (self.centers[i][0] - int((dis / 2)),int((self.centers[j][1]+self.centers[i][1])/2))
+                    self.center = int((self.centers[i][0] + self.centers[j][0])/2),(int((self.centers[j][1]+self.centers[i][1])/2))
                     dif = dis
         self.contours = possible_fit
 
@@ -454,12 +454,12 @@ class Vision:
         except ZeroDivisionError:
             pass
         try:
-            distance = self.target_height * self.focal / height
+            distance = self.target_height * self.focal / height / 2
         except ZeroDivisionError:
             distance=None
         self.distance=distance
         self.set_item('Switch Distance',self.distance)
-        return self.distance / 100 # for meters
+        return self.distance # for meters
 
     def gen(self):
         while not stop:
