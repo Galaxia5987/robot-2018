@@ -1,12 +1,12 @@
 package org.usfirst.frc.team5987.robot.commands;
 
-import org.omg.CORBA.Request;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 import auxiliary.Point;
 import auxiliary.surfceMP;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class PathCommand extends Command {
 
 	private double x = 0, y = 0;
-	private double h = 1;
+	private double h = -0.36;
 	private double preLeftDistance = 0;
 	private double preRightDistance = 0;
 	surfceMP train;
@@ -28,13 +28,13 @@ public class PathCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Point A = new Point(0, 0);
-		Point B = new Point(6, 8);
-		Point C = new Point(14, 8);
-		Point D = new Point(16, 14);
-		Point[] p = {A,B,C,D};
+    	Point A = new Point(h, 0);
+		Point B = new Point(h-1, 0);
+		Point[] p = {A,B};
 		train = new surfceMP(p, DriveSubsystem.MAX_VELOCITY, DriveSubsystem.ACCELERATION, DriveSubsystem.DECCELERATION, DriveSubsystem.MIN_VELOCITY, 0);
-		train.setRatio(h, 0.5);
+		train.setRatio(h, 0.3375);
+		preLeftDistance = Robot.driveSubsystem.getLeftDistance();
+		preRightDistance = Robot.driveSubsystem.getRightDistance();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -47,12 +47,20 @@ public class PathCommand extends Command {
     	x += avg * Math.cos(Robot.driveSubsystem.getAngleRadians());
     	y += avg * Math.sin(Robot.driveSubsystem.getAngleRadians());
     	
-    	double PointX = x + h * Math.cos(Robot.driveSubsystem.getAngleRadians());
-    	double PointY = y + h * Math.sin(Robot.driveSubsystem.getAngleRadians());
     	
-    	Point pos = new Point(PointX, PointY);
+    	double pointX = x + h * Math.cos(Robot.driveSubsystem.getAngleRadians());
+    	double pointY = y + h * Math.sin(Robot.driveSubsystem.getAngleRadians());
+    	
+    	Point pos = new Point(pointX, pointY);
     	double[] velocitys = train.getMotorsVelocity(pos, Robot.driveSubsystem.getAngleRadians());
     	Robot.driveSubsystem.setSetpoints(velocitys[0], velocitys[1]);
+    	
+    	SmartDashboard.putNumber("x", x);
+    	SmartDashboard.putNumber("y", y);
+    	SmartDashboard.putNumber("point x", pointX);
+    	SmartDashboard.putNumber("point y", pointY);
+    	SmartDashboard.putNumber("point left", velocitys[0]);
+    	SmartDashboard.putNumber("point right", velocitys[1]);
     	
     	Robot.driveSubsystem.updatePID();
     	
@@ -65,7 +73,13 @@ public class PathCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    }
+    	Robot.driveSubsystem.setLeftSpeed(0);
+
+    	Robot.driveSubsystem.setRightSpeed(0);
+    	
+		Robot.driveSubsystem.setSetpoints(0, 0);
+
+}
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
