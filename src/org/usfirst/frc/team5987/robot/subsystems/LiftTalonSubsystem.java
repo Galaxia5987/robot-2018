@@ -40,7 +40,7 @@ public class LiftTalonSubsystem extends Subsystem {
 	/**
 	 * How many TICKS in one METER of the elevator going up
 	 */
-	private static final double TICKS_PER_METER = getDistanceToTicks(0.045466, 4096, 2); // encoder sees less by 1.2 cause of the gearbox and twice more bec
+	private static final double TICKS_PER_METER = getDistanceToTicks(0.045466, 4096, 0.5); // encoder sees twice less because of the cascade mechanism
 	private static final boolean TOP_HALL_REVERSED = true;
 	private static final boolean BOTTOM_HALL_REVERSED = false;
 	
@@ -68,6 +68,11 @@ public class LiftTalonSubsystem extends Subsystem {
 	private static final double ZERO_RATE = 0.005;
 	private static final double MAX_ZEROING_OUTPUT = 0.3333334; // ABSOLUTE
 	private static final double MAX_RUNNING_OUTPUT = 0.5;
+	/**
+	 * The supplied output in which the lift remains still (from 0 to 1)
+	 */
+	private static final double STILL_OUTPUT = 0.3;
+	private static final double MIN_DOWN_OUTPUT = 0.1;
 	
 	
 	private States state = States.MECHANISM_DISABLED;
@@ -102,6 +107,12 @@ public class LiftTalonSubsystem extends Subsystem {
 		 
 		
 		liftMotor.setInverted(TALON_REVERSE);
+		/* set the min and and max outputs */
+		liftMotor.configNominalOutputForward(STILL_OUTPUT, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputForward(1, TALON_TIMEOUT_MS);
+		liftMotor.configNominalOutputReverse(MIN_DOWN_OUTPUT, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputReverse(STILL_OUTPUT, TALON_TIMEOUT_MS);
+		
 		liftMotor.setSensorPhase(ENCODER_REVERSED);
 		/* Configure the encoder */
 		liftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT_MS);
@@ -120,11 +131,7 @@ public class LiftTalonSubsystem extends Subsystem {
 				TALON_TIMEOUT_MS
 				);
 		
-		/* set the peak and nominal outputs, 12V means full */
-		liftMotor.configNominalOutputForward(0, TALON_TIMEOUT_MS);
-		liftMotor.configNominalOutputReverse(0, TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputForward(1, TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputReverse(-1, TALON_TIMEOUT_MS);
+
 		
 		 // Add the NetworkTable entries if they don't exist
 		ntIsEnabled.setBoolean(ntIsEnabled.getBoolean(false));
@@ -136,13 +143,14 @@ public class LiftTalonSubsystem extends Subsystem {
     
     /**
      * 
-     * @param diameter diameter of the winch in METER
-     * @param ticksPerRevolution
-     * @param scale
+     * @param diameter diameter of the gear of the chain in METER
+     * @param ticksPerRevolution how many ticks in full rotation
+     * @param encoderMultiplier a multiplier relative to the encoder = (what the encoder sees / what's actually) <br>
+     * For example, if the encoder detects 1 and it's 2, the multiplier should be 0.5  
      * @return
      */
-    private static double getDistanceToTicks(double diameter, double ticksPerRevolution, double scale){
-    	return ticksPerRevolution / (diameter * Math.PI * scale);
+    private static double getDistanceToTicks(double diameter, double ticksPerRevolution, double encoderMultiplier){
+    	return encoderMultiplier * ticksPerRevolution / (diameter * Math.PI);
     }
     
     public void setPrecentSpeed(double speed){
@@ -214,6 +222,10 @@ public class LiftTalonSubsystem extends Subsystem {
     	displaySensorValues();
     }
     
+    /**
+     * 
+     * @return the height of the gripper from its bottommost position in METER
+     */
 	public double getHeight(){
 		return liftMotor.getSelectedSensorPosition(0) * TICKS_PER_METER;
 	}
