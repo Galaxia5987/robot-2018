@@ -2,6 +2,7 @@ package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.RobotMap;
 
+import auxiliary.SafeSPXVictor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Victor;
@@ -40,7 +41,7 @@ public class ClimbSubsystem extends Subsystem {
 	/**
 	 * Motor for climbing.
 	 */
-	Victor motor = new Victor(RobotMap.climbMotor);
+	SafeSPXVictor motor = new SafeSPXVictor(RobotMap.climbMotor);
 
 	/**
 	 * Limit switch at the top that is used for affirmation if the robot has

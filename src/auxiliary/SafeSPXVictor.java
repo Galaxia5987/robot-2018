@@ -1,30 +1,33 @@
 package auxiliary;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Victor;
 
-/**
- * Extension of Victor class to provide easy enable/disable functionality
- */
-public class SafeVictor extends Victor {
+public class SafeSPXVictor extends VictorSPX {
 
 	private boolean isDisabled;
 	
-	public SafeVictor(int channel) {
+	public SafeSPXVictor(int channel) {
 		super(channel);
 		this.isDisabled = false;
+	}
+	
+	
+	public double get(){
+		return super.getMotorOutputPercent();
 	}
 	
 	/**
 	 *
 	 * @param speed desired PWM output
 	 */
-	@Override
+	
 	public void set(double speed) {
 		if (isDisabled)
 			speed = 0;
-		super.set(speed);
+		super.set(ControlMode.PercentOutput, speed);
 	}
 	
 	/**
