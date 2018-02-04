@@ -45,13 +45,13 @@ public class LiftTalonSubsystem extends Subsystem {
 	private static final boolean BOTTOM_HALL_REVERSED = false;
 	
 	/*------------- Talon Motor Constants -------------------*/
-	private static final double topPIDF[] = {
+	private static final double upPIDF[] = {
 			1, // P
 			0, // I
 			0, // D
 			0  // F
 			};
-	private static final double bottomPIDF[] = {
+	private static final double downPIDF[] = {
 			0.5, // P
 			0,   // I
 			0,   // D
@@ -93,17 +93,17 @@ public class LiftTalonSubsystem extends Subsystem {
 
 	public LiftTalonSubsystem(){
 		// The PID values are defined in the robo-rio webdash. Not NT!!!
-		liftMotor.selectProfileSlot(TALON_UP_PID_SLOT, 0);
-	     liftMotor.config_kP(0, topPIDF[0], TALON_TIMEOUT_MS);
-		 liftMotor.config_kI(0, topPIDF[1], TALON_TIMEOUT_MS);
-		 liftMotor.config_kD(0, topPIDF[2], TALON_TIMEOUT_MS);
-		 liftMotor.config_kF(0, topPIDF[3], TALON_TIMEOUT_MS);
+		/* top PID */
+	    liftMotor.config_kP(TALON_UP_PID_SLOT, upPIDF[0], TALON_TIMEOUT_MS);
+		liftMotor.config_kI(TALON_UP_PID_SLOT, upPIDF[1], TALON_TIMEOUT_MS);
+		liftMotor.config_kD(TALON_UP_PID_SLOT, upPIDF[2], TALON_TIMEOUT_MS);
+		liftMotor.config_kF(TALON_UP_PID_SLOT, upPIDF[3], TALON_TIMEOUT_MS);
 		
-		liftMotor.selectProfileSlot(TALON_DOWN_PID_SLOT, 0);
-	     liftMotor.config_kP(0, bottomPIDF[0], TALON_TIMEOUT_MS);
-		 liftMotor.config_kI(0, bottomPIDF[1], TALON_TIMEOUT_MS);
-		 liftMotor.config_kD(0, bottomPIDF[2], TALON_TIMEOUT_MS);
-		 liftMotor.config_kF(0, bottomPIDF[3], TALON_TIMEOUT_MS);
+		/* bottom PID */
+	    liftMotor.config_kP(TALON_DOWN_PID_SLOT, downPIDF[0], TALON_TIMEOUT_MS);
+		liftMotor.config_kI(TALON_DOWN_PID_SLOT, downPIDF[1], TALON_TIMEOUT_MS);
+		liftMotor.config_kD(TALON_DOWN_PID_SLOT, downPIDF[2], TALON_TIMEOUT_MS);
+		liftMotor.config_kF(TALON_DOWN_PID_SLOT, downPIDF[3], TALON_TIMEOUT_MS);
 		 
 		
 		liftMotor.setInverted(TALON_REVERSE);
