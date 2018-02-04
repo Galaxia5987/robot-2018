@@ -2,17 +2,16 @@ package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
+import org.usfirst.frc.team5987.robot.commands.JoystickDriveCommand;
 
 import auxiliary.MiniPID;
-import auxiliary.Misc;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * @author Dor Brekhman
@@ -58,6 +57,10 @@ public class DriveSubsystem extends Subsystem {
 	private static final Victor driveRightFrontMotor = new Victor(RobotMap.driveRightFrontMotor);
 	private static final Victor driveLeftRearMotor = new Victor(RobotMap.driveLeftRearMotor);
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
+	
+	private static SpeedControllerGroup leftMotors = new SpeedControllerGroup(driveLeftFrontMotor, driveLeftRearMotor);
+	private static SpeedControllerGroup rightMotors = new SpeedControllerGroup(driveRightFrontMotor, driveRightRearMotor);
+	private static DifferentialDrive mainDrive = new DifferentialDrive(leftMotors, rightMotors);
 
 	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA,
 			RobotMap.driveRightEncoderChannelB, rightInverted);
@@ -128,10 +131,26 @@ public class DriveSubsystem extends Subsystem {
 		gyroPID = new MiniPID(gyroKp, gyroKi, gyroKd);
 	}
 
+	/**
+	   * Tank drive method for differential drive platform.
+	   * The calculated values will be squared to decrease sensitivity at low speeds.
+	   *
+	   * @param leftSpeed  The robot's left side speed along the X axis [-1.0..1.0]. Forward is
+	   *                   positive.
+	   * @param rightSpeed The robot's right side speed along the X axis [-1.0..1.0]. Forward is
+	   *                   positive.
+	   * @param squaredInputs If set, decreases the input sensitivity at low speeds.
+	   */
+	public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs)
+	{
+		mainDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
+	}
+	
 	/* TODO ADD DriveJoystickCommand TODO */
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
+		setDefaultCommand(new JoystickDriveCommand());
 	}
 
 	/**
