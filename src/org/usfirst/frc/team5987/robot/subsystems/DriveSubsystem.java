@@ -131,9 +131,19 @@ public class DriveSubsystem extends Subsystem {
 		gyroPID = new MiniPID(gyroKp, gyroKi, gyroKd);
 	}
 
-	public void tankDrive(double leftSpeed, double rightSpeed)
+	/**
+	   * Tank drive method for differential drive platform.
+	   * The calculated values will be squared to decrease sensitivity at low speeds.
+	   *
+	   * @param leftSpeed  The robot's left side speed along the X axis [-1.0..1.0]. Forward is
+	   *                   positive.
+	   * @param rightSpeed The robot's right side speed along the X axis [-1.0..1.0]. Forward is
+	   *                   positive.
+	   * @param squaredInputs If set, decreases the input sensitivity at low speeds.
+	   */
+	public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs)
 	{
-		mainDrive.tankDrive(leftSpeed, rightSpeed);
+		mainDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
 	}
 	
 	/* TODO ADD DriveJoystickCommand TODO */
