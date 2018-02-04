@@ -19,9 +19,7 @@ import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 import com.kauailabs.navx.frc.AHRS;
 
 import auxiliary.Watch_Doge;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -61,6 +59,16 @@ public class Robot extends TimedRobot {
 	NetworkTableEntry ntSetpoint = liftTable.getEntry("Setpoint");
 	
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
+		
+	/**
+	 * Compressor of the robot.<br>
+	 * It is activated between matches to fill the air tanks and then is removed 
+	 * from the robot.<br>
+	 * <b>Make sure to set the robot to <u>test</u> mode in the DriverStation 
+	 * between matches so the compressor will work.</b> Also, do not forget to set the 
+	 * robot to <u>autonomous</u> mode before the beginning of the match.
+	 */
+	public static Compressor compressor = new Compressor();
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
