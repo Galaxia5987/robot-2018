@@ -35,6 +35,16 @@ public class LiftTalonSubsystem extends Subsystem {
 		RUNNING
 	}
 	
+
+	/*-------------- Talon Sensors Constants ------------*/
+	/**
+	 * How many TICKS in one METER of the elevator going up
+	 */
+	private static final double TICKS_PER_METER = getDistanceToTicks(0.045466, 4096, 2); // encoder sees less by 1.2 cause of the gearbox and twice more bec
+	private static final boolean TOP_HALL_REVERSED = true;
+	private static final boolean BOTTOM_HALL_REVERSED = false;
+	
+	/*------------- Talon Motor Constants -------------------*/
 	private static final double topPIDF[] = {
 			1, // P
 			0, // I
@@ -47,18 +57,18 @@ public class LiftTalonSubsystem extends Subsystem {
 			0,   // D
 			0    // F
 			}; 
+	private static final boolean TALON_REVERSE = false;
+	private static final boolean ENCODER_REVERSED = false;
+	private static final int TALON_TIMEOUT_MS = 10;
+	private static final int TALON_UP_PID_SLOT = 0;
+	private static final int TALON_DOWN_PID_SLOT = 1;
 	/**
 	 * Decreasing rate for the output (substructs this from the setpoint every iteration)
 	 */
 	private static final double ZERO_RATE = 0.005;
-	private static final double MAX_ZEROING_OUTPUT = 0.3333334;
+	private static final double MAX_ZEROING_OUTPUT = 0.3333334; // ABSOLUTE
 	private static final double MAX_RUNNING_OUTPUT = 0.5;
-	private static final double TICKS_PER_METER = getDistanceToTicks(0.0455, 4096, 2);
-	private static final boolean TOP_HALL_REVERSED = true;
-	private static final boolean BOTTOM_HALL_REVERSED = false;
-	private static final int TALON_TIMEOUT_MS = 10;
-	private static final int TALON_UP_PID_SLOT = 0;
-	private static final int TALON_DOWN_PID_SLOT = 1;
+	
 	
 	private States state = States.MECHANISM_DISABLED;
 	
@@ -74,8 +84,7 @@ public class LiftTalonSubsystem extends Subsystem {
 	NetworkTableEntry ntHeight = LiftTable.getEntry("height");
 
 	TalonSRX liftMotor = new TalonSRX(RobotMap.liftMotorPort);
-	
-	double setpoint = 0;
+	private double setpoint;
 
 	public LiftTalonSubsystem(){
 		// The PID values are defined in the robo-rio webdash. Not NT!!!
@@ -92,31 +101,53 @@ public class LiftTalonSubsystem extends Subsystem {
 		 liftMotor.config_kF(0, bottomPIDF[3], TALON_TIMEOUT_MS);
 		 
 		
-		 // Add the NetworkTable entries if they don't exist
-		ntIsEnabled.setBoolean(ntIsEnabled.getBoolean(false));
+		liftMotor.setInverted(TALON_REVERSE);
+		liftMotor.setSensorPhase(ENCODER_REVERSED);
+		/* Configure the encoder */
 		liftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT_MS);
-		// the limit switches are hall effects actually and are connected to the encoder
-		// fwd = top
+		
+		/* Configure the hall effect sensors */
+		// TOP hall effect
 		liftMotor.configForwardLimitSwitchSource( 
 				LimitSwitchSource.FeedbackConnector,
 				TOP_HALL_REVERSED ? LimitSwitchNormal.NormallyClosed : LimitSwitchNormal.NormallyOpen,
-				TALON_TIMEOUT_MS); 
-		// reverse = bottom
+				TALON_TIMEOUT_MS
+				); 
+		// BOTTOM hall effect
 		liftMotor.configReverseLimitSwitchSource(
 				LimitSwitchSource.FeedbackConnector,
 				BOTTOM_HALL_REVERSED ? LimitSwitchNormal.NormallyClosed : LimitSwitchNormal.NormallyOpen,
-				TALON_TIMEOUT_MS);
-
+				TALON_TIMEOUT_MS
+				);
+		
+		/* set the peak and nominal outputs, 12V means full */
+		liftMotor.configNominalOutputForward(0, TALON_TIMEOUT_MS);
+		liftMotor.configNominalOutputReverse(0, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputForward(1, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputReverse(-1, TALON_TIMEOUT_MS);
+		
+		 // Add the NetworkTable entries if they don't exist
+		ntIsEnabled.setBoolean(ntIsEnabled.getBoolean(false));
 	}
 	
     public void initDefaultCommand() {
     
     }
     
+    /**
+     * 
+     * @param diameter diameter of the winch in METER
+     * @param ticksPerRevolution
+     * @param scale
+     * @return
+     */
     private static double getDistanceToTicks(double diameter, double ticksPerRevolution, double scale){
     	return ticksPerRevolution / (diameter * Math.PI * scale);
     }
     
+    public void setPrecentSpeed(double speed){
+    	liftMotor.set(ControlMode.PercentOutput, speed);
+    }
     /**
      * Update the PID setpoint
      * @param height in METER
@@ -130,6 +161,9 @@ public class LiftTalonSubsystem extends Subsystem {
     		liftMotor.selectProfileSlot(TALON_DOWN_PID_SLOT, 0);
     }
     
+    /**
+     * Actually command the talon to move to the setpoint
+     */
     private void setPosition(){
     	liftMotor.set(ControlMode.Position, setpoint);
     }
@@ -141,17 +175,20 @@ public class LiftTalonSubsystem extends Subsystem {
     	switch(state){
 	    	case MECHANISM_DISABLED:
 	    		ntState.setString("MECHANISM_DISABLED");
+	    		// if mechanism is configured enabled, switch to RUNNING
 	    		if(ntIsEnabled.getBoolean(false))
 	    			state = States.ZEROING;
-	    		liftMotor.set(ControlMode.PercentOutput, 0);
+	    		// stop the motors
+	    		setPrecentSpeed(0);
 	    		break;
 	    		
 	    	case ZEROING:
 	    		ntState.setString("ZEROING");
+	    		// move the lift down
 	    		setSetpoint(setpoint - ZERO_RATE);
-	    		liftMotor.configVoltageCompSaturation(MAX_ZEROING_OUTPUT * 12, TALON_TIMEOUT_MS);
+	    		limitAbsoluteOutput(MAX_ZEROING_OUTPUT);
 	    		setPosition();
-	    		if(liftMotor.getSensorCollection().isRevLimitSwitchClosed()){
+	    		if(reachedBottom()){
 	    			state = States.RUNNING;
 	    			liftMotor.setSelectedSensorPosition(0, 0, TALON_TIMEOUT_MS); // zero
 	    		}
@@ -159,8 +196,12 @@ public class LiftTalonSubsystem extends Subsystem {
 	    		
 	    	case RUNNING:
 	    		ntState.setString("RUNNING");
-	    		liftMotor.configVoltageCompSaturation(MAX_RUNNING_OUTPUT * 12, TALON_TIMEOUT_MS);
+	    		limitAbsoluteOutput(MAX_RUNNING_OUTPUT);
+	    		// allow the motors to move when reaching top or bottom
+	    		if(reachedTop() || reachedBottom())
+	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
 	    		setPosition();
+	    		// if mechanism is configured disabled, switch to MECHANISM_DISABLED
 	    		if(!ntIsEnabled.getBoolean(false))
 	    			state = States.MECHANISM_DISABLED;
 	    		break;
@@ -169,22 +210,58 @@ public class LiftTalonSubsystem extends Subsystem {
 	    		state = States.MECHANISM_DISABLED;
 	    		break;
     	}
-    	ntError.setDouble(getHeight());
-    	ntHeight.setDouble(getSpeed());
+    	
+    	displaySensorValues();
     }
     
 	public double getHeight(){
 		return liftMotor.getSelectedSensorPosition(0) * TICKS_PER_METER;
 	}
-     
+    
+	/**
+	 * 
+	 * @return difference between setpoint and current height in METER
+	 */
+	public double getHeightError(){
+		return setpoint - getHeight();
+	}
+	
+	/**
+	 * 
+	 * @return speed in METER/SEC
+	 */
     public double getSpeed() {
     	return liftMotor.getSelectedSensorVelocity(0) * TICKS_PER_METER;
     }
-
-    public void clearStickyFaults()
-    {
-    	liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+    
+    /**
+     * 
+     * @return true if the top hull effect detects the gripper
+     */
+    public boolean reachedTop(){
+    	return liftMotor.getSensorCollection().isFwdLimitSwitchClosed();
     }
     
+    /**
+     * 
+     * @return true if the top hull effect detects the gripper
+     */
+    public boolean reachedBottom(){
+    	return liftMotor.getSensorCollection().isRevLimitSwitchClosed();
+    }
+    
+    /**
+     * Display the value of the encoder, top hall effect and bottom hall effect in the NetworkTables
+     */
+    public void displaySensorValues(){
+    	ntError.setDouble(getHeight() - setpoint);
+    	ntHeight.setDouble(getHeight());
+    	ntTopHall.setBoolean(reachedTop());
+    	ntBottomHall.setBoolean(reachedBottom());
+    }
+    
+    private void limitAbsoluteOutput(double absoluteMaxOutput){
+    	liftMotor.configVoltageCompSaturation(absoluteMaxOutput * 12, TALON_TIMEOUT_MS);
+    }
 }
 
