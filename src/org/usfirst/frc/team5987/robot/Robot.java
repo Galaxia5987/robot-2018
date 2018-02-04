@@ -135,7 +135,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-        // liftTalonSubsystem.update();
+        // liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
 	}
 

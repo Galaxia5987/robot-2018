@@ -40,8 +40,8 @@ public class LiftSubsystem extends Subsystem {
 	/**
 	 * How many TICKS in one METER of the elevator going up
 	 */
-	private static final double TICKS_PER_METER = getDistanceToTicks(0.045466, 4096, 0.5); // encoder sees twice less because of the cascade mechanism
-	private static final boolean TOP_HALL_REVERSED = true;
+	private static final double TICKS_PER_METER = getTicksPerMeter(0.045466, 4096, 0.5); // encoder sees twice less because of the cascade mechanism
+	private static final boolean TOP_HALL_REVERSED = false;
 	private static final boolean BOTTOM_HALL_REVERSED = false;
 	
 	/*------------- Talon Motor Constants -------------------*/
@@ -72,12 +72,12 @@ public class LiftSubsystem extends Subsystem {
 	 * The supplied output in which the lift remains still (from 0 to 1)
 	 */
 	private static final double STILL_OUTPUT = 0.3;
-	private static final double MIN_DOWN_OUTPUT = 0.1;
+	private static final double MIN_DOWN_OUTPUT = -0.1;
 	
 	
 	private States state = States.MECHANISM_DISABLED;
 	
-	public NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	public NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("Lift");
 
 	NetworkTableEntry ntTopHall = LiftTable.getEntry("Top Hall");
 	NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
@@ -86,7 +86,7 @@ public class LiftSubsystem extends Subsystem {
 	
 	NetworkTableEntry ntIsEnabled = LiftTable.getEntry("IS ENABLED");
 	
-	NetworkTableEntry ntHeight = LiftTable.getEntry("height");
+	NetworkTableEntry ntHeight = LiftTable.getEntry("Height");
 
 	TalonSRX liftMotor = new TalonSRX(RobotMap.liftMotorPort);
 	private double setpoint;
@@ -104,7 +104,7 @@ public class LiftSubsystem extends Subsystem {
 		liftMotor.config_kI(TALON_DOWN_PID_SLOT, downPIDF[1], TALON_TIMEOUT_MS);
 		liftMotor.config_kD(TALON_DOWN_PID_SLOT, downPIDF[2], TALON_TIMEOUT_MS);
 		liftMotor.config_kF(TALON_DOWN_PID_SLOT, downPIDF[3], TALON_TIMEOUT_MS);
-		 
+		
 		
 		liftMotor.setInverted(TALON_REVERSE);
 		/* set the min and and max outputs */
@@ -149,7 +149,7 @@ public class LiftSubsystem extends Subsystem {
      * For example, if the encoder detects 1 and it's 2, the multiplier should be 0.5  
      * @return
      */
-    private static double getDistanceToTicks(double diameter, double ticksPerRevolution, double encoderMultiplier){
+    private static double getTicksPerMeter(double diameter, double ticksPerRevolution, double encoderMultiplier){
     	return encoderMultiplier * ticksPerRevolution / (diameter * Math.PI);
     }
     
@@ -162,8 +162,7 @@ public class LiftSubsystem extends Subsystem {
      */
     public void setSetpoint(double height) {
     	setpoint = height * TICKS_PER_METER;
-    	boolean goingUp = setpoint - getHeight()  > 0;
-    	if(goingUp)
+    	if(setpoint > getHeight())
     		liftMotor.selectProfileSlot(TALON_UP_PID_SLOT, 0);
     	else
     		liftMotor.selectProfileSlot(TALON_DOWN_PID_SLOT, 0);
@@ -193,7 +192,7 @@ public class LiftSubsystem extends Subsystem {
 	    	case ZEROING:
 	    		ntState.setString("ZEROING");
 	    		// move the lift down
-	    		setSetpoint(setpoint - ZERO_RATE);
+	    		setSetpoint(getHeight() - ZERO_RATE);
 	    		limitAbsoluteOutput(MAX_ZEROING_OUTPUT);
 	    		setPosition();
 	    		if(reachedBottom()){
@@ -204,14 +203,16 @@ public class LiftSubsystem extends Subsystem {
 	    		
 	    	case RUNNING:
 	    		ntState.setString("RUNNING");
-	    		limitAbsoluteOutput(MAX_RUNNING_OUTPUT);
-	    		// allow the motors to move when reaching top or bottom
-	    		if(reachedTop() || reachedBottom())
-	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
-	    		setPosition();
-	    		// if mechanism is configured disabled, switch to MECHANISM_DISABLED
 	    		if(!ntIsEnabled.getBoolean(false))
 	    			state = States.MECHANISM_DISABLED;
+	    		limitAbsoluteOutput(MAX_RUNNING_OUTPUT);
+	    		// allow the motors to move when reaching top or bottom
+	    		if(reachedTop() || reachedBottom()){
+	    			setSetpoint(getHeight());
+	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+	    		}
+	    		setPosition();
+	    		// if mechanism is configured disabled, switch to MECHANISM_DISABLED
 	    		break;
 	    		
 	    	default:
@@ -227,7 +228,7 @@ public class LiftSubsystem extends Subsystem {
      * @return the height of the gripper from its bottommost position in METER
      */
 	public double getHeight(){
-		return liftMotor.getSelectedSensorPosition(0) * TICKS_PER_METER;
+		return liftMotor.getSelectedSensorPosition(0) / TICKS_PER_METER;
 	}
     
 	/**
@@ -243,7 +244,7 @@ public class LiftSubsystem extends Subsystem {
 	 * @return speed in METER/SEC
 	 */
     public double getSpeed() {
-    	return liftMotor.getSelectedSensorVelocity(0) * TICKS_PER_METER;
+    	return liftMotor.getSelectedSensorVelocity(0) / TICKS_PER_METER;
     }
     
     /**
