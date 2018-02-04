@@ -12,21 +12,26 @@ import edu.wpi.first.wpilibj.command.Command;
 public class LiftCommand extends Command {
 	double position;
 	private boolean isShuffleboard;
-	NetworkTableEntry ntSetpoint = Robot.liftSubsystem.LiftTable.getEntry("Setpoint");
+	NetworkTableEntry ntSetpoint = Robot.liftTalonSubsystem.LiftTable.getEntry("Setpoint");
 
 	public enum liftStates {
 		BOTTOM, SWITCH, SCALE
 
 	}
-
-	public LiftCommand(double pos) {
+	
+	public LiftCommand(double pos, boolean isShuffleboard){
 		this.position = pos;
-		this.isShuffleboard = false;
-		// Use requires() here to declare subsystem dependencies
-		requires(Robot.liftSubsystem);
+		this.isShuffleboard = isShuffleboard;
+		ntSetpoint.setDouble(0);
+		requires(Robot.liftTalonSubsystem);
+	}
+	
+	public LiftCommand(double pos) {
+		this(pos, false);
 	}
 
 	public LiftCommand(liftStates state) {
+		this(0, false);
 		switch (state) {
 		case BOTTOM:
 			this.position = 0.0;
@@ -38,19 +43,18 @@ public class LiftCommand extends Command {
 			this.position = 2.10;
 			break;
 		}
+	
 	}
 
 	public LiftCommand() {
-		this.isShuffleboard = true;
-		// Use requires() here to declare subsystem dependencies
-		requires(Robot.liftSubsystem);
+		this(0, true);
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		if (isShuffleboard)
 			this.position = ntSetpoint.getDouble(0);
-		Robot.liftSubsystem.setSetpoint(position);
+		Robot.liftTalonSubsystem.setSetpoint(position);
 	}
 
 	// Called repeatedly when this Command is scheduled to run

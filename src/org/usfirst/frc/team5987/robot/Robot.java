@@ -44,7 +44,6 @@ public class Robot extends TimedRobot {
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static OI m_oi;
-	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 	public static final LiftTalonSubsystem liftTalonSubsystem = new LiftTalonSubsystem();
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
@@ -136,7 +135,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		liftSubsystem.updateMotors();
+        // liftTalonSubsystem.update();
+		liftTalonSubsystem.displaySensorValues();
 	}
 
 	/**
