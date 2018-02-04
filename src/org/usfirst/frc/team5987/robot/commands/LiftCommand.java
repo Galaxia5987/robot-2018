@@ -15,7 +15,7 @@ public class LiftCommand extends Command {
 	NetworkTableEntry ntSetpoint = Robot.liftSubsystem.LiftTable.getEntry("Setpoint");
 
 	public enum liftStates {
-		BOTTOM, SWITCH, SCALE
+		BOTTOM, SWITCH, SCALE_DOWN, SCALE_MID, SCALE_TOP, CLIMB
 
 	}
 
@@ -34,8 +34,17 @@ public class LiftCommand extends Command {
 		case SWITCH:
 			this.position = 0.77;
 			break;
-		case SCALE:
+		case SCALE_DOWN:
+			this.position = 1.8;
+			break;
+		case SCALE_MID:
+			this.position = 2;
+			break;
+		case SCALE_TOP:
 			this.position = 2.10;
+			break;
+		case CLIMB:
+			this.position = 2.2;
 			break;
 		}
 	}

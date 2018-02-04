@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.RobotMap;
+import org.usfirst.frc.team5987.robot.commands.JoystickLiftCommand;
 
 import auxiliary.MiniPID;
 import edu.wpi.first.networktables.NetworkTable;
@@ -74,6 +75,7 @@ public class LiftSubsystem extends Subsystem {
 	}
 
 	public void initDefaultCommand() {
+		setDefaultCommand(new JoystickLiftCommand());
 	}
 
 	public void setSpeed(double speed) {
