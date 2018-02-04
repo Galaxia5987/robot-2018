@@ -1,4 +1,4 @@
-self.command_s = "area,0,0"
+self.command_s = "extent,0.8,1"
 self.draw_contours_b = False
 self.draw_hulls_b = False
 self.dirode_iterations_i = 2
