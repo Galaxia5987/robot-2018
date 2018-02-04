@@ -20,7 +20,7 @@ public class IntakeTakeCubeCommand extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		if (Robot.liftSubsystem.isDown())
+		if (Robot.liftSubsystem.reachedBottom())
 			Robot.intakeSubsystem.setSpeed(wheelSpeed, -wheelSpeed); // TODO:
 																		// check
 																		// the

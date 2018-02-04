@@ -14,7 +14,7 @@ import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.GripperSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
-import org.usfirst.frc.team5987.robot.subsystems.LiftTalonSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static OI m_oi;
-	public static final LiftTalonSubsystem liftTalonSubsystem = new LiftTalonSubsystem();
+	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
 	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
 	public static AHRS navx;
@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
         // liftTalonSubsystem.update();
-		liftTalonSubsystem.displaySensorValues();
+		liftSubsystem.displaySensorValues();
 	}
 
 	/**

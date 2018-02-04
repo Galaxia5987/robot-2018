@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class LiftCommand extends Command {
 	double position;
 	private boolean isShuffleboard;
-	NetworkTableEntry ntSetpoint = Robot.liftTalonSubsystem.LiftTable.getEntry("Setpoint");
+	NetworkTableEntry ntSetpoint = Robot.liftSubsystem.LiftTable.getEntry("Setpoint");
 
 	public enum liftStates {
 		BOTTOM, SWITCH, SCALE
@@ -23,7 +23,7 @@ public class LiftCommand extends Command {
 		this.position = pos;
 		this.isShuffleboard = isShuffleboard;
 		ntSetpoint.setDouble(0);
-		requires(Robot.liftTalonSubsystem);
+		requires(Robot.liftSubsystem);
 	}
 	
 	public LiftCommand(double pos) {
@@ -54,7 +54,7 @@ public class LiftCommand extends Command {
 	protected void initialize() {
 		if (isShuffleboard)
 			this.position = ntSetpoint.getDouble(0);
-		Robot.liftTalonSubsystem.setSetpoint(position);
+		Robot.liftSubsystem.setSetpoint(position);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
