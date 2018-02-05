@@ -16,6 +16,7 @@ import org.usfirst.frc.team5987.robot.commands.IntakeTakeCubeCommand;
 
 import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	Joystick rightStick = new Joystick(0);
 	XboxController xbox = new XboxController(0);
 	Button a = new JoystickButton(xbox, 1);
 	Button b = new JoystickButton(xbox, 2);

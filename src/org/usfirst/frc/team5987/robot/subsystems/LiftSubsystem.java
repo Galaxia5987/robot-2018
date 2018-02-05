@@ -57,8 +57,8 @@ public class LiftSubsystem extends Subsystem {
 			0,   // D
 			0    // F
 			}; 
-	private static final boolean TALON_REVERSE = false;
-	private static final boolean ENCODER_REVERSED = false;
+	private static final boolean TALON_REVERSE = true;
+	private static final boolean ENCODER_REVERSED = true;
 	private static final int TALON_TIMEOUT_MS = 10;
 	private static final int TALON_UP_PID_SLOT = 0;
 	private static final int TALON_DOWN_PID_SLOT = 1;
@@ -83,13 +83,17 @@ public class LiftSubsystem extends Subsystem {
 	NetworkTableEntry ntBottomHall = LiftTable.getEntry("Bottom Hall");
 	NetworkTableEntry ntState = LiftTable.getEntry("State");
 	NetworkTableEntry ntError = LiftTable.getEntry("Error");
-	
+	NetworkTableEntry ntOutPrecent = LiftTable.getEntry("Output Precent");
 	NetworkTableEntry ntIsEnabled = LiftTable.getEntry("IS ENABLED");
 	
 	NetworkTableEntry ntHeight = LiftTable.getEntry("Height");
 
 	TalonSRX liftMotor = new TalonSRX(RobotMap.liftMotorPort);
 	private double setpoint;
+	private NetworkTableEntry ntNomOutFwd = LiftTable.getEntry("Nom Out Fwd");
+	private NetworkTableEntry ntPeakOutFwd = LiftTable.getEntry("Peak Out Fwd");
+	private NetworkTableEntry ntNomOutRev = LiftTable.getEntry("Nom Out Rev");
+	private NetworkTableEntry ntPeakOutRev = LiftTable.getEntry("Peak Out Rev");
 
 	public LiftSubsystem(){
 		// The PID values are defined in the robo-rio webdash. Not NT!!!
@@ -107,12 +111,8 @@ public class LiftSubsystem extends Subsystem {
 		
 		
 		liftMotor.setInverted(TALON_REVERSE);
-		/* set the min and and max outputs */
-		liftMotor.configNominalOutputForward(STILL_OUTPUT, TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputForward(1, TALON_TIMEOUT_MS);
-		liftMotor.configNominalOutputReverse(MIN_DOWN_OUTPUT, TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputReverse(STILL_OUTPUT, TALON_TIMEOUT_MS);
-		
+
+		configNominalAndPeakOutputs();
 		liftMotor.setSensorPhase(ENCODER_REVERSED);
 		/* Configure the encoder */
 		liftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT_MS);
@@ -135,9 +135,22 @@ public class LiftSubsystem extends Subsystem {
 		
 		 // Add the NetworkTable entries if they don't exist
 		ntIsEnabled.setBoolean(ntIsEnabled.getBoolean(false));
+		ntNomOutFwd.setDouble(0);
+		ntPeakOutFwd.setDouble(1);
+		ntNomOutRev.setDouble(0);
+		ntPeakOutRev.setDouble(-1);
 	}
 	
-    public void initDefaultCommand() {
+    public void configNominalAndPeakOutputs() {
+		// TODO Auto-generated method stub
+		/* set the min and and max outputs */
+		liftMotor.configNominalOutputForward(ntNomOutFwd.getDouble(0), TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputForward(ntPeakOutFwd.getDouble(1), TALON_TIMEOUT_MS);
+		liftMotor.configNominalOutputReverse(ntNomOutRev.getDouble(0), TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputReverse(ntPeakOutRev.getDouble(-1), TALON_TIMEOUT_MS);
+	}
+
+	public void initDefaultCommand() {
     
     }
     
@@ -156,6 +169,7 @@ public class LiftSubsystem extends Subsystem {
     public void setPrecentSpeed(double speed){
     	liftMotor.set(ControlMode.PercentOutput, speed);
     }
+    
     /**
      * Update the PID setpoint
      * @param height in METER
@@ -184,7 +198,7 @@ public class LiftSubsystem extends Subsystem {
 	    		ntState.setString("MECHANISM_DISABLED");
 	    		// if mechanism is configured enabled, switch to RUNNING
 	    		if(ntIsEnabled.getBoolean(false))
-	    			state = States.ZEROING;
+	    			state = States.RUNNING; // TODO: change to ZEROING!!!
 	    		// stop the motors
 	    		setPrecentSpeed(0);
 	    		break;
@@ -247,6 +261,9 @@ public class LiftSubsystem extends Subsystem {
     	return liftMotor.getSelectedSensorVelocity(0) / TICKS_PER_METER;
     }
     
+    public double getOutputPrecent(){
+    	return liftMotor.getMotorOutputPercent();
+    }
     /**
      * 
      * @return true if the top hull effect detects the gripper
@@ -271,6 +288,7 @@ public class LiftSubsystem extends Subsystem {
     	ntHeight.setDouble(getHeight());
     	ntTopHall.setBoolean(reachedTop());
     	ntBottomHall.setBoolean(reachedBottom());
+    	ntOutPrecent.setDouble(getOutputPrecent());
     }
     
     private void limitAbsoluteOutput(double absoluteMaxOutput){

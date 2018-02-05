@@ -137,6 +137,11 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
         // liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
+//		double joyY = m_oi.rightStick.getY();
+//		SmartDashboard.putNumber("Joy Y", joyY);
+//		liftSubsystem.setPrecentSpeed(m_oi.rightStick.getY());
+		liftSubsystem.setSetpoint(ntSetpoint.getDouble(0));
+		liftSubsystem.configNominalAndPeakOutputs();
 	}
 
 	/**
