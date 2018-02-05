@@ -39,13 +39,12 @@ public class Robot extends TimedRobot {
 
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-	NetworkTable liftTable;
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
-	NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTable LiftTable = liftSubsystem.LiftTable;
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
 	public static AHRS navx;
 	
@@ -63,7 +62,7 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
-		ntSetpoint.setDouble(0);
+		ntSetpoint.setDouble(liftSubsystem.getHeight());
 		SmartDashboard.putData(new LiftCommand());
 	}
 
@@ -137,10 +136,10 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
         // liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
-//		double joyY = m_oi.rightStick.getY();
-//		SmartDashboard.putNumber("Joy Y", joyY);
-//		liftSubsystem.setPrecentSpeed(m_oi.rightStick.getY());
-		liftSubsystem.setSetpoint(ntSetpoint.getDouble(0));
+		double joyY = m_oi.rightStick.getY();
+		SmartDashboard.putNumber("Joy Y", joyY);
+		liftSubsystem.setPrecentSpeed(joyY);
+//		liftSubsystem.update();
 		liftSubsystem.configNominalAndPeakOutputs();
 	}
 
