@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
 	
 	public static OI m_oi;
 	
-	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30);
+	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30,0.05);
 	
 	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
