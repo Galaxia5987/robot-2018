@@ -69,7 +69,7 @@ public class RobotMap {
 	public static final int driveLeftEncoderChannelA = 1; // TODO: CHANGE!
 	public static final int driveLeftEncoderChannelB = 0; // TODO: CHANGE!
 
-	public static final double driveEncoderDistancePerPulse = 0.00133; // TODO:
+	public static final double driveEncoderDistancePerPulse = 0.0016255555; // TODO:
 																	// CHANGE!
 
 	public static final int backUltrasonic = 0; // TODO: CHANGE!

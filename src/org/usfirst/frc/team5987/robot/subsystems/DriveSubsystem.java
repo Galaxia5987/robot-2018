@@ -5,27 +5,43 @@ import org.usfirst.frc.team5987.robot.RobotMap;
 import org.usfirst.frc.team5987.robot.commands.JoystickDriveCommand;
 
 import auxiliary.MiniPID;
+import auxiliary.Misc;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 
 /**
  * @author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
 	/*********************** CONSTANTS ************************/
-	// Gyro PID
-	private static double gyroKp = 0.007;
-	private static double gyroKi = 0;
+
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0.15; 
 	private static double kI = 0.002; 
 	private static double kD = 0.04;
-	private static double kF = 0.4; 
+	private static double kF = 0.4;
+	
+	private static double TurnKp = 0.3; 
+	private static double TurnKi = 0.006; 
+	private static double TurnKd = 0.04;
+	private static double TurnKf = 0.7;
+	public enum PIDTypes{
+		STRAIGHT,
+		TURN
+	}
+	private PIDTypes pidType = PIDTypes.STRAIGHT;
+	// Gyro PID
+	private static double gyroKp = 0.015;
+	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
 	private static final boolean GYRO_REVERSED = true;
 	/**
@@ -81,19 +97,26 @@ public class DriveSubsystem extends Subsystem {
 	NetworkTableEntry ntKi = driveTable.getEntry("kI");
 	NetworkTableEntry ntKd = driveTable.getEntry("kD");
 	NetworkTableEntry ntKf = driveTable.getEntry("kF");
-	// NetworkTable error for debugging PIDF constants
+	// NT Turn PIDF constants
+	NetworkTableEntry ntTurnKp = driveTable.getEntry("Turn kP");
+	NetworkTableEntry ntTurnKi = driveTable.getEntry("Turn kI");
+	NetworkTableEntry ntTurnKd = driveTable.getEntry("Turn kD");
+	NetworkTableEntry ntTurnKf = driveTable.getEntry("Turn kF");
+	// NT error for debugging PIDF constants
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
+	
 	// Gyro NetworkTable constants
-
 	NetworkTableEntry ntGyroKp = driveTable.getEntry("Gyro kP");
 	NetworkTableEntry ntGyroKi = driveTable.getEntry("Gyro kI");
 	NetworkTableEntry ntGyroKd = driveTable.getEntry("Gyro kD");
+	
 	// NetworkTable error for debugging gyro PID
 	NetworkTableEntry ntGyroError = driveTable.getEntry("Gyro Error");
 	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
 	NetworkTableEntry ntRightSpeed = driveTable.getEntry("Right Velocity");
 	NetworkTableEntry ntLeftSpeed = driveTable.getEntry("Left Velocity");
+	private NetworkTableEntry ntPIDType = driveTable.getEntry("PID Type");
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
@@ -120,6 +143,10 @@ public class DriveSubsystem extends Subsystem {
 		ntKi.setDouble(kI);
 		ntKd.setDouble(kD);
 		ntKf.setDouble(kF);
+		ntTurnKp.setDouble(TurnKp);
+		ntTurnKi.setDouble(TurnKi);
+		ntTurnKd.setDouble(TurnKd);
+		ntTurnKf.setDouble(TurnKf);
 		ntGetGyroPID();
 		ntGyroKp.setDouble(gyroKp);
 		ntGyroKi.setDouble(gyroKi);
@@ -161,6 +188,10 @@ public class DriveSubsystem extends Subsystem {
 		kI = ntKi.getDouble(kI);
 		kD = ntKd.getDouble(kD);
 		kF = ntKf.getDouble(kF);
+		TurnKp = ntTurnKp.getDouble(TurnKp);
+		TurnKi = ntTurnKi.getDouble(TurnKi);
+		TurnKd = ntTurnKd.getDouble(TurnKd);
+		TurnKf = ntTurnKf.getDouble(TurnKf);
 	}
 
 	/**
@@ -171,7 +202,15 @@ public class DriveSubsystem extends Subsystem {
 		gyroKi = ntGyroKi.getDouble(gyroKi);
 		gyroKd = ntGyroKd.getDouble(gyroKd);
 	}
-
+	
+	public PIDTypes getPIDType(){
+		return pidType;
+	}
+	
+	public void setPIDType(PIDTypes newType){
+		pidType = newType;
+	}
+	
 	/**
 	 * Updates the PIDF control and moves the motors <br>
 	 * Controls the velocity according to {@link #setRightSetpoint()} and
@@ -180,10 +219,20 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public void updatePID() {
 		ntGetPID();
-
-		rightPID.setPID(kP, kI, kD, kF);
-		leftPID.setPID(kP, kI, kD, kF);
-
+		switch(pidType){
+		default:
+		case STRAIGHT:
+			ntPIDType.setString("STRAIGHT");
+			rightPID.setPID(kP, kI, kD, kF);
+			leftPID.setPID(kP, kI, kD, kF);
+			break;
+		case TURN:
+			ntPIDType.setString("TURN");
+			rightPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
+			leftPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
+			break;
+		}
+		
 		double rightOut = rightPID.getOutput(getRightSpeed());
 		double leftOut = leftPID.getOutput(getLeftSpeed());
 
@@ -212,23 +261,19 @@ public class DriveSubsystem extends Subsystem {
 	 * @param leftVelocity - desired velocity for the left motors METERS/SEC
 	 */
 	public void setSetpoints(double leftVelocity, double rightVelocity) {
-		double rightOut; // Normalized output [METERS/SEC]
-		double leftOut; // Normalized output [METERS/SEC]
-		// NORMALIZATION
-		if ((Math.abs(rightVelocity) > MAX_VELOCITY) || (Math.abs(leftVelocity) > MAX_VELOCITY)) {
-			if (Math.abs(rightVelocity) > Math.abs(leftVelocity)) {
-				rightOut = (rightVelocity / rightVelocity) * MAX_VELOCITY;
-				leftOut = (leftVelocity / rightVelocity) * MAX_VELOCITY;
-			} else {
-				leftOut = (leftVelocity / leftVelocity) * MAX_VELOCITY;
-				rightOut = (rightVelocity / leftVelocity) * MAX_VELOCITY;
-			}
-		} else {
-			// No normalization needed
-			rightOut = rightVelocity;
-			leftOut = leftVelocity;
-		}
-		}
+		double outs[] = Misc.normalize(leftVelocity, rightVelocity, MAX_VELOCITY);
+		double leftOut = outs[0];
+		double rightOut = outs[1];
+		double leftError = leftOut - getLeftSpeed();
+		ntLeftError.setDouble(leftError);
+		ntLeftSpeed.setDouble(getLeftSpeed());
+		leftPID.setSetpoint(leftOut);
+		
+		double rightError = rightOut - getRightSpeed();
+		ntRightError.setDouble(rightError);
+		ntRightSpeed.setDouble(getRightSpeed());
+		rightPID.setSetpoint(rightOut);
+	}
 
 	/**
 	 * Set the speed of the two right motors

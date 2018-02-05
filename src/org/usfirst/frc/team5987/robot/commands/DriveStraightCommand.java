@@ -8,8 +8,10 @@ import auxiliary.Misc;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * TODO: REMOVE (-) minus in ntDistance!!!
  * TODO: fix absolute angle
  */
 public class DriveStraightCommand extends Command {
@@ -30,6 +32,7 @@ public class DriveStraightCommand extends Command {
 	NetworkTableEntry ntMPoutput = driveTable.getEntry("MP Output");
 	private double DistanceError;
 	NetworkTableEntry ntShowAngleToKeep = driveTable.getEntry("Show Angle To Keep");
+	private double absDistanceAddition = 0;
 	
 	
 
@@ -49,7 +52,7 @@ public class DriveStraightCommand extends Command {
 		constructMotionProfile();
 		requires(Robot.driveSubsystem);
 	}
-
+	
 	/**
 	 * Uses values from the Shuffleboard.
 	 * @param distance
@@ -72,6 +75,39 @@ public class DriveStraightCommand extends Command {
 	 */
 	public DriveStraightCommand(double distance) {
 		this(distance, 0);
+		keepStartingAngle = true;
+		requires(Robot.driveSubsystem);
+	}
+	
+	/**
+	 * The robot will keep (heading to) its starting angle. Uses values from the Shuffleboard.
+	 * 
+	 * @param ntDistance
+	 *            desired distance, distance from target
+	 * @param angleToKeep
+	 * 			  the angle to keep while driving           
+	 * @param absDistanceAddition
+	 * 			  the distance to add to the distance from the network table (or subtract if the distance from NT is negative)           
+	 */
+	public DriveStraightCommand(NetworkTableEntry ntDistance, double angleToKeep, double absDistanceAddition) {
+		this.ntFinalDistance = ntDistance;
+		this.absDistanceAddition  = absDistanceAddition;
+		this.angleToKeep = angleToKeep;
+		keepStartingAngle = false;
+		requires(Robot.driveSubsystem);
+	}
+	
+	/**
+	 * The robot will keep (heading to) its starting angle. Uses values from the Shuffleboard.
+	 * 
+	 * @param distance
+	 *            desired distance, distance from target
+	 * @param absDistanceAddition
+	 * 			  the distance to add to the distance from the network table (or subtract if the distance from NT is negative)           
+	 */
+	public DriveStraightCommand(NetworkTableEntry ntDistance, double absDistanceAddition) {
+		this.ntFinalDistance = ntDistance;
+		this.absDistanceAddition  = absDistanceAddition;
 		keepStartingAngle = true;
 		requires(Robot.driveSubsystem);
 	}
@@ -105,6 +141,8 @@ public class DriveStraightCommand extends Command {
 		}
 		if (ntFinalDistance != null) {
 			finalDistance = ntFinalDistance.getDouble(0);
+			// TODO: remove!!!!
+			finalDistance *= -1;
 		}
 		if(keepStartingAngle){
 			angleToKeep = Robot.driveSubsystem.getAngle();
@@ -112,6 +150,12 @@ public class DriveStraightCommand extends Command {
 			double start = Robot.driveSubsystem.getAngle();
 			angleToKeep = Misc.absoluteToRelativeAngle(angleToKeep, start) + start;
 		}
+		
+		if(finalDistance > 0)
+			finalDistance += absDistanceAddition;
+		else
+			finalDistance -= absDistanceAddition;
+		
 		ntShowAngleToKeep.setDouble(angleToKeep);
 		initRightDistance = Robot.driveSubsystem.getRightDistance();
 		initLeftDistance = Robot.driveSubsystem.getLeftDistance();

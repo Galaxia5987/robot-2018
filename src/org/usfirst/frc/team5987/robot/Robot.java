@@ -7,8 +7,13 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
+
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
@@ -55,6 +60,7 @@ public class Robot extends TimedRobot {
 	
 	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	public static NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
@@ -64,6 +70,12 @@ public class Robot extends TimedRobot {
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+	
+
+	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
+
+	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
 
 
 	/**
@@ -77,7 +89,12 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
-		SmartDashboard.putData(new DriveStraightCommand(-2));
+		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
+		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
+		SmartDashboard.putData(new TurnCommand(ntSwitchAngle, true));
+		SmartDashboard.putData(new TurnToTargetGroupCommand());
+		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
+		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		ntSetpoint.setDouble(0);
 	}
 
