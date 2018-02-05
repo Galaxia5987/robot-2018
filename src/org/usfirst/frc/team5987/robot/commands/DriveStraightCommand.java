@@ -184,7 +184,7 @@ public class DriveStraightCommand extends Command {
 		ntMPoutput.setDouble(speed);
 		
 		DistanceError = finalDistance - avgDistance;
-		ntDistanceError .setDouble(DistanceError);
+		ntDistanceError.setDouble(DistanceError);
 
 	}
 

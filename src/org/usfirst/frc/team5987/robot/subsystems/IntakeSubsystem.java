@@ -20,10 +20,8 @@ public class IntakeSubsystem extends Subsystem {
 	/**
 	 * Set the speed for the intake wheels
 	 * 
-	 * @param speedLeft
-	 *            - speed between -1 and 1
-	 * @param speedRight
-	 *            - speed between -1 and 1
+	 * @param speedLeft - speed between -1 and 1.
+	 * @param speedRight - speed between -1 and 1.
 	 */
 	public void setSpeed(double speedLeft, double speedRight) {
 		// Basic function to set motor speed
@@ -32,10 +30,9 @@ public class IntakeSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Open the intake mechanism (expends beyond the frame perimeter)
+	 * Open the intake mechanism (expends beyond the frame perimeter).
 	 * 
-	 * @param open
-	 *            - Whether you want to open the mechanism.
+	 * @param open - whether you want to open the mechanism.
 	 */
 	public void setSolenoid(boolean open) {
 		// open decides weather to open the piston or close it
@@ -44,6 +41,11 @@ public class IntakeSubsystem extends Subsystem {
 		} else {
 			solenoid.set(DoubleSolenoid.Value.kReverse);
 		}
+	}
+	
+	public boolean getSolenoid() {
+		if (solenoid.get() == DoubleSolenoid.Value.kForward) return true;
+		return false;
 	}
 
 	public void initDefaultCommand() {

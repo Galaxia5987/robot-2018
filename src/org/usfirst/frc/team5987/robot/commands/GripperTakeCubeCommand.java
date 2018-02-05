@@ -8,27 +8,33 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class GripperTakeCubeCommand extends Command {
+	private boolean canceled = false;
+	public GripperTakeCubeCommand() {
+		requires(Robot.gripperSubsystem);
+	}
 
-    public GripperTakeCubeCommand() {
-    	requires(Robot.gripperSubsystem);
-    }
+	protected void initialize() {
+		canceled = false;
+	}
 
-    protected void initialize() {
-    }
+	protected void execute() {
+		if (Robot.liftSubsystem.isDown() && !Robot.gripperSubsystem.isCubeInside()) {
+			Robot.gripperSubsystem.setSpeed(0.3, 0.3);
+		}
+		else canceled = true;
+	}
 
-    protected void execute() {
-    	Robot.gripperSubsystem.setSpeed(0.5, 0.5);
-    	Robot.gripperSubsystem.ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
-    }
+	protected boolean isFinished() {
+		return Robot.gripperSubsystem.isCubeInside() || canceled;
+	}
 
-    protected boolean isFinished() {
-        return Robot.gripperSubsystem.isCubeInside();
-    }
+	protected void end() {
+		Robot.gripperSubsystem.setSpeed(0.0, 0.0);
+	}
 
-    protected void end() {
-    	Robot.gripperSubsystem.setSpeed(0.0, 0.0);
-    }
+	protected void interrupted() {
 
-    protected void interrupted() {
-    }
+		Robot.gripperSubsystem.setSpeed(0, 0);
+		canceled = true;
+	}
 }

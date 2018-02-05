@@ -10,8 +10,10 @@ package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
+
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
@@ -21,9 +23,11 @@ import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import auxiliary.Watch_Doge;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -39,15 +43,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-
+	
+	public static final PowerDistributionPanel PDP = new PowerDistributionPanel();
+	
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
 	public static final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
-	public static OI m_oi;
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
+	
+	public static OI m_oi;
+	
+	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30);
+	
 	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	public static NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
@@ -161,6 +171,12 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
 		ntAngle.setDouble(driveSubsystem.getAngle());
+		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
+		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
+		//gripperSubsystem.ntCurrent.setDouble(PDP.getCurrent(RobotMap.gripperLeftPDP));
+		liftSubsystem.ntBottomHall.setBoolean(liftSubsystem.isDown());
+		
+		//clingyShiba.feed();
 //		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
 //		driveSubsystem.setSetpoints(-0.3, -1);
 	}

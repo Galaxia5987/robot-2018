@@ -6,19 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team5987.robot;
-import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
-
-
-import org.usfirst.frc.team5987.robot.commands.GripperShootCommand;
-import org.usfirst.frc.team5987.robot.commands.GripperTakeCubeCommand;
-
-import org.usfirst.frc.team5987.robot.commands.IntakeSelenoidCommand;
-import org.usfirst.frc.team5987.robot.commands.IntakeTakeCubeCommand;
-
-import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
-
-import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
-
+import org.usfirst.frc.team5987.robot.commands.*;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -28,17 +16,21 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	public Joystick leftStick = new Joystick(0);
+	public Joystick rightStick = new Joystick(1);
 	XboxController xbox = new XboxController(0);
 	Button a = new JoystickButton(xbox, 1);
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
+	Button select = new JoystickButton(xbox, 7);
+	Button start = new JoystickButton(xbox, 8);
 	
 
 	public OI() {
-		y.whenPressed(new DriveStraightCommand(4));
-		a.whenPressed(new ClimbCommand(false));
-		b.whenPressed(new OpenHooksCommand(true));
-		x.whenPressed(new OpenHooksCommand(false));
+		b.whileHeld(new ShootCubeCommand(0.75, false));
+		x.whileHeld(new ShootCubeCommand(-0.75, false));
+		y.whenPressed(new IntakeSelenoidCommand());
+		a.whenPressed(new CommandGroup_TakeCube());
 	}
 }

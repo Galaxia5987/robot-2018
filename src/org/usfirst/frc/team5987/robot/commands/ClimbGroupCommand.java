@@ -3,16 +3,17 @@ package org.usfirst.frc.team5987.robot.commands;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
+ * The group command
  * @author Dan Katzuv
  */
 public class ClimbGroupCommand extends CommandGroup {
 
-    public ClimbGroupCommand() {
+    public ClimbGroupCommand(double climbSpeed) {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
         // these will run in order.
-    	addParallel(new ClimbCommand());
+    	addParallel(new ClimbCommand(true, Math.abs(climbSpeed)));
     	addSequential(new OpenHooksCommand(false));
     	// addSequential(new openRaisingBarCommand());
         // To run multiple commands at the same time,

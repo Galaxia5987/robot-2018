@@ -1,13 +1,13 @@
 package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
-import org.usfirst.frc.team5987.robot.RobotMap;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Command for openning the hooks on the climbing subsystem.
+ * 
  * @author Dan Katzuv
  */
 public class OpenHooksCommand extends Command {
