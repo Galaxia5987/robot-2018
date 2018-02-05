@@ -17,11 +17,12 @@ public class RobotMap {
 
 
 	/*---------------CLIMB-----------------*/
-	public static int climbRightServo = 8; // TODO: CHANGE!
-	public static int climbLeftServo = 9; // TODO: CHANGE!
+
+	public static int climbRightServo = 10; // TODO: CHANGE!
+	public static int climbLeftServo = 11; // TODO: CHANGE!
 	
-	public static int climbMotor = 10; // TODO: CHANGE!
-	public static int climbPDP = 10;
+	public static int climbMotor = 12; // TODO: CHANGE!
+	public static int climbPDP = 14;
 	
 	public static final int[] climbPDPs = new int[] {climbPDP}; // TODO: CHANGE!
 	/*-------------------------------------*/
@@ -29,30 +30,30 @@ public class RobotMap {
 
 
 	/*----------------DRIVE----------------*/
-	public static final int driveRightRearMotor = 5; // TODO: CHANGE!
-	public static final int driveRightFrontMotor = 4; // TODO: CHANGE!
-	public static final int driveLeftRearMotor = 7; // TODO: CHANGE!
-	public static final int driveLeftFrontMotor = 6; // TODO: CHANGE!
+	public static final int driveRightRearMotor = 1; // TODO: CHANGE!
+	public static final int driveRightFrontMotor = 2; // TODO: CHANGE!
+	public static final int driveLeftRearMotor = 3; // TODO: CHANGE!
+	public static final int driveLeftFrontMotor = 4; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 	/*---------------GRIPPER---------------*/
-	public static int gripperWheelLeft = 2; // TODO: CHANGE!
-	public static int gripperLeftPDP = 2; // TODO: CHANGE!
-	public static int gripperWheelRight = 3; // TODO: CHANGE!
-	public static int gripperRightPDP = 3; // TODO: CHANGE!
+	public static int gripperWheelLeft = 8; // TODO: CHANGE!
+	public static int gripperLeftPDP = 10; // TODO: CHANGE!
+	public static int gripperWheelRight = 6; // TODO: CHANGE!
+	public static int gripperRightPDP = 5; // TODO: CHANGE!
 	
 	public static final int[] gripperPDPs = new int[] {gripperLeftPDP, gripperRightPDP};
 	/*-------------------------------------*/
 
 	/*----------------LIFT-----------------*/
-	public static int liftMotorPort = 11;
+	public static int liftMotorPort = 15;
 	/*-------------------------------------*/
 
 	/*----------------INTAKE---------------*/
-	public static final int intakeMotorLeft = 0;
-	public static int intakeLeftPDP = 0;
-	public static final int intakeMotorRight = 1;
-	public static int intakeRightPDP = 1;
+	public static final int intakeMotorLeft = 7;
+	public static int intakeLeftPDP = 6;
+	public static final int intakeMotorRight = 5;
+	public static int intakeRightPDP = 4;
 	
 	public static final int[] intakePDPs = new int[] {intakeLeftPDP, intakeRightPDP};
 	/*-------------------------------------*/
@@ -64,21 +65,22 @@ public class RobotMap {
 	/*-------------------------------------*/
 
 	/*----------------DRIVE----------------*/
-	public static final int driveRightEncoderChannelA = 3; // TODO: CHANGE!
-	public static final int driveRightEncoderChannelB = 2; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelA = 1; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelB = 0; // TODO: CHANGE!
+
+	public static final int driveRightEncoderChannelA = 2; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelB = 3; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelA = 0; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelB = 1; // TODO: CHANGE!
 
 	public static final double driveEncoderDistancePerPulse = 0.00133; // TODO:
 																	// CHANGE!
 
-	public static final int backUltrasonic = 0; // TODO: CHANGE!
+	public static final int backUltrasonic = 1; // TODO: CHANGE!
 	public static int bumpSensor = 7; // TODO: CHANGE!
 	public static int colorSensor = 2;
 	/*-------------------------------------*/
 
 	/*---------------GRIPPER---------------*/
-	public static int proximityChannel = 1; // TODO: CHANGE!
+	public static int proximityChannel = 0; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 	/*----------------LIFT-----------------*/
