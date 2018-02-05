@@ -63,10 +63,9 @@ public class Watch_Doge {
 						timer.start();
 						isTimerEnabled = true;
 					}
-					if (timer.get() > minTime) {
+					if (timer.hasPeriodPassed(minTime)) { // This also resets the timer					
 						subsystem.bork();
 						timer.stop();
-						timer.reset();
 						isTimerEnabled = false;
 					}
 				} else {
