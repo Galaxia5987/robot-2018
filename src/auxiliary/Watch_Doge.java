@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.Timer;
  * This class is a good boy. A REALLY good boy. Such a good boy, in fact, he can
  * tell when a 775pro motor is stalling just by sniffing the current that the
  * motor is drawing from the PDP. If the amount of amps passes the maximum that
- * this Watch_Doge was trained with, he'll bork() at the subsystem to shut it
+ * this Watch_Doge was trained with, he'll {@link #bork()} at the subsystem to shut it
  * off to prevent any further damage. He will then proceed to revive the
- * subsystem with some awesome necromancy().
+ * subsystem with some awesome Refer to {@linkplain #bork the overridden method}.
  */
 public class Watch_Doge {
 
@@ -29,11 +29,11 @@ public class Watch_Doge {
 	 * Birth and train a new Watch_Doge
 	 *
 	 * @param PDP Reference to PowerDistributionPanel object
-	 * @param subsystem Reference to a subsystem with Watch_Dogeable interface implemented
+	 * @param subsystem Reference to a subsystem with {@link Watch_Dogeable} interface implemented
 	 * @param motorPorts Array of PDP power ports used by motor controllers in subsystem
 	 * @param maxAmp Maximum number of amperes allowed before Watch_Dogeable shuts 
-	 * 		subsystem down (by borking)
-	 * @param minTime Minimum time [sec] for motor to exceed maxAmps before Watch_Doge {@link #bork()}s.
+	 * 		subsystem down by bork().
+	 * @param minTime Minimum time [sec] for motor to exceed maxAmps before Watch_Doge bork()s.
 	 */
 	public Watch_Doge(PowerDistributionPanel PDP, Watch_Dogeable subsystem, int[] motorPorts, double maxAmp,
 			double minTime) {

@@ -1,6 +1,6 @@
 package auxiliary;
 
-/** Interface that must be implemented for a subsystem to be monitered by Watch_Doge.
+/** Interface that must be implemented for a subsystem to be monitored by Watch_Doge.
  */
 public interface Watch_Dogeable {
     /**
