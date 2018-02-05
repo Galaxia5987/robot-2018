@@ -6,6 +6,9 @@ import org.usfirst.frc.team5987.robot.commands.JoystickDriveCommand;
 
 import auxiliary.MiniPID;
 import auxiliary.Misc;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
