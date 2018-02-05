@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/vision_class.py" line="205" mnemonic="1" />
-    <bookmark url="file://$PROJECT_DIR$/vision_class.py" line="407" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/vision_class.py" line="214" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/vision_class.py" line="416" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="23aa1bf5-88db-4cb2-be71-720effe23260" name="Default" comment="">
@@ -21,8 +21,28 @@
       <file leaf-file-name="vision_class.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vision_class.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="502" column="34" lean-forward="true" selection-start-line="502" selection-start-column="34" selection-end-line="502" selection-end-column="34" />
+            <state relative-caret-position="396">
+              <caret line="557" column="0" lean-forward="false" selection-start-line="557" selection-start-column="0" selection-end-line="559" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="networktables server.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tools/networktables server.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="612">
+              <caret line="38" column="4" lean-forward="false" selection-start-line="38" selection-start-column="4" selection-end-line="38" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="networtables put stuff.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tools/networtables put stuff.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="108">
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -39,10 +59,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>distance</find>
-      <find>range</find>
-      <find>aspect</find>
-      <find>v</find>
       <find>vision class</find>
       <find>Vision</find>
       <find>get_distance</find>
@@ -56,7 +72,6 @@
       <find>range_finder</find>
       <find>NetworkTable</find>
       <find>open(&quot;</find>
-      <find>open(</find>
       <find>self.set_item</find>
       <find>find_center</find>
       <find>center</find>
@@ -67,6 +82,13 @@
       <find>tan(</find>
       <find>return</find>
       <find>angle</find>
+      <find>show</find>
+      <find>gen</find>
+      <find>open(</find>
+      <find>get_item</find>
+      <find>set_item(&quot;Filter MOde&quot;</find>
+      <find>set_item</find>
+      <find>print</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -82,17 +104,16 @@
         <option value="$PROJECT_DIR$/oreder.py" />
         <option value="$PROJECT_DIR$/key mapper.py" />
         <option value="$PROJECT_DIR$/range_finder.py" />
-        <option value="$PROJECT_DIR$/tools/networtables put stuff.py" />
-        <option value="$PROJECT_DIR$/tools/networktables server.py" />
         <option value="$PROJECT_DIR$/tools/manual_range_finder.py" />
+        <option value="$PROJECT_DIR$/tools/networktables server.py" />
+        <option value="$PROJECT_DIR$/tools/networtables put stuff.py" />
         <option value="$PROJECT_DIR$/vision_class.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="534" />
     <option name="y" value="27" />
-    <option name="width" value="960" />
+    <option name="width" value="1920" />
     <option name="height" value="1053" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -124,8 +145,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -142,6 +161,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -161,24 +182,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.vision_class">
-    <configuration name="key mapper" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Vision" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/key mapper.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <configuration name="manual_range_finder" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -215,6 +218,24 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="networtables put stuff" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tools" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Vision" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tools/networtables put stuff.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="range_finder" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -246,25 +267,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Vision" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/vision_class.py" />
-      <option name="PARAMETERS" value="-s -p 1 -nts 192.168.13.152" />
+      <option name="PARAMETERS" value="-l -p 1 -m -nts 127.0.0.1" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.vision_class" />
-      <item index="1" class="java.lang.String" itemvalue="Python.key mapper" />
-      <item index="2" class="java.lang.String" itemvalue="Python.range_finder" />
-      <item index="3" class="java.lang.String" itemvalue="Python.networktables server" />
-      <item index="4" class="java.lang.String" itemvalue="Python.manual_range_finder" />
+      <item index="1" class="java.lang.String" itemvalue="Python.range_finder" />
+      <item index="2" class="java.lang.String" itemvalue="Python.networktables server" />
+      <item index="3" class="java.lang.String" itemvalue="Python.manual_range_finder" />
+      <item index="4" class="java.lang.String" itemvalue="Python.networtables put stuff" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.vision_class" />
-        <item index="1" class="java.lang.String" itemvalue="Python.networktables server" />
-        <item index="2" class="java.lang.String" itemvalue="Python.manual_range_finder" />
-        <item index="3" class="java.lang.String" itemvalue="Python.range_finder" />
-        <item index="4" class="java.lang.String" itemvalue="Python.key mapper" />
+        <item index="1" class="java.lang.String" itemvalue="Python.networtables put stuff" />
+        <item index="2" class="java.lang.String" itemvalue="Python.networktables server" />
+        <item index="3" class="java.lang.String" itemvalue="Python.manual_range_finder" />
+        <item index="4" class="java.lang.String" itemvalue="Python.range_finder" />
       </list>
     </recent_temporary>
   </component>
@@ -291,13 +312,13 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32800853" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32800853" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -465,22 +486,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tools/networktables server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="22" lean-forward="false" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tools/networtables put stuff.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="38" lean-forward="false" selection-start-line="2" selection-start-column="38" selection-end-line="2" selection-end-column="38" />
+        <state relative-caret-position="612">
+          <caret line="38" column="4" lean-forward="false" selection-start-line="38" selection-start-column="4" selection-end-line="38" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/vision_class.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="502" column="34" lean-forward="true" selection-start-line="502" selection-start-column="34" selection-end-line="502" selection-end-column="34" />
+        <state relative-caret-position="396">
+          <caret line="557" column="0" lean-forward="false" selection-start-line="557" selection-start-column="0" selection-end-line="559" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/networtables put stuff.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -37,4 +37,4 @@ def set_item(key, value):
 while True:
     command=input('should be as such: Key, Value :> ')
     command.split(',')
-    set_item(command[0],command[1])
+    set_item(command[0],str(command[1]))

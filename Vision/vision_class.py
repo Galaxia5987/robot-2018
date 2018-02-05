@@ -33,6 +33,9 @@ if '-p' in sys.argv or '--port' in sys.argv: #checks for the port argument and s
 else:
     camera = 0
 
+if '--mask' in sys.argv or '-m' in sys.argv:
+    mask=True
+
 if '-nts' in sys.argv or '--networktables-server' in sys.argv: #sets the netwrorktables server as the argument after this one
     try:
         index = sys.argv.index('-nts')
@@ -73,7 +76,7 @@ import cv2
 import numpy as np
 import math
 from networktables import NetworkTables
-
+from time import sleep
 cam = cv2.VideoCapture(camera)
 
 stop = False
@@ -96,11 +99,10 @@ class Vision:
 
         NetworkTables.initialize(server=nt_server)
         self.table = NetworkTables.getTable("Vision") # initialize Vision networktables
-
+        sleep(1)
         self.check_files() # make sure the files with the surfix exist, if not, create them
         self.set_range() # set the hsv range
         self.init_values() # set all the values
-
         self.filter_hsv() # convert image from bgr to hsv
         self.dirode() # dialate and erode
         _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE) # get the contours
@@ -110,7 +112,7 @@ class Vision:
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.stream = [] # empty stream
         self.app = Flask(__name__) # the app used for streaming
-
+        self.set_item("Filter Mode",self.surfix)
         @self.app.route('/')
         def index():#returns the HTML template (lower case 't')
             return render_template('index.html')
@@ -119,7 +121,14 @@ class Vision:
         def video_feed(): #initiate the feed
             return Response(self.gen(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
-
+        if mask:
+            @self.app.route('/mask_feed')
+            def mask_feed():
+                return Response(self.gen_mask(), mimetype='multipart/x-mixed-replace; boundary=frame')
+        else:
+            @self.app.route('/mask_feed')
+            def mask_feed():
+                return "Mask Mode Not Enabled"
     def set_item(self, key, value):
         """
         Summary: Add a value to SmartDashboard.
@@ -212,7 +221,7 @@ class Vision:
         try:
             _ = open("files/Values_"+self.surfix+".val", 'r')
         except FileNotFoundError:
-            file=open('Values_'+self.surfix+'.val','w+')
+            file=open('files/Values_'+self.surfix+'.val','w+')
             file.write(
                 'self.command_s = "area,0,0"\n'+
                 'self.draw_contours_b = False\n'+
@@ -467,6 +476,12 @@ class Vision:
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
             key = cv2.waitKey(1)
 
+    def gen_mask(self):
+        while not stop:
+            jpg = cv2.imencode('.jpg', self.mask)[1].tostring()
+            yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
+            key = cv2.waitKey(1)
+
     def get_frame(self, once=False):
         if once:
             _, self.frame = self.cam.read()
@@ -484,11 +499,12 @@ class Vision:
         if is_local:
             while not stop:
                 cv2.imshow('Frame', self.show_frame)
-                try:
-                    cv2.imshow('Mask', self.mask)
-                except:
-                    pass
-                self.key = cv2.waitKey(1)
+                if mask:
+                    try:
+                        cv2.imshow('Mask', self.mask)
+                    except:
+                        pass
+                    self.key = cv2.waitKey(1)
                 if self.key is ord('q'):
                     cv2.destroyAllWindows()
                     stop = True
@@ -508,14 +524,19 @@ class Vision:
             self.contours = list(contours)
             self.get_contours()
             if len(self.contours) > 0:
-                self.sees_target = True
-                self.set_item("Sees target", self.sees_target)
                 self.find_center()
-                self.get_two()
+                if self.surfix is '0':
+                    self.get_two()
+                    if hasattr(self, 'center'):
+                        self.sees_target = True
+                        self.get_distance()
+                        self.get_angle()
+                else:
+                    self.sees_target = True
                 self.draw_contours()
-                if hasattr(self, 'center'):
-                    self.get_distance()
-                    self.get_angle()
+            else:
+                self.sees_target = False
+            self.set_item("Sees target", self.sees_target)
 
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
