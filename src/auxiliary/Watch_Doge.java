@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * This class is a good boy. A REALLY good boy. Such a good boy, in fact, he can
  * tell when a 775pro motor is stalling just by sniffing the current that the
- * motor is drawing from the PDP. If the amount of amps passes the maximum that
- * this Watch_Doge was trained with, he'll {@link #bork()} at the subsystem to shut it
+ * motor is drawing from the PDP. If the amount of amps passes the maximum that took
+ * Watch_Doge forty-two treats to learn, he'll {@link #bork()} at the subsystem to shut it
  * off to prevent any further damage. He will then proceed to revive the
  * subsystem with some awesome Refer to {@linkplain #bork the overridden method}.
  */
