@@ -26,7 +26,7 @@ public class IntakeSubsystem extends Subsystem {
 	public void setSpeed(double speedLeft, double speedRight) {
 		// Basic function to set motor speed
 		intakeMotorLeft.set(speedLeft);
-		intakeMotorRight.set(speedRight);
+		intakeMotorRight.set(-speedRight);
 	}
 
 	/**

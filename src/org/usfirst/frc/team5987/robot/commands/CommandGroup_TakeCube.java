@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -9,12 +11,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class CommandGroup_TakeCube extends CommandGroup {
 
     public CommandGroup_TakeCube() {
-    	
+
     	addSequential(new IntakeSelenoidCommand(true)); //Lowers the intake TODO: turn to parallel
     	//addSequential(new LiftCommand(LiftCommand.liftStates.BOTTOM)); //lowers the lift
     	addParallel(new IntakeTakeCubeCommand()); //turns the intake
     	addSequential(new GripperTakeCubeCommand()); //turns the gripper
-    	// addParallel(new DriveStraightCommand(0.5)); //TODO: change to camera OR a simple drive
-    	
     }
 }

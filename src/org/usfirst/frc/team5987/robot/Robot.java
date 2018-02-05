@@ -22,6 +22,7 @@ import auxiliary.Watch_Doge;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -64,7 +65,8 @@ public class Robot extends TimedRobot {
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
-
+	
+	Compressor compressor = new Compressor(1);
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -144,6 +146,7 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.cancel();
 		}
 //		driveSubsystem.setSetpoints(1, 1);
+		compressor.start();
 	}
 
 	/**
@@ -158,7 +161,12 @@ public class Robot extends TimedRobot {
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
 		//gripperSubsystem.ntCurrent.setDouble(PDP.getCurrent(RobotMap.gripperLeftPDP));
 		liftSubsystem.ntBottomHall.setBoolean(liftSubsystem.isDown());
+		liftSubsystem.ntHeight.setDouble(liftSubsystem.getHeight());
 		
+		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
+		driveSubsystem.setRightSpeed(-m_oi.right.getY());
+		
+
 		//clingyShiba.feed();
 //		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
 //		driveSubsystem.setSetpoints(-0.3, -1);

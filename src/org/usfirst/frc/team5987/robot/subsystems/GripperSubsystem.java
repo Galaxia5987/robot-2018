@@ -40,7 +40,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 */
 	public void setSpeed(double speedL, double speedR) {
 		leftWheel.set(speedL);
-		rightWheel.set(speedR);
+		rightWheel.set(-speedR);
 	}
 	
 	/**

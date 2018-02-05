@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.*;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -16,7 +18,9 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	XboxController xbox = new XboxController(0);
+	Joystick left = new Joystick(0);
+	Joystick right = new Joystick(1);
+	XboxController xbox = new XboxController(2);
 	Button a = new JoystickButton(xbox, 1);
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
@@ -26,8 +30,8 @@ public class OI {
 	
 
 	public OI() {
-		b.whileHeld(new ShootCubeCommand(0.75, false));
-		x.whileHeld(new ShootCubeCommand(-0.75, false));
+		b.whileHeld(new ShootCubeCommand(1, false));
+		x.whileHeld(new ShootCubeCommand(-1, false));
 		y.whenPressed(new IntakeSelenoidCommand());
 		a.whenPressed(new CommandGroup_TakeCube());
 	}

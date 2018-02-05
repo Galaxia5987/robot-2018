@@ -45,14 +45,14 @@ public class IntakeSelenoidCommand extends Command {
 	protected void initialize() {
 		switch(chosen){
 		case TOGGLE:
-			if (Robot.liftSubsystem.getHeight() >= 0.3 && Robot.liftSubsystem.state != States.MECHANISM_DISABLED && !Robot.intakeSubsystem.getSolenoid())
+			if (Robot.liftSubsystem.getHeight() >= 0.3 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED || Robot.intakeSubsystem.getSolenoid())
 				Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
 			break;
 		case OPEN:
 			Robot.intakeSubsystem.setSolenoid(true);
 			break;
 		case CLOSE:
-			if (Robot.liftSubsystem.getHeight() >= 0.3 && Robot.liftSubsystem.state != States.MECHANISM_DISABLED)
+			if (Robot.liftSubsystem.getHeight() >= 0.3 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED)
 				Robot.intakeSubsystem.setSolenoid(false);
 			break;
 			

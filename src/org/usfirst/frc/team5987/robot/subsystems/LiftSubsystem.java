@@ -35,6 +35,7 @@ public class LiftSubsystem extends Subsystem {
 	public States state = States.MECHANISM_DISABLED;
 
 	public NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTableEntry ntIsDown = LiftTable.getEntry("Is down");
 	NetworkTableEntry ntTopKp = LiftTable.getEntry("Top kP");
 	NetworkTableEntry ntTopKi = LiftTable.getEntry("Top kI");
 	NetworkTableEntry ntTopKd = LiftTable.getEntry("Top kD");
@@ -49,7 +50,7 @@ public class LiftSubsystem extends Subsystem {
 	NetworkTableEntry ntIsEnabled = LiftTable.getEntry("IS ENABLED");
 	NetworkTableEntry ntIsExceeding = LiftTable.getEntry("Trying To Exceed Limits");
 
-	NetworkTableEntry ntHeight = LiftTable.getEntry("height");
+	public NetworkTableEntry ntHeight = LiftTable.getEntry("height");
 	MiniPID pid;
 
 	Victor liftMotor = new Victor(RobotMap.liftMotorPort);
@@ -70,6 +71,8 @@ public class LiftSubsystem extends Subsystem {
 		ntBottomKi.setDouble(ntBottomKi.getDouble(bottomPID[1]));
 		ntBottomKd.setDouble(ntBottomKd.getDouble(bottomPID[2]));
 		ntHeight.setDouble(getHeight());
+		ntIsDown.setBoolean(ntIsDown.getBoolean(true));
+		ntHeight.setDouble(ntHeight.getDouble(0));
 		liftEncoder.setDistancePerPulse(LIFT_DISTANCE_PER_PULSE);
 	}
 
@@ -161,7 +164,8 @@ public class LiftSubsystem extends Subsystem {
 	}
 
 	public double getHeight() {
-		return getAbsoluteEncoderHeight() - offset;
+		return ntHeight.getDouble(0);
+		//return getAbsoluteEncoderHeight() - offset;
 	}
 
 	public double getSpeed() {
@@ -174,8 +178,9 @@ public class LiftSubsystem extends Subsystem {
 	}
 
 	public boolean isDown() {
-		boolean rawVal = hallEffectBottom.get();
-		return BOTTOM_HULL_REVERSED ? !rawVal : rawVal;
+		//boolean rawVal = hallEffectBottom.get();
+		//return BOTTOM_HULL_REVERSED ? !rawVal : rawVal;
+		return ntIsDown.getBoolean(true);
 	}
 
 	public void resetEncoder() {

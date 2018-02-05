@@ -47,6 +47,8 @@ public class ShootCubeCommand extends Command {
 	}
 
 	protected void interrupted() {
-		end();
+		Robot.gripperSubsystem.setSpeed(0, 0);
+		Robot.intakeSubsystem.setSpeed(0, 0);
+		this.cancel();
 	}
 }
