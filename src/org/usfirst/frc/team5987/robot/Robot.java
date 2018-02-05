@@ -73,12 +73,14 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		liftSubsystem.update();
+		liftSubsystem.setSetpoint(0);
 	}
 
 	/**
@@ -136,10 +138,10 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
         // liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
-		double joyY = m_oi.rightStick.getY();
-		SmartDashboard.putNumber("Joy Y", joyY);
-		liftSubsystem.setPrecentSpeed(joyY);
-//		liftSubsystem.update();
+//		double joyY = m_oi.rightStick.getY();
+//		SmartDashboard.putNumber("Joy Y", joyY);
+//		liftSubsystem.setPrecentSpeed(joyY);
+		liftSubsystem.update();
 		liftSubsystem.configNominalAndPeakOutputs();
 	}
 

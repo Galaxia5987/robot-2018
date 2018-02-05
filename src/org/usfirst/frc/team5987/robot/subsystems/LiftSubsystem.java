@@ -40,13 +40,13 @@ public class LiftSubsystem extends Subsystem {
 	/**
 	 * How many TICKS in one METER of the elevator going up
 	 */
-	private static final double TICKS_PER_METER = getTicksPerMeter(0.045466, 4096, 0.5); // encoder sees twice less because of the cascade mechanism
+	private static final double TICKS_PER_METER = 16814; // 9483.0 ticks per 0.564 meter
 	private static final boolean TOP_HALL_REVERSED = false;
 	private static final boolean BOTTOM_HALL_REVERSED = false;
 	
 	/*------------- Talon Motor Constants -------------------*/
 	private static final double upPIDF[] = {
-			1, // P
+			0.1, // P
 			0, // I
 			0, // D
 			0  // F
@@ -73,6 +73,11 @@ public class LiftSubsystem extends Subsystem {
 	 */
 	private static final double STILL_OUTPUT = 0.3;
 	private static final double MIN_DOWN_OUTPUT = -0.1;
+	
+	private static final double NOMINAL_OUT_FWD = 0.2;
+	private static final double PEAK_OUT_FWD = 1;
+	private static final double PEAK_OUT_REV = -0.2;
+	private static final double NOMINAL_OUT_REV = 0;
 	
 	
 	private States state = States.MECHANISM_DISABLED;
@@ -135,19 +140,23 @@ public class LiftSubsystem extends Subsystem {
 		
 		 // Add the NetworkTable entries if they don't exist
 		ntIsEnabled.setBoolean(ntIsEnabled.getBoolean(false));
-		ntNomOutFwd.setDouble(0);
-		ntPeakOutFwd.setDouble(1);
-		ntNomOutRev.setDouble(0);
-		ntPeakOutRev.setDouble(-1);
+		ntNomOutFwd.setDouble(ntNomOutFwd.getDouble(0));
+		ntPeakOutFwd.setDouble(ntPeakOutFwd.getDouble(1));
+		ntNomOutRev.setDouble(ntNomOutRev.getDouble(0));
+		ntPeakOutRev.setDouble(ntPeakOutRev.getDouble(-1));
 	}
 	
     public void configNominalAndPeakOutputs() {
 		// TODO Auto-generated method stub
 		/* set the min and and max outputs */
-		liftMotor.configNominalOutputForward(ntNomOutFwd.getDouble(0), TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputForward(ntPeakOutFwd.getDouble(1), TALON_TIMEOUT_MS);
-		liftMotor.configNominalOutputReverse(ntNomOutRev.getDouble(0), TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputReverse(ntPeakOutRev.getDouble(-1), TALON_TIMEOUT_MS);
+//		liftMotor.configNominalOutputForward(ntNomOutFwd.getDouble(0), TALON_TIMEOUT_MS);
+//		liftMotor.configPeakOutputForward(ntPeakOutFwd.getDouble(1), TALON_TIMEOUT_MS);
+//		liftMotor.configNominalOutputReverse(ntNomOutRev.getDouble(0), TALON_TIMEOUT_MS);
+//		liftMotor.configPeakOutputReverse(ntPeakOutRev.getDouble(-1), TALON_TIMEOUT_MS);
+		liftMotor.configNominalOutputForward(NOMINAL_OUT_FWD, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputForward(PEAK_OUT_FWD, TALON_TIMEOUT_MS);
+		liftMotor.configNominalOutputReverse(NOMINAL_OUT_REV, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputReverse(PEAK_OUT_REV, TALON_TIMEOUT_MS);
 	}
 
 	public void initDefaultCommand() {
@@ -162,8 +171,8 @@ public class LiftSubsystem extends Subsystem {
      * For example, if the encoder detects 1 and it's 2, the multiplier should be 0.5  
      * @return
      */
-    private static double getTicksPerMeter(double diameter, double ticksPerRevolution, double encoderMultiplier){
-    	return encoderMultiplier * ticksPerRevolution / (diameter * Math.PI);
+    private static double getTicksPerMeter(double ticksPerRevolution, double encoderMultiplier){
+    	return encoderMultiplier * ticksPerRevolution;
     }
     
     public void setPrecentSpeed(double speed){
@@ -221,8 +230,15 @@ public class LiftSubsystem extends Subsystem {
 	    			state = States.MECHANISM_DISABLED;
 	    		limitAbsoluteOutput(MAX_RUNNING_OUTPUT);
 	    		// allow the motors to move when reaching top or bottom
-	    		if(reachedTop() || reachedBottom()){
-	    			setSetpoint(getHeight());
+//	    		if(reachedTop() || reachedBottom()){
+//	    			setSetpoint(getHeight());
+//	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+//	    		}
+	    		if(reachedTop()){
+	    			setSetpoint(getHeight()-0.03);
+	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+	    		}
+	    		if(reachedBottom()){
 	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
 	    		}
 	    		setPosition();
