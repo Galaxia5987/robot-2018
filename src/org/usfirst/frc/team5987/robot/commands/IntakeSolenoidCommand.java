@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class IntakeSelenoidCommand extends Command {
+public class IntakeSolenoidCommand extends Command {
 	private enum opMode {
 		TOGGLE,
 		OPEN,
@@ -21,7 +21,7 @@ public class IntakeSelenoidCommand extends Command {
 	 * 
 	 * @author Paulo Khayat
 	 */
-	public IntakeSelenoidCommand() {
+	public IntakeSolenoidCommand() {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		chosen = opMode.TOGGLE;
@@ -35,7 +35,7 @@ public class IntakeSelenoidCommand extends Command {
 	 * @param toDown - Whether the intake should go down.
 	 * @author Paulo Khayat
 	 */
-	public IntakeSelenoidCommand(boolean state){
+	public IntakeSolenoidCommand(boolean state){
 		if(state)
 			chosen = opMode.OPEN;
 		else
@@ -45,14 +45,14 @@ public class IntakeSelenoidCommand extends Command {
 	protected void initialize() {
 		switch(chosen){
 		case TOGGLE:
-			if (Robot.liftSubsystem.getHeight() >= 0.3 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED || Robot.intakeSubsystem.getSolenoid())
+			if (Robot.liftSubsystem.getHeight() >= 0.35 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED || Robot.intakeSubsystem.getSolenoid())
 				Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
 			break;
 		case OPEN:
 			Robot.intakeSubsystem.setSolenoid(true);
 			break;
 		case CLOSE:
-			if (Robot.liftSubsystem.getHeight() >= 0.3 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED)
+			if (Robot.liftSubsystem.getHeight() >= 0.35 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED)
 				Robot.intakeSubsystem.setSolenoid(false);
 			break;
 			

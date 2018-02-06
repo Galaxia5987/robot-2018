@@ -2,7 +2,10 @@ package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.RobotMap;
 
+import auxiliary.SafeVictor;
+import auxiliary.Watch_Dogeable;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -10,12 +13,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author ACoolName
  * @version 1.0
  */
-public class IntakeSubsystem extends Subsystem {
+public class IntakeSubsystem extends Subsystem implements Watch_Dogeable {
 
 	// Defining motors and piston
-	private Victor intakeMotorLeft = new Victor(RobotMap.intakeMotorLeft);
-	private Victor intakeMotorRight = new Victor(RobotMap.intakeMotorRight);
-	private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.intakeSolenoid1, RobotMap.intakeSolenoid2);
+	private SafeVictor intakeMotorLeft = new SafeVictor(RobotMap.intakeMotorLeft);
+	private SafeVictor intakeMotorRight = new SafeVictor(RobotMap.intakeMotorRight);
+	private DoubleSolenoid solenoid = new DoubleSolenoid(1,RobotMap.intakeSolenoid1, RobotMap.intakeSolenoid2);
+	Timer downTimer = new Timer();
 
 	/**
 	 * Set the speed for the intake wheels
@@ -51,5 +55,34 @@ public class IntakeSubsystem extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
+	}
+	
+	@Override
+	public void bork() {
+		intakeMotorLeft.disable();
+		intakeMotorRight.disable();
+		downTimer.reset();
+		downTimer.start();
+	}
+
+	@Override
+	public void necromancy() {
+		intakeMotorLeft.enable();
+		intakeMotorRight.enable();
+	}
+
+	@Override
+	public boolean wakeMeUp() {
+		if (downTimer.get() >= 10) {
+			downTimer.stop();
+			downTimer.reset();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean ded() {
+		return intakeMotorLeft.status() && intakeMotorRight.status();
 	}
 }

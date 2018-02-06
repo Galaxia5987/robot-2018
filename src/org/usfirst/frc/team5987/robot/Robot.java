@@ -53,7 +53,9 @@ public class Robot extends TimedRobot {
 	
 	public static OI m_oi;
 	
-	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30,0.05);
+	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30,0.5);
+	public static final Watch_Doge inTakeCanine = new Watch_Doge(PDP, intakeSubsystem, RobotMap.intakePDPs, 27,0.5);
+
 	
 	NetworkTable LiftTable = liftSubsystem.LiftTable;
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
@@ -168,7 +170,8 @@ public class Robot extends TimedRobot {
 		liftSubsystem.update();
 		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
 		driveSubsystem.setRightSpeed(-m_oi.right.getY());
-		//clingyShiba.feed();
+		clingyShiba.feed();
+		inTakeCanine.feed();
 		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
 	}

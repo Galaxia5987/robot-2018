@@ -18,10 +18,11 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	Joystick left = new Joystick(0);
-	Joystick right = new Joystick(1);
-	XboxController xbox = new XboxController(2);
-	Button a = new JoystickButton(xbox, 1);
+	public final int TakeCommandButton = 1;
+	public Joystick left = new Joystick(0);
+	public Joystick right = new Joystick(1);
+	public XboxController xbox = new XboxController(2);
+	Button a = new JoystickButton(xbox, TakeCommandButton);
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
@@ -32,7 +33,7 @@ public class OI {
 	public OI() {
 		b.whileHeld(new ShootCubeCommand(1, false));
 		x.whileHeld(new ShootCubeCommand(-1, false));
-		y.whenPressed(new IntakeSelenoidCommand());
-		a.whenPressed(new CommandGroup_TakeCube());
+		y.whenPressed(new IntakeSolenoidCommand());
+		a.whenPressed(new TakeCommand());
 	}
 }

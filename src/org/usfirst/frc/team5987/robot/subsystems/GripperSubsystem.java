@@ -76,7 +76,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 
 	@Override
 	public boolean wakeMeUp() {
-		if (downTimer.get() >= 3) {
+		if (downTimer.get() >= 10) {
 			downTimer.stop();
 			downTimer.reset();
 			return true;
