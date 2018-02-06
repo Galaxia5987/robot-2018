@@ -35,6 +35,8 @@ else:
 
 if '--mask' in sys.argv or '-m' in sys.argv:
     mask=True
+else:
+    mask = False
 
 if '-nts' in sys.argv or '--networktables-server' in sys.argv: #sets the netwrorktables server as the argument after this one
     try:
@@ -326,6 +328,7 @@ class Vision:
                             self.hulls.append(cv2.convexHull(c, returnPoints=False))
                 # Updates the contour list
                 self.contours = possible_fit
+                print(self.contours)
 
     def area(self, c):
         return cv2.contourArea(c)
@@ -504,7 +507,7 @@ class Vision:
                         cv2.imshow('Mask', self.mask)
                     except:
                         pass
-                    self.key = cv2.waitKey(1)
+                self.key = cv2.waitKey(1)
                 if self.key is ord('q'):
                     cv2.destroyAllWindows()
                     stop = True
