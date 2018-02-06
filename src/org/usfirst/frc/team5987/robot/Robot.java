@@ -9,6 +9,7 @@ package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
+import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
@@ -54,12 +55,11 @@ public class Robot extends TimedRobot {
 	
 	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30,0.05);
 	
-	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTable LiftTable = liftSubsystem.LiftTable;
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
-	NetworkTableEntry ntSetpoint = liftTable.getEntry("Setpoint");
 	
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 	
@@ -80,7 +80,8 @@ public class Robot extends TimedRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		SmartDashboard.putData(new DriveStraightCommand(-2));
-		ntSetpoint.setDouble(0);
+//		ntSetpoint.setDouble(liftSubsystem.getHeight());
+		SmartDashboard.putData(new LiftCommand());
 	}
 
 	/**
@@ -96,6 +97,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		liftSubsystem.update();
+		liftSubsystem.setSetpoint(0);
 	}
 
 	/**
@@ -147,6 +150,8 @@ public class Robot extends TimedRobot {
 		}
 //		driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
+		liftSubsystem.configNominalAndPeakOutputs();
+
 	}
 
 	/**
@@ -155,21 +160,17 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		liftSubsystem.updateMotors();
-		ntAngle.setDouble(driveSubsystem.getAngle());
-		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
-		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
-		//gripperSubsystem.ntCurrent.setDouble(PDP.getCurrent(RobotMap.gripperLeftPDP));
-		liftSubsystem.ntBottomHall.setBoolean(liftSubsystem.isDown());
-		liftSubsystem.ntHeight.setDouble(liftSubsystem.getHeight());
-		
+        // liftSubsystem.update();
+		liftSubsystem.displaySensorValues();
+//		double joyY = m_oi.rightStick.getY();
+//		SmartDashboard.putNumber("Joy Y", joyY);
+//		liftSubsystem.setPrecentSpeed(joyY);
+		liftSubsystem.update();
 		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
 		driveSubsystem.setRightSpeed(-m_oi.right.getY());
-		
-
 		//clingyShiba.feed();
-//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
-//		driveSubsystem.setSetpoints(-0.3, -1);
+		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
+		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
 	}
 
 	/**

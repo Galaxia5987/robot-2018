@@ -46,7 +46,7 @@ public class RobotMap {
 	/*-------------------------------------*/
 
 	/*----------------LIFT-----------------*/
-	public static int liftMotorPort = 15;
+	public static int liftMotorPort = 2;
 	/*-------------------------------------*/
 
 	/*----------------INTAKE---------------*/

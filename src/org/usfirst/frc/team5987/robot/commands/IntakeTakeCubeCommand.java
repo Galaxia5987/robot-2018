@@ -23,7 +23,7 @@ public class IntakeTakeCubeCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		
-		if (Robot.liftSubsystem.isDown() && !Robot.gripperSubsystem.isCubeInside())
+		if (Robot.liftSubsystem.reachedBottom() && !Robot.gripperSubsystem.isCubeInside())
 			Robot.intakeSubsystem.setSpeed(-WHEELSPEED, -WHEELSPEED); // TODO: check the actual directions
 		else canceled = true;
 
@@ -31,7 +31,7 @@ public class IntakeTakeCubeCommand extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return Robot.gripperSubsystem.isCubeInside() || canceled ||!Robot.liftSubsystem.isDown();
+		return Robot.gripperSubsystem.isCubeInside() || canceled ||!Robot.liftSubsystem.reachedBottom();
 	}
 
 	// Called once after isFinished returns true
