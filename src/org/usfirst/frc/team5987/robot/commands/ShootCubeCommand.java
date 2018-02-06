@@ -18,8 +18,8 @@ public class ShootCubeCommand extends Command {
 	public ShootCubeCommand(double speed, boolean byTime) {
 		this.speed = speed;
 		this.byTime = byTime;
-		requires(Robot.gripperSubsystem);
-		requires(Robot.intakeSubsystem);
+		requires(Robot.wheelSubsystem);
+
 	}
 
 	protected void initialize() {
@@ -29,11 +29,11 @@ public class ShootCubeCommand extends Command {
 	protected void execute() {
 		if (speed < 0) {
 			if (Robot.liftSubsystem.getHeight() > 0.8)
-				Robot.gripperSubsystem.setSpeed(speed, speed);
+				Robot.wheelSubsystem.setSpeedGripper(speed, speed);
 		} else {
-			Robot.gripperSubsystem.setSpeed(speed, speed);
+			Robot.wheelSubsystem.setSpeedGripper(speed, speed);
 			if (Robot.liftSubsystem.getHeight() < 0.1)
-				Robot.intakeSubsystem.setSpeed(speed, speed);
+				Robot.wheelSubsystem.setSpeedIntake(speed, speed);
 		}
 	}
 
@@ -42,13 +42,12 @@ public class ShootCubeCommand extends Command {
 	}
 
 	protected void end() {
-		Robot.gripperSubsystem.setSpeed(0, 0);
-		Robot.intakeSubsystem.setSpeed(0, 0);
+		Robot.wheelSubsystem.setSpeedGripper(0, 0);
+		Robot.wheelSubsystem.setSpeedIntake(0, 0);
 	}
 
 	protected void interrupted() {
-		Robot.gripperSubsystem.setSpeed(0, 0);
-		Robot.intakeSubsystem.setSpeed(0, 0);
+		end();
 		this.cancel();
 	}
 }

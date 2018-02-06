@@ -15,14 +15,14 @@ public class IntakeShootCubeCommand extends Command {
 
 	public IntakeShootCubeCommand(double timer) {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.intakeSubsystem);
+		requires(Robot.wheelSubsystem);
 		time = timer;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		Timer.start();
-		Robot.intakeSubsystem.setSpeed(-wheelSpeed, wheelSpeed); // TODO: check the actual directions
+		Robot.wheelSubsystem.setSpeedIntake(-wheelSpeed, wheelSpeed); // TODO: check the actual directions
 
 	}
 
@@ -44,7 +44,8 @@ public class IntakeShootCubeCommand extends Command {
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
-		Robot.intakeSubsystem.setSpeed(0, 0);
+		end();
+		this.cancel();
 
 	}
 }

@@ -12,9 +12,9 @@ public class CommandGroup_TakeCube extends CommandGroup {
 
     public CommandGroup_TakeCube() {
 
-    	addSequential(new IntakeSelenoidCommand(true)); //Lowers the intake TODO: turn to parallel
-    	//addSequential(new LiftCommand(LiftCommand.liftStates.BOTTOM)); //lowers the lift
-    	addParallel(new IntakeTakeCubeCommand()); //turns the intake
-    	addSequential(new GripperTakeCubeCommand()); //turns the gripper
+    	addParallel(new IntakeSelenoidCommand(true)); //Lowers the intake TODO: turn to parallel
+    	addSequential(new LiftCommand(LiftCommand.liftStates.BOTTOM)); //lowers the lift
+    	addParallel(new GripperTakeCubeCommand()); //turns the intake
+    	addSequential(new IntakeTakeCubeCommand()); //turns the gripper
     }
 }

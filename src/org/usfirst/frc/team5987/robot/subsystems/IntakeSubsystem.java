@@ -44,8 +44,7 @@ public class IntakeSubsystem extends Subsystem {
 	}
 	
 	public boolean getSolenoid() {
-		if (solenoid.get() == DoubleSolenoid.Value.kForward) return true;
-		return false;
+		return (solenoid.get() == DoubleSolenoid.Value.kForward);
 	}
 
 	public void initDefaultCommand() {

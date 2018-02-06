@@ -12,7 +12,7 @@ public class IntakeTakeCubeCommand extends Command {
 	private boolean canceled = false;
 	public IntakeTakeCubeCommand() {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.intakeSubsystem);
+		requires(Robot.wheelSubsystem);
 	}
 
 	// Called just before this Command runs the first time
@@ -23,8 +23,8 @@ public class IntakeTakeCubeCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		
-		if (Robot.liftSubsystem.isDown() && !Robot.gripperSubsystem.isCubeInside())
-			Robot.intakeSubsystem.setSpeed(-WHEELSPEED, -WHEELSPEED); // TODO: check the actual directions
+		if (Robot.liftSubsystem.isDown() && !Robot.wheelSubsystem.isCubeInside())
+			Robot.wheelSubsystem.setSpeedIntake(-WHEELSPEED, -WHEELSPEED); // TODO: check the actual directions
 		else canceled = true;
 
 	}

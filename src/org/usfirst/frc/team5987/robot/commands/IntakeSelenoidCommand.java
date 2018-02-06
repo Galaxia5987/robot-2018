@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class IntakeSelenoidCommand extends Command {
+	private double okHeight = 0.5;
 	private enum opMode {
 		TOGGLE,
 		OPEN,
@@ -25,7 +26,7 @@ public class IntakeSelenoidCommand extends Command {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		chosen = opMode.TOGGLE;
-		requires(Robot.intakeSubsystem);
+		requires(Robot.wheelSubsystem);
 	}
 	
 	/**
@@ -45,15 +46,15 @@ public class IntakeSelenoidCommand extends Command {
 	protected void initialize() {
 		switch(chosen){
 		case TOGGLE:
-			if (Robot.liftSubsystem.getHeight() >= 0.3 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED || Robot.intakeSubsystem.getSolenoid())
+			if (Robot.liftSubsystem.getHeight() >= okHeight || Robot.liftSubsystem.state == States.MECHANISM_DISABLED || Robot.wheelSubsystem.getSolenoid())
 				Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
 			break;
 		case OPEN:
 			Robot.intakeSubsystem.setSolenoid(true);
 			break;
 		case CLOSE:
-			if (Robot.liftSubsystem.getHeight() >= 0.3 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED)
-				Robot.intakeSubsystem.setSolenoid(false);
+			if (Robot.liftSubsystem.getHeight() >= okHeight || Robot.liftSubsystem.state == States.MECHANISM_DISABLED)
+				Robot.wheelSubsystem.setSolenoid(false);
 			break;
 			
 		}

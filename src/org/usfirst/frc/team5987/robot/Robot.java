@@ -15,6 +15,7 @@ import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.GripperSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.WheelSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
+	public static final WheelSubsystem wheelSubsystem = new WheelSubsystem(gripperSubsystem, intakeSubsystem);
 	
 	public static OI m_oi;
 	
