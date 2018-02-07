@@ -163,6 +163,11 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
 		ntAngle.setDouble(driveSubsystem.getAngle());
+		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
+		driveSubsystem.setRightSpeed(-m_oi.right.getY());
+		SmartDashboard.putNumber("left Dis", driveSubsystem.getLeftDistance());
+		SmartDashboard.putNumber("right Dis", driveSubsystem.getRightDistance());
+
 //		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
 //		driveSubsystem.setSetpoints(-0.3, -1);
 	}

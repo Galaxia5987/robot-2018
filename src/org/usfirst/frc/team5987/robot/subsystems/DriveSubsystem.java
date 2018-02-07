@@ -22,13 +22,13 @@ public class DriveSubsystem extends Subsystem {
 	/***********************CONSTANTS************************/
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0.15; 
-	private static double kI = 0.002; 
-	private static double kD = 0.04;
-	private static double kF = 0.4;
-	private static double TurnKp = 0.3; 
-	private static double TurnKi = 0.006; 
-	private static double TurnKd = 0.04;
-	private static double TurnKf = 0.7;
+	private static double kI = 0.0; 
+	private static double kD = 0.0;
+	private static double kF = 0.33;
+	private static double TurnKp = 0.15; 
+	private static double TurnKi = 0.0; 
+	private static double TurnKd = 0.0;
+	private static double TurnKf = 0.33;
 	public enum PIDTypes{
 		STRAIGHT,
 		TURN
@@ -43,7 +43,7 @@ public class DriveSubsystem extends Subsystem {
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double MAX_VELOCITY = 1;
+	public static final double MAX_VELOCITY = 0.8;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
@@ -71,7 +71,7 @@ public class DriveSubsystem extends Subsystem {
 	private static final Victor driveLeftRearMotor = new Victor(RobotMap.driveLeftRearMotor);
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
 	
-	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, rightInverted);
+	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, false);
 	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, leftInverted);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class PathCommand extends Command {
 
 	private double x = 0, y = 0;
-	private double h = -0.36;
+	private double h = 0.4;
 	private double preLeftDistance = 0;
 	private double preRightDistance = 0;
 	surfceMP train;
@@ -29,10 +29,10 @@ public class PathCommand extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	Point A = new Point(h, 0);
-		Point B = new Point(h-1, 0);
+		Point B = new Point(h+1, 0);
 		Point[] p = {A,B};
 		train = new surfceMP(p, DriveSubsystem.MAX_VELOCITY, DriveSubsystem.ACCELERATION, DriveSubsystem.DECCELERATION, DriveSubsystem.MIN_VELOCITY, 0);
-		train.setRatio(h, 0.3375);
+		train.setRatio(h, 0.375);
 		preLeftDistance = Robot.driveSubsystem.getLeftDistance();
 		preRightDistance = Robot.driveSubsystem.getRightDistance();
     }
