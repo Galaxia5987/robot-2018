@@ -43,19 +43,19 @@ public class DriveSubsystem extends Subsystem {
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double MAX_VELOCITY = 0.8;
+	public static final double MAX_VELOCITY = 1.2;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double MIN_VELOCITY = 0.2;
+	public static final double MIN_VELOCITY = 0.4;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double ACCELERATION = 0.4;
+	public static final double ACCELERATION = 1;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DECCELERATION = 0.4;
+	public static final double DECCELERATION = 1;
 	public static final double ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
 	 * Mapping between 0-5V to METER for the analog input
@@ -72,7 +72,7 @@ public class DriveSubsystem extends Subsystem {
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
 	
 	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, false);
-	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, leftInverted);
+	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, true);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
 	private static final AnalogInput colorSensor = new AnalogInput(RobotMap.colorSensor);

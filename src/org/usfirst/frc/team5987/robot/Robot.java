@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 	
 
 	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
-
+	public static NetworkTableEntry ntSwitchTarget = visionTable.getEntry("Sees Target");
 	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
 
 
@@ -98,6 +98,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		driveSubsystem.setSetpoints(0, 0);
+		driveSubsystem.setLeftSpeed(0);
+		driveSubsystem.setRightSpeed(0);
+
 	}
 
 	@Override
@@ -163,8 +166,8 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		liftSubsystem.updateMotors();
 		ntAngle.setDouble(driveSubsystem.getAngle());
-		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
-		driveSubsystem.setRightSpeed(-m_oi.right.getY());
+//		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
+//		driveSubsystem.setRightSpeed(-m_oi.right.getY());
 		SmartDashboard.putNumber("left Dis", driveSubsystem.getLeftDistance());
 		SmartDashboard.putNumber("right Dis", driveSubsystem.getRightDistance());
 
