@@ -22,7 +22,7 @@ public class AutoCommandGroup extends CommandGroup {
 		/**
 		 * Determines where the Robot was placed in the beginning of the game.
 		 */
-		char robotInitPosition = Robot.driveSubsystem.driveTable.getEntry("Robot init position");
+		NetworkTableEntry robotInitPosition = Robot.driveSubsystem.driveTable.getEntry("Robot init position");
 
 		// Positions of the alliance Switch and Scale Plates.
 		char switchPosition = gameData.charAt(0), scalePosition = gameData.charAt(1);
