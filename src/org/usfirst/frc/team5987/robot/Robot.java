@@ -25,6 +25,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -56,6 +57,7 @@ public class Robot extends TimedRobot {
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
 	NetworkTableEntry ntSetpoint = liftTable.getEntry("Setpoint");
+	CameraServer cs;
 	
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 	
@@ -88,6 +90,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new PathCommand());
 		ntSetpoint.setDouble(0);
+		cs = CameraServer.getInstance();
+		cs.addAxisCamera("ACoolCamera","10.59.87.66");
 	}
 
 	/**
