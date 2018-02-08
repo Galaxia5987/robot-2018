@@ -9,6 +9,13 @@ package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.*;
 
+
+
+import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
+
+import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
+
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -19,12 +26,14 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+
 	public static final int TakeCommandButton = 1;
 	public Joystick left = new Joystick(0);
 	public Joystick right = new Joystick(1);
 	public XboxController xbox = new XboxController(2);
 	
 	Button a = new JoystickButton(xbox, TakeCommandButton);
+
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);

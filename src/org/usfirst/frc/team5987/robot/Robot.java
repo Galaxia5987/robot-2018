@@ -11,6 +11,8 @@ import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
+
+import org.usfirst.frc.team5987.robot.commands.PathCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
@@ -26,8 +28,12 @@ import auxiliary.Watch_Doge;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+
+import edu.wpi.first.wpilibj.CameraServer;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -66,6 +72,9 @@ public class Robot extends TimedRobot {
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
+
+	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
+	CameraServer cs;
 	
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 	
@@ -73,7 +82,7 @@ public class Robot extends TimedRobot {
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
 	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
-
+	public static NetworkTableEntry ntSwitchTarget = visionTable.getEntry("Sees Target");
 	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
 
 
@@ -99,6 +108,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new LiftCommand());
+		SmartDashboard.putData(new PathCommand());
+		ntSetpoint.setDouble(0);
+		cs = CameraServer.getInstance();
+		cs.addAxisCamera("ACoolCamera","10.59.87.66");
 	}
 
 	/**
@@ -109,6 +122,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		driveSubsystem.setSetpoints(0, 0);
+		driveSubsystem.setLeftSpeed(0);
+		driveSubsystem.setRightSpeed(0);
+
 	}
 
 	@Override
@@ -187,6 +203,16 @@ public class Robot extends TimedRobot {
 		inTakeCanine.feed();
 		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
+		liftSubsystem.update();
+		ntAngle.setDouble(driveSubsystem.getAngle());
+//		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
+//		driveSubsystem.setRightSpeed(-m_oi.right.getY());
+		SmartDashboard.putNumber("left Dis", driveSubsystem.getLeftDistance());
+		SmartDashboard.putNumber("right Dis", driveSubsystem.getRightDistance());
+
+//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
+//		driveSubsystem.setSetpoints(-0.3, -1);
+
 	}
 
 	/**
