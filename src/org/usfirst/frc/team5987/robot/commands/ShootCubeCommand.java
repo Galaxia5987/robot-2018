@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ShootCubeCommand extends Command {
 
 	double speed;
-	double shootTime = 5;
+	double shootTime = 1;
 	boolean byTime = false;
 	Timer timer = new Timer();
 
