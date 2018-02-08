@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.RobotMap;
+import org.usfirst.frc.team5987.robot.commands.JoystickLiftCommand;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -8,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import auxiliary.Misc;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -77,6 +79,7 @@ public class LiftSubsystem extends Subsystem {
 	private static final double PEAK_OUT_FWD = 1;
 	private static final double PEAK_OUT_REV = -0.2;
 	private static final double NOMINAL_OUT_REV = 0;
+	private static final double MAX_HEIGHT = 2.05;
 	
 	
 	public States state = States.MECHANISM_DISABLED;
@@ -160,7 +163,7 @@ public class LiftSubsystem extends Subsystem {
 	}
 
 	public void initDefaultCommand() {
-    
+		setDefaultCommand(new JoystickLiftCommand());
     }
     
     
@@ -173,7 +176,7 @@ public class LiftSubsystem extends Subsystem {
      * @param height in METER
      */
     public void setSetpoint(double height) {
-    	setpointMeters =  height;
+    	setpointMeters =  Misc.limitAbsMax(height, MAX_HEIGHT);
     	setpoint = height * TICKS_PER_METER;
     	if(height > getHeight()){
     		liftMotor.selectProfileSlot(TALON_UP_PID_SLOT, 0);
@@ -226,7 +229,7 @@ public class LiftSubsystem extends Subsystem {
 	    		if(reachedTop()){
 	    			if(setpointMeters < getHeight()) // going down
 	    				liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
-	    			setSetpoint(getHeight()-0.04);
+	    			setSetpoint(getHeight());
 	    		}
 	    		if(reachedBottom()){
 	    			if(setpointMeters > getHeight()) // going up

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class JoystickLiftCommand extends Command {
-
+	private final double CHANGE_SPEED = 0.1;
     public JoystickLiftCommand() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.liftSubsystem);
@@ -21,7 +21,7 @@ public class JoystickLiftCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double y = Robot.m_oi.xbox.getY();
-    	double change = -y * 0.1;
+    	double change = -y * CHANGE_SPEED;
     	if(Math.abs(y)> 0.1)
     		Robot.liftSubsystem.setSetpoint(Robot.liftSubsystem.getHeight() + change);
     }
