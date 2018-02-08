@@ -69,7 +69,7 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public static final double ultransonicMeterFactor = 1.024;
 	private static final boolean rightInverted = true; // inverts the right motors & right encoder
-	private static final boolean leftInverted = false; // inverts the left motors & left encoder
+	private static final boolean leftInverted = true; // inverts the left motors & left encoder
 	/*******************************************************/
 
 	private static final Victor driveRightRearMotor = new Victor(RobotMap.driveRightRearMotor);
@@ -77,9 +77,9 @@ public class DriveSubsystem extends Subsystem {
 	private static final Victor driveLeftRearMotor = new Victor(RobotMap.driveLeftRearMotor);
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
 	
-	private static SpeedControllerGroup leftMotors = new SpeedControllerGroup(driveLeftFrontMotor, driveLeftRearMotor);
-	private static SpeedControllerGroup rightMotors = new SpeedControllerGroup(driveRightFrontMotor, driveRightRearMotor);
-	private static DifferentialDrive mainDrive = new DifferentialDrive(leftMotors, rightMotors);
+	private static SpeedControllerGroup leftMotors;
+	private static SpeedControllerGroup rightMotors;
+	private static DifferentialDrive mainDrive;
 
 	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA,
 			RobotMap.driveRightEncoderChannelB, rightInverted);
@@ -139,7 +139,9 @@ public class DriveSubsystem extends Subsystem {
 		// Sets the distance per pulse for the encoders
 		driveRightEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
 		driveLeftEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
-
+		leftMotors = new SpeedControllerGroup(driveLeftFrontMotor, driveLeftRearMotor);
+		rightMotors = new SpeedControllerGroup(driveRightFrontMotor, driveRightRearMotor);
+		mainDrive = new DifferentialDrive(leftMotors, rightMotors);
 		// Initialize the PIDF constants in the NetworkTable
 		ntGetPID();
 		ntKp.setDouble(kP);
