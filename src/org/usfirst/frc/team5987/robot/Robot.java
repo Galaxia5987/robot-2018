@@ -19,6 +19,9 @@ import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 import com.kauailabs.navx.frc.AHRS;
 
 import auxiliary.Watch_Doge;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;

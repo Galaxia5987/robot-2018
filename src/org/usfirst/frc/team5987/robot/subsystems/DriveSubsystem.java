@@ -1,10 +1,11 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.Robot;
+
 import org.usfirst.frc.team5987.robot.RobotMap;
 import org.usfirst.frc.team5987.robot.commands.JoystickDriveCommand;
 
-import auxiliary.MiniPID;
+import auxiliary.MiniPID; 	
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
