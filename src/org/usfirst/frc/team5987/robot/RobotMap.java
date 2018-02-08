@@ -17,6 +17,7 @@ public class RobotMap {
 
 
 	/*---------------CLIMB-----------------*/
+
 	public static int climbRightServo = 10; // TODO: CHANGE!
 	public static int climbLeftServo = 11; // TODO: CHANGE!
 	
@@ -64,6 +65,7 @@ public class RobotMap {
 	/*-------------------------------------*/
 
 	/*----------------DRIVE----------------*/
+
 	public static final int driveRightEncoderChannelA = 2; // TODO: CHANGE!
 	public static final int driveRightEncoderChannelB = 3; // TODO: CHANGE!
 	public static final int driveLeftEncoderChannelA = 0; // TODO: CHANGE!
@@ -72,7 +74,7 @@ public class RobotMap {
 	public static final double driveEncoderDistancePerPulse = 0.00133; // TODO:
 																	// CHANGE!
 
-	public static final int backUltrasonic = 0; // TODO: CHANGE!
+	public static final int backUltrasonic = 1; // TODO: CHANGE!
 	public static int bumpSensor = 7; // TODO: CHANGE!
 	public static int colorSensor = 2;
 	/*-------------------------------------*/

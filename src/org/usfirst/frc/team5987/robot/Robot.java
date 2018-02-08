@@ -10,10 +10,9 @@ package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
-
+import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
-
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.ExampleSubsystem;
@@ -27,6 +26,7 @@ import auxiliary.Watch_Doge;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -56,26 +56,29 @@ public class Robot extends TimedRobot {
 	
 	public static OI m_oi;
 	
-	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30);
+	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30,0.5);
+	public static final Watch_Doge inTakeCanine = new Watch_Doge(PDP, intakeSubsystem, RobotMap.intakePDPs, 27,0.5);
+
 	
-	NetworkTable liftTable = NetworkTableInstance.getDefault().getTable("liftTable");
+	NetworkTable LiftTable = liftSubsystem.LiftTable;
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	public static NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
-	NetworkTableEntry ntSetpoint = liftTable.getEntry("Setpoint");
 	
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-	
-
 	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
 
 	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
+
+
+	
+	Compressor compressor = new Compressor(1);
 
 
 	/**
@@ -95,7 +98,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
-		ntSetpoint.setDouble(0);
+		SmartDashboard.putData(new LiftCommand());
 	}
 
 	/**
@@ -111,6 +114,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		liftSubsystem.update();
+		liftSubsystem.setSetpoint(0);
 	}
 
 	/**
@@ -161,6 +166,9 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.cancel();
 		}
 //		driveSubsystem.setSetpoints(1, 1);
+		compressor.start();
+		liftSubsystem.configNominalAndPeakOutputs();
+
 	}
 
 	/**
@@ -169,16 +177,16 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		liftSubsystem.updateMotors();
-		ntAngle.setDouble(driveSubsystem.getAngle());
+        // liftSubsystem.update();
+		liftSubsystem.displaySensorValues();
+//		double joyY = m_oi.rightStick.getY();
+//		SmartDashboard.putNumber("Joy Y", joyY);
+//		liftSubsystem.setPrecentSpeed(joyY);
+		liftSubsystem.update();
+		clingyShiba.feed();
+		inTakeCanine.feed();
 		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
-		//gripperSubsystem.ntCurrent.setDouble(PDP.getCurrent(RobotMap.gripperLeftPDP));
-		liftSubsystem.ntBottomHall.setBoolean(liftSubsystem.isDown());
-		
-		//clingyShiba.feed();
-//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
-//		driveSubsystem.setSetpoints(-0.3, -1);
 	}
 
 	/**

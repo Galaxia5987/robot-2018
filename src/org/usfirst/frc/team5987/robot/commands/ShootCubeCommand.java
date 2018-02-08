@@ -48,5 +48,6 @@ public class ShootCubeCommand extends Command {
 
 	protected void interrupted() {
 		end();
+		this.cancel();
 	}
 }
