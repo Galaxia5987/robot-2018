@@ -5,6 +5,7 @@ import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -18,15 +19,20 @@ public class LiftCommand extends Command {
 		BOTTOM, SWITCH, SCALE_DOWN, SCALE_MID, SCALE_TOP, CLIMB
 
 	}
-
-	public LiftCommand(double pos) {
+	
+	public LiftCommand(double pos, boolean isShuffleboard){
 		this.position = pos;
-		this.isShuffleboard = false;
-		// Use requires() here to declare subsystem dependencies
+		this.isShuffleboard = isShuffleboard;
+		ntSetpoint.setDouble(0);
 		requires(Robot.liftSubsystem);
+	}
+	
+	public LiftCommand(double pos) {
+		this(pos, false);
 	}
 
 	public LiftCommand(liftStates state) {
+		this(0, false);
 		switch (state) {
 		case BOTTOM:
 			this.position = 0.0;
@@ -38,21 +44,21 @@ public class LiftCommand extends Command {
 			this.position = 1.8;
 			break;
 		case SCALE_MID:
-			this.position = 2;
+			this.position = 1.9;
 			break;
 		case SCALE_TOP:
-			this.position = 2.10;
+			this.position = 2;
 			break;
 		case CLIMB:
-			this.position = 2.2;
+			this.position = 2;
 			break;
 		}
+		SmartDashboard.putNumber("LiftCommand.position", this.position);
+	
 	}
 
 	public LiftCommand() {
-		this.isShuffleboard = true;
-		// Use requires() here to declare subsystem dependencies
-		requires(Robot.liftSubsystem);
+		this(0, true);
 	}
 
 	// Called just before this Command runs the first time
@@ -64,6 +70,7 @@ public class LiftCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() { 
+
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

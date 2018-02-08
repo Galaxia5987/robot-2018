@@ -3,6 +3,7 @@ package auxiliary;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DPadButton extends Button {
 	private GenericHID m_joystick;
@@ -20,6 +21,7 @@ public class DPadButton extends Button {
 	}
 
 	public boolean get() {
-		return (m_joystick.getPOV() % 360) / 45  == m_dPadNumber;
+		SmartDashboard.putNumber("D-PAD", m_joystick.getPOV());
+		return (m_joystick.getPOV() % 360) / 45.0  == m_dPadNumber;
 	}
 }

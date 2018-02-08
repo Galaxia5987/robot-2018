@@ -20,8 +20,10 @@ public class JoystickLiftCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double change = -Robot.m_oi.xbox.getY() * 0.1;
-    	Robot.liftSubsystem.setSetpoint(Robot.liftSubsystem.getHeight() + change);
+    	double y = Robot.m_oi.xbox.getY();
+    	double change = -y * 0.1;
+    	if(Math.abs(y)> 0.1)
+    		Robot.liftSubsystem.setSetpoint(Robot.liftSubsystem.getHeight() + change);
     }
 
     // Make this return true when this Command no longer needs to run execute()

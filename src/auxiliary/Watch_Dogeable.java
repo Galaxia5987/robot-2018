@@ -1,6 +1,6 @@
 package auxiliary;
 
-/** Interface that must be implemented for a subsystem to be monitered by Watch_Doge.
+/** Interface that must be implemented for a subsystem to be monitored by Watch_Doge.
  */
 public interface Watch_Dogeable {
     /**
@@ -30,7 +30,7 @@ public interface Watch_Dogeable {
      * Watch_Doge also must be able to poke the subsystem with a stick to check if it is alive. Overload to return if the
      * subsystem is currently enabled or disabled.
      *
-     * @return boolean indicating if subsystem is enabled or disabled (true is enabled)
+     * @return boolean indicating if subsystem is enabled or disabled (true if disabled)
      */
 	public boolean ded();
 }

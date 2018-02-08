@@ -6,10 +6,13 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team5987.robot;
+
 import org.usfirst.frc.team5987.robot.commands.*;
+
 import org.usfirst.frc.team5987.robot.commands.LiftCommand.liftStates;
 
 import auxiliary.DPadButton;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -20,15 +23,19 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	public Joystick leftStick = new Joystick(0);
-	public Joystick rightStick = new Joystick(1);
-	public XboxController xbox = new XboxController(0);
-	Button a = new JoystickButton(xbox, 1);
+
+	public static final int TakeCommandButton = 1;
+	public Joystick left = new Joystick(0);
+	public Joystick right = new Joystick(1);
+	public XboxController xbox = new XboxController(2);
+	
+	Button a = new JoystickButton(xbox, TakeCommandButton);
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
 	Button select = new JoystickButton(xbox, 7);
 	Button start = new JoystickButton(xbox, 8);
+
 	DPadButton d_up = new DPadButton(xbox,0);
 	DPadButton d_down = new DPadButton(xbox,4);
 	DPadButton d_dl = new DPadButton(xbox,5);
@@ -43,7 +50,8 @@ public class OI {
 		d_up.whenPressed(new LiftCommand(liftStates.SCALE_TOP));
 		b.whileHeld(new ShootCubeCommand(0.75, false));
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
-		y.whenPressed(new IntakeSelenoidCommand());
-		a.whenPressed(new CommandGroup_TakeCube());
+		y.whenPressed(new IntakeSolenoidCommand());
+		a.whenPressed(new TakeCommand());
+
 	}
 }

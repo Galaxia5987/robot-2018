@@ -40,7 +40,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 */
 	public void setSpeed(double speedL, double speedR) {
 		leftWheel.set(speedL);
-		rightWheel.set(speedR);
+		rightWheel.set(-speedR);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 
 	@Override
 	public boolean wakeMeUp() {
-		if (downTimer.get() >= 3) {
+		if (downTimer.get() >= 10) {
 			downTimer.stop();
 			downTimer.reset();
 			return true;

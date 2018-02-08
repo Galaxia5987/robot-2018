@@ -2,6 +2,7 @@ package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
+import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem.PIDTypes;
 
 import auxiliary.DistanceMotionProfile;
 import auxiliary.Misc;
@@ -29,7 +30,7 @@ public class TurnCommand extends Command {
 	 * If the absolute angle error is less than that, the command will stop
 	 */
 	private static final double MIN_DEGREES_ERROR = 1; 
-	private static final double TURN_CONTROL_FACTOR = 2;
+	private static final double TURN_CONTROL_FACTOR = 1;
 	private DistanceMotionProfile mp;
 	private boolean isRelative;
 	private double angle;
@@ -38,6 +39,7 @@ public class TurnCommand extends Command {
 	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
 	NetworkTableEntry ntMPoutput = driveTable.getEntry("MP Output");
 	NetworkTableEntry ntRotationDegreesError = driveTable.getEntry("Rotation Degrees Error");
+	private PIDTypes priorPIDType;
 	
 	/**
 	 * 
@@ -76,6 +78,8 @@ public class TurnCommand extends Command {
     
     // Called just before this Command runs the first time
     protected void initialize() {
+    	priorPIDType = Robot.driveSubsystem.getPIDType();
+    	Robot.driveSubsystem.setPIDType(DriveSubsystem.PIDTypes.TURN);
     	if(ntAngle != null)
     		angle = ntAngle.getDouble(0);
     	if(ntIsRelative != null)
@@ -119,6 +123,7 @@ public class TurnCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double out = mp.getV(getDeltaDistance()) * TURN_CONTROL_FACTOR;
+
     	ntMPoutput.setDouble(out);
     	Robot.driveSubsystem.setSetpoints(-out, out);
     	Robot.driveSubsystem.updatePID();
@@ -136,6 +141,7 @@ public class TurnCommand extends Command {
     	Robot.driveSubsystem.setLeftSpeed(0);
     	Robot.driveSubsystem.setRightSpeed(0);
     	Robot.driveSubsystem.setSetpoints(0, 0);
+    	Robot.driveSubsystem.setPIDType(priorPIDType);
     }
 
     // Called when another command which requires one or more of the same
