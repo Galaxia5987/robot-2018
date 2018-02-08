@@ -28,12 +28,9 @@ import auxiliary.Watch_Doge;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-
 import edu.wpi.first.wpilibj.CameraServer;
-
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -110,8 +107,6 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new LiftCommand());
 		SmartDashboard.putData(new PathCommand());
 		ntSetpoint.setDouble(0);
-		cs = CameraServer.getInstance();
-		cs.addAxisCamera("ACoolCamera","10.59.87.66");
 	}
 
 	/**

@@ -12,24 +12,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-
-
 /**
- * @author Dor Brekhman
+ *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
-	/*********************** CONSTANTS ************************/
-
+	/***********************CONSTANTS************************/
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0.15; 
-
 	private static double kI = 0.0; 
 	private static double kD = 0.0;
 	private static double kF = 0.33;
@@ -37,7 +30,6 @@ public class DriveSubsystem extends Subsystem {
 	private static double TurnKi = 0.0; 
 	private static double TurnKd = 0.0;
 	private static double TurnKf = 0.33;
-
 	public enum PIDTypes{
 		STRAIGHT,
 		TURN
@@ -45,6 +37,7 @@ public class DriveSubsystem extends Subsystem {
 	private PIDTypes pidType = PIDTypes.STRAIGHT;
 	// Gyro PID
 	private static double gyroKp = 0.015;
+//	private static double gyroKp = 0;
 	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
 	private static final boolean GYRO_REVERSED = true;
@@ -53,15 +46,15 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public static final double MAX_VELOCITY = 1.2;
 	/**
-	 * Absolute max velocity [m/s]
+	 * ABSOLUTE, METER/SEC
 	 */
 	public static final double MIN_VELOCITY = 0.4;
 	/**
-	 * Absolute acceleration [m/s^2]
+	 * ABSOLUTE, METER/SEC^2
 	 */
 	public static final double ACCELERATION = 1;
 	/**
-	 * Absolute deccleration [m/s^2]
+	 * ABSOLUTE, METER/SEC^2
 	 */
 	public static final double DECCELERATION = 1;
 	public static final double ROTATION_RADIUS = 0.3325; // test chasiss
@@ -70,30 +63,25 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public static final double ultransonicMeterFactor = 1.024;
 	private static final boolean rightInverted = true; // inverts the right motors & right encoder
-	private static final boolean leftInverted = true; // inverts the left motors & left encoder
+	private static final boolean leftInverted = false; // inverts the left motors & left encoder
 	/*******************************************************/
-
+	
+	
 	private static final Victor driveRightRearMotor = new Victor(RobotMap.driveRightRearMotor);
 	private static final Victor driveRightFrontMotor = new Victor(RobotMap.driveRightFrontMotor);
 	private static final Victor driveLeftRearMotor = new Victor(RobotMap.driveLeftRearMotor);
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
 	
-	private static SpeedControllerGroup leftMotors;
-	private static SpeedControllerGroup rightMotors;
-	private static DifferentialDrive mainDrive;
-
-	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA,
-			RobotMap.driveRightEncoderChannelB, rightInverted);
-	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA,
-			RobotMap.driveLeftEncoderChannelB, leftInverted);
-
+	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, false);
+	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, true);
+	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
 	private static final AnalogInput colorSensor = new AnalogInput(RobotMap.colorSensor);
 	/**
 	 * HRLV-MaxSonar -EZ ultrasonic sensor
 	 */
 	private static final AnalogInput backDistanceSensor = new AnalogInput(RobotMap.backUltrasonic);
-
+	
 	// Creates a new NetworkTable
 	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	// NT PIDF constants
@@ -109,13 +97,12 @@ public class DriveSubsystem extends Subsystem {
 	// NT error for debugging PIDF constants
 	NetworkTableEntry ntRightError = driveTable.getEntry("Right Speed Error");
 	NetworkTableEntry ntLeftError = driveTable.getEntry("Left Speed Error");
-	
-	// Gyro NetworkTable constants
+
+	// Gyro NT constants
 	NetworkTableEntry ntGyroKp = driveTable.getEntry("Gyro kP");
 	NetworkTableEntry ntGyroKi = driveTable.getEntry("Gyro kI");
 	NetworkTableEntry ntGyroKd = driveTable.getEntry("Gyro kD");
-	
-	// NetworkTable error for debugging gyro PID
+	// NT error for debugging gyro PID
 	NetworkTableEntry ntGyroError = driveTable.getEntry("Gyro Error");
 	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
 	NetworkTableEntry ntRightSpeed = driveTable.getEntry("Right Velocity");
@@ -125,10 +112,10 @@ public class DriveSubsystem extends Subsystem {
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
 	private static MiniPID gyroPID;
-
-	/* TODO Set distance per pulse TODO */
-	public DriveSubsystem() {
-		// Inverts the motors if needed
+	
+	/*TODO Set distance per pulse TODO*/
+	public DriveSubsystem(){
+		// invert the motors if needed
 		driveRightRearMotor.setInverted(rightInverted);
 		driveRightFrontMotor.setInverted(rightInverted);
 		driveLeftRearMotor.setInverted(leftInverted);
@@ -137,13 +124,11 @@ public class DriveSubsystem extends Subsystem {
 		driveRightFrontMotor.setInverted(rightInverted);
 		driveLeftRearMotor.setInverted(leftInverted);
 		driveLeftFrontMotor.setInverted(leftInverted);
-		// Sets the distance per pulse for the encoders
+		// set the distance per pulse for the encoders
 		driveRightEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
 		driveLeftEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
-		leftMotors = new SpeedControllerGroup(driveLeftFrontMotor, driveLeftRearMotor);
-		rightMotors = new SpeedControllerGroup(driveRightFrontMotor, driveRightRearMotor);
-		mainDrive = new DifferentialDrive(leftMotors, rightMotors);
-		// Initialize the PIDF constants in the NetworkTable
+		
+		// init the PIDF constants in the NetworkTable
 		ntGetPID();
 		ntKp.setDouble(kP);
 		ntKi.setDouble(kI);
@@ -157,39 +142,24 @@ public class DriveSubsystem extends Subsystem {
 		ntGyroKp.setDouble(gyroKp);
 		ntGyroKi.setDouble(gyroKi);
 		ntGyroKd.setDouble(gyroKd);
-
-		// Initialize the MiniPID for each side
+		
+		// init the MiniPID for each side
 		rightPID = new MiniPID(kP, kI, kD, kF);
 		leftPID = new MiniPID(kP, kI, kD, kF);
 		gyroPID = new MiniPID(gyroKp, gyroKi, gyroKd);
 	}
-
-	/**
-	   * Tank drive method for differential drive platform.
-	   * The calculated values will be squared to decrease sensitivity at low speeds.
-	   *
-	   * @param leftSpeed  The robot's left side speed along the X axis [-1.0..1.0]. Forward is
-	   *                   positive.
-	   * @param rightSpeed The robot's right side speed along the X axis [-1.0..1.0]. Forward is
-	   *                   positive.
-	   * @param squaredInputs If set, decreases the input sensitivity at low speeds.
-	   */
-	public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs)
-	{
-		mainDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
-	}
 	
-	/* TODO ADD DriveJoystickCommand TODO */
+	/*TODO ADD DriveJoystickCommand TODO*/
 	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
+        // Set the default command for a subsystem here.
+        //setDefaultCommand(new MySpecialCommand());
 		setDefaultCommand(new JoystickDriveCommand());
-	}
-
+    }
+	
 	/**
 	 * Gets the PIDF constants from the NetworkTable
 	 */
-	private void ntGetPID() {
+	private void ntGetPID(){
 		kP = ntKp.getDouble(kP);
 		kI = ntKi.getDouble(kI);
 		kD = ntKd.getDouble(kD);
@@ -199,11 +169,11 @@ public class DriveSubsystem extends Subsystem {
 		TurnKd = ntTurnKd.getDouble(TurnKd);
 		TurnKf = ntTurnKf.getDouble(TurnKf);
 	}
-
+	
 	/**
 	 * Gets the gyro PID constants from the NetworkTable
 	 */
-	private void ntGetGyroPID() {
+	private void ntGetGyroPID(){
 		gyroKp = ntGyroKp.getDouble(gyroKp);
 		gyroKi = ntGyroKi.getDouble(gyroKi);
 		gyroKd = ntGyroKd.getDouble(gyroKd);
@@ -219,11 +189,10 @@ public class DriveSubsystem extends Subsystem {
 	
 	/**
 	 * Updates the PIDF control and moves the motors <br>
-	 * Controls the velocity according to {@link #setRightSetpoint()} and
-	 * {@link #setLeftSetpoint()}. <br>
+	 * Controls the velocity according to <code>setRightSetpoint(..)</code> and <code>setLeftSetpoint(..)</code> <br>
 	 * <b>This should be run periodically in order to work!</b>
 	 */
-	public void updatePID() {
+	public void updatePID(){
 		ntGetPID();
 		switch(pidType){
 		default:
@@ -239,34 +208,33 @@ public class DriveSubsystem extends Subsystem {
 			break;
 		}
 		
+		
 		double rightOut = rightPID.getOutput(getRightSpeed());
 		double leftOut = leftPID.getOutput(getLeftSpeed());
-
+		
 		setRightSpeed(rightOut);
 		setLeftSpeed(leftOut);
 	}
-
+	
 	/**
 	 * Get the output from the gyro PID.
-	 * 
 	 * @param desiredAngle - the setpoint for the PID control
 	 * @return output for adding rotation to the robot
 	 */
-	public double getGyroPID(double desiredAngle) {
+	public double getGyroPID(double desiredAngle){
 		ntGetGyroPID();
 		double out = gyroPID.getOutput(getAngle(), desiredAngle);
 		ntGyroPIDOut.setDouble(out);
 		return out;
 	}
-
+	
+	
 	/**
-	 * Set the desired velocity for the both motors (to make it move use
-	 * {@link #updatePID()} and set speed methods periodically)
-	 * 
-	 * @param rightVelocity - desired velocity for the right motors METERS/SEC
-	 * @param leftVelocity - desired velocity for the left motors METERS/SEC
+	 * Set the desired velocity for the both motors (to make it move use {@link #updatePID()}  and set speed methods periodically) 
+	 * @param rightVelocity desired velocity for the right motors METERS/SEC
+	 * @param leftVelocity desired velocity for the left motors METERS/SEC
 	 */
-	public void setSetpoints(double leftVelocity, double rightVelocity) {
+	public void setSetpoints(double leftVelocity, double rightVelocity){
 		double outs[] = Misc.normalize(leftVelocity, rightVelocity, MAX_VELOCITY);
 		double leftOut = outs[0];
 		double rightOut = outs[1];
@@ -280,76 +248,66 @@ public class DriveSubsystem extends Subsystem {
 		ntRightSpeed.setDouble(getRightSpeed());
 		rightPID.setSetpoint(rightOut);
 	}
-
+	
 	/**
 	 * Set the speed of the two right motors
-	 * 
-	 * @param speed - between -1 and 1
+	 * @param speed between -1 and 1
 	 */
 	public void setRightSpeed(double speed) {
 		driveRightRearMotor.set(speed);
 		driveRightFrontMotor.set(speed);
 	}
-
+	
 	/**
 	 * Set the speed of the two left motors
-	 * 
-	 * @param speed - between -1 and 1
+	 * @param speed between -1 and 1
 	 */
 	public void setLeftSpeed(double speed) {
 		driveLeftRearMotor.set(speed);
 		driveLeftFrontMotor.set(speed);
 	}
-
+	
 	/**
 	 * Get the speed of the right wheels
-	 * 
-	 * @return speed [m/s]
+	 * @return speed in METER/SEC
 	 */
 	public double getRightSpeed() {
 		return driveRightEncoder.getRate();
 	}
-
+	
 	/**
 	 * Get the speed of the left wheels
-	 * 
-	 * @return speed [m/s]
+	 * @return speed in METER/SEC
 	 */
 	public double getLeftSpeed() {
 		return driveLeftEncoder.getRate();
 	}
-
+	
 	/**
-	 * Get the distance the right wheels have passed since the beginning of the
-	 * program
-	 * 
-	 * @return distance [m]
+	 * Get the distance the right wheels have passed since the beginning of the program
+	 * @return distance in METER
 	 */
 	public double getRightDistance() {
 		return driveRightEncoder.getDistance();
 	}
-
+	
 	/**
-	 * Get the distance the left wheels have passed since the beginning of the
-	 * program
-	 * 
-	 * @return distance in [m]
+	 * Get the distance the left wheels have passed since the beginning of the program
+	 * @return distance in METER
 	 */
 	public double getLeftDistance() {
 		return driveLeftEncoder.getDistance();
 	}
-
+	
 	/**
 	 * Get the angle of the navX
-	 * 
-	 * @return angle [degrees]
+	 * @return angle in DEGREES
 	 */
-
     public double getAngle() {
 		double rawAngle = Robot.navx.getAngle();
 		return GYRO_REVERSED ? -rawAngle : rawAngle;
 	}
-
+    
 	/**
 	 * Get the angle of the navX
 	 * @return angle in RADIANS
@@ -359,24 +317,22 @@ public class DriveSubsystem extends Subsystem {
     }
 	/**
 	 * 
-	 * @return whether the robot's on the cable bump on the center of the arena
-	 *         (in the null territory)
+	 * @return true if the robot's on the cable bump on the center of the arena (in the null territory)
 	 */
-	public boolean isBump() {
+	public boolean isBump(){
 		return bumpSensor.get();
 	}
-
+	
 	public boolean seesWhite() {
 		return colorSensor.getVoltage() >= 4.5;
 	}
-
+	
 	/**
 	 * Get the distance from the back of the robot <br>
 	 * <i>Note: Shows ~0.3 M under 0.3 M</i>
-	 * 
-	 * @return distance [m]
+	 * @return distance in METER
 	 */
-	public double getBackDistance() {
+	public double getBackDistance(){
 		return backDistanceSensor.getVoltage() * ultransonicMeterFactor;
 	}
 }
