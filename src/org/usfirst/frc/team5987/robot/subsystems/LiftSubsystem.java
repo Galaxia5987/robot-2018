@@ -98,6 +98,7 @@ public class LiftSubsystem extends Subsystem {
 	private NetworkTableEntry ntPeakOutFwd = LiftTable.getEntry("Peak Out Fwd");
 	private NetworkTableEntry ntNomOutRev = LiftTable.getEntry("Nom Out Rev");
 	private NetworkTableEntry ntPeakOutRev = LiftTable.getEntry("Peak Out Rev");
+	private double setpointMeters;
 
 	public LiftSubsystem(){
 		// The PID values are defined in the robo-rio webdash. Not NT!!!
@@ -172,6 +173,7 @@ public class LiftSubsystem extends Subsystem {
      * @param height in METER
      */
     public void setSetpoint(double height) {
+    	setpointMeters =  height;
     	setpoint = height * TICKS_PER_METER;
     	if(height > getHeight()){
     		liftMotor.selectProfileSlot(TALON_UP_PID_SLOT, 0);
@@ -216,23 +218,22 @@ public class LiftSubsystem extends Subsystem {
 	    		
 	    	case RUNNING:
 	    		ntState.setString("RUNNING");
+	    		// if mechanism is configured disabled, switch to MECHANISM_DISABLED
 	    		if(!ntIsEnabled.getBoolean(false))
 	    			state = States.MECHANISM_DISABLED;
 	    		limitAbsoluteOutput(MAX_RUNNING_OUTPUT);
-	    		// allow the motors to move when reaching top or bottom
-//	    		if(reachedTop() || reachedBottom()){
-//	    			setSetpoint(getHeight());
-//	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
-//	    		}
+	    		/*Unfreeze the lift when reaching hall effects if setpoint does not exceed limits*/
 	    		if(reachedTop()){
-	    			setSetpoint(getHeight());
-	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+	    			if(setpointMeters < getHeight()) // going down
+	    				liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+	    			setSetpoint(getHeight()-0.04);
 	    		}
 	    		if(reachedBottom()){
-	    			liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+	    			if(setpointMeters > getHeight()) // going up
+	    				liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
+//	    			setSetpoint(getHeight());
 	    		}
 	    		setPosition();
-	    		// if mechanism is configured disabled, switch to MECHANISM_DISABLED
 	    		break;
 	    		
 	    	default:
@@ -256,7 +257,7 @@ public class LiftSubsystem extends Subsystem {
 	 * @return difference between setpoint and current height in METER
 	 */
 	public double getHeightError(){
-		return setpoint - getHeight();
+		return setpointMeters - getHeight();
 	}
 	
 	/**
