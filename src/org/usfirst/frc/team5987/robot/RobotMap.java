@@ -21,10 +21,14 @@ public class RobotMap {
 	public static int climbRightServo = 10; // TODO: CHANGE!
 	public static int climbLeftServo = 11; // TODO: CHANGE!
 	
-	public static int climbMotor = 12; // TODO: CHANGE!
-	public static int climbPDP = 14;
+	public static int climbMotor1 = 12; // TODO: CHANGE!
+	public static int climbMotor2 = 12; // TODO: CHANGE!
+	public static int climbMotor3 = 12; // TODO: CHANGE!
+	public static int climb1PDP = 14;
+	public static int climb2PDP = 14;
+	public static int climb3PDP = 14;
 	
-	public static final int[] climbPDPs = new int[] {climbPDP}; // TODO: CHANGE!
+	public static final int[] climbPDPs = new int[] {climb1PDP, climb2PDP, climb3PDP}; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 

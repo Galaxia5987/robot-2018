@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.RobotMap;
+import auxiliary.SafeVictorSPX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -10,45 +11,44 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class ClimbSubsystem extends Subsystem {
 
-	public final boolean motorReversed = false;
+	public final boolean motor1Reversed = false;
+	public final boolean motor2Reversed = false;
+	public final boolean motor3Reversed = false;
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
 	}
 
+	// Motors for climbing
+	SafeVictorSPX motor1 = new SafeVictorSPX(RobotMap.climbMotor1);
+	SafeVictorSPX motor2 = new SafeVictorSPX(RobotMap.climbMotor2);
+	SafeVictorSPX motor3 = new SafeVictorSPX(RobotMap.climbMotor3);
 
 	
 	public ClimbSubsystem() {
-		motor.setInverted(motorReversed);
+		motor1.setInverted(motor1Reversed);
+		motor2.setInverted(motor2Reversed);
+		motor3.setInverted(motor3Reversed);
 	}
 
 	/**
-	 * Set the servo position.
+	 * Set the climbing motors' speed.
 	 * 
-	 * <p>
-	 * Servo values range from 0.0 to 1.0 corresponding to the range of full
-	 * left to full right.
-	 * 
-	 * @param value
-	 *            Position from 0.0 to 1.0.
-	 */
-	}
-	
-	/**
-	 * Set the PWM value.
-	 *
-	 * <p>
-	 * The PWM value is set using a range of -1.0 to 1.0, appropriately scaling
-	 * the value for the FPGA.
-	 *
 	 * @param speed
-	 *            The speed value between -1.0 and 1.0 to set.
+	 *            - speed of the motors
 	 */
-	public void setClimbSpeed(double speed) {
-		motor.set(speed);
+	public void set(double speed) {
+		speed = (speed < 0) ? 0 : speed; // If the speed given to the motors is negative, the 
+										 // speed is set to zero (0). This is done because
+										 // the robot cannot descend as result of the ratchet mechanism.
+		motor1.set(speed);
+		motor2.set(speed);
+		motor3.set(speed);
 	}
 	
-		}
+	}
+	
+	}
 	}
 }
