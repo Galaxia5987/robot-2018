@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
+
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -20,7 +21,8 @@ public class ClimbCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if (Timer.getMatchTime() - 1 > 30)
+//    	if (Timer.getMatchTime() - 1 > 30)
+    	if (false) // TODO: Delete
     	{
     		cancel();
     	}
