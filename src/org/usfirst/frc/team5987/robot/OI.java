@@ -8,14 +8,6 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.*;
-
-
-
-import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
-
-import org.usfirst.frc.team5987.robot.commands.OpenHooksCommand;
-
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -33,7 +25,6 @@ public class OI {
 	public XboxController xbox = new XboxController(2);
 	
 	Button a = new JoystickButton(xbox, TakeCommandButton);
-
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
@@ -45,5 +36,6 @@ public class OI {
 		x.whileHeld(new ShootCubeCommand(-1, false));
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());
+		start.toggleWhenActive(new ClimbCommand());
 	}
 }
