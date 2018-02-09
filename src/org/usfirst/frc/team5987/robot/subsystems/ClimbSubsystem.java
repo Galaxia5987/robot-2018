@@ -1,10 +1,9 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
 import org.usfirst.frc.team5987.robot.RobotMap;
-
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Victor;
+import auxiliary.SafeVictorSPX;
+import auxiliary.Watch_Dogeable;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -12,86 +11,74 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * 
  * @author Dan Katzuv
  */
-public class ClimbSubsystem extends Subsystem {
+public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 
-	// Put methods for controlling this subsystem
-	// here. Call these from Commands.
-	public static final double openPosition = -1;
-	public static final double closePosition = 1;
-	// Make it true if the limit switch is normally on
-	public final boolean limitSwitchReverse = true;
-	public final boolean motorReversed = false;
+	public final boolean motor1Reversed = false;
+	public final boolean motor2Reversed = false;
+	public final boolean motor3Reversed = false;
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
 	}
 
-	/**
-	 * Right servo of the right hook on the climb subsystem.
-	 */
-	Servo rightServo = new Servo(RobotMap.climbRightServo);
+	// Motors for climbing
+	SafeVictorSPX motor1 = new SafeVictorSPX(RobotMap.climbMotor1);
+	SafeVictorSPX motor2 = new SafeVictorSPX(RobotMap.climbMotor2);
+	SafeVictorSPX motor3 = new SafeVictorSPX(RobotMap.climbMotor3);
 
-	/**
-	 * Left servo of the left hook on the climb subsystem.
-	 */
-	Servo leftServo = new Servo(RobotMap.climbLeftServo);
-
-	/**
-	 * Motor for climbing.
-	 */
-	Victor motor = new Victor(RobotMap.climbMotor);
-
-	/**
-	 * Limit switch at the top that is used for affirmation if the robot has
-	 * reached the top.
-	 */
-	DigitalInput limitSwitch = new DigitalInput(RobotMap.climbLimitSwitch);
-
+	Timer downTimer = new Timer();
+	
 	public ClimbSubsystem() {
-		motor.setInverted(motorReversed);
+		motor1.setInverted(motor1Reversed);
+		motor2.setInverted(motor2Reversed);
+		motor3.setInverted(motor3Reversed);
 	}
 
 	/**
-	 * Set the servo position.
-	 *
-	 * <p>
-	 * Servo values range from 0.0 to 1.0 corresponding to the range of full
-	 * left to full right.
-	 *
-	 * @param value
-	 *            Position from 0.0 to 1.0.
-	 */
-	public void setHooks(double position) {
-		rightServo.set(position);
-		leftServo.set(position);
-	}
-
-	/**
-	 * Set the PWM value.
-	 *
-	 * <p>
-	 * The PWM value is set using a range of -1.0 to 1.0, appropriately scaling
-	 * the value for the FPGA.
-	 *
+	 * Set the climbing motors' speed.
+	 * 
 	 * @param speed
-	 *            The speed value between -1.0 and 1.0 to set.
+	 *            - speed of the motors
 	 */
-	public void setClimbSpeed(double speed) {
-		motor.set(speed);
+	public void set(double speed) {
+		speed = (speed < 0) ? 0 : speed; // If the speed given to the motors is negative, the 
+										 // speed is set to zero (0). This is done because
+										 // the robot cannot descend as result of the ratchet mechanism.
+		motor1.set(speed);
+		motor2.set(speed);
+		motor3.set(speed);
 	}
 	
-	public double getClimbSpeed() {
-		return motor.getSpeed();
+	@Override
+	public void bork()
+	{
+		motor1.disable();
+		motor2.disable();
+		motor3.disable();
+		downTimer.reset();
+		downTimer.start();
 	}
-	/**
-	 * Get the value from the limit switch to know whether the robot has reached
-	 * the top.
-	 *
-	 * @return The status of the limit switch
-	 */
-	public boolean hasReachedTop() {
-		boolean rawVal = limitSwitch.get();
-		return limitSwitchReverse ? !rawVal : rawVal;
+	
+	@Override
+	public void necromancy() {
+		motor1.enable();
+		motor2.enable();
+		motor3.enable();
+	}
+	
+	@Override
+	public boolean wakeMeUp() {
+		if (downTimer.get() >= 10) {
+			downTimer.stop();
+			downTimer.reset();
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean ded() {
+		return motor1.status() && motor2.status() && motor3.status();
 	}
 }

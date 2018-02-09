@@ -5,6 +5,7 @@ import org.usfirst.frc.team5987.robot.Robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -12,17 +13,16 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class AutoCommandGroup extends CommandGroup {
+	private char startPosition;
 	
 	public AutoCommandGroup(char startPosition) {
+		this.startPosition = startPosition;
+	
 		/**
 		 * The game specific message which includes data about the Scale and
 		 * Switches Plates randomanization.
 		 */
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
-
-		/**
-		 * Determines where the Robot was placed in the beginning of the game.
-		 */
 
 		// Positions of the alliance Switch and Scale Plates.
 		char switchPosition = gameData.charAt(0), scalePosition = gameData.charAt(1);
@@ -48,28 +48,11 @@ public class AutoCommandGroup extends CommandGroup {
 		 */
 		NetworkTableEntry switchAngle = autoTable.getEntry("switch angle");
 
-		/**
-		 * Final distance from the Switch after rotating the second time.
-		 */
-		NetworkTableEntry distanceFromSwitch = autoTable.getEntry("switch distance 2");
-
-		/**
-		 * Angle relative to the robot the robot should nullify to get to the
-		 * switch.
-		 */
-		NetworkTableEntry finalAngleFromSwitch = autoTable.getEntry("angle from switch");
-
-		/**
-		 * Second distance the robot drives (between
-		 * {@link #beginningSwitchDist} and {@link #distanceFromSwitch})
-		 */
-		NetworkTableEntry secondSwitchDist = autoTable.getEntry("second switch distance");
-
 		addSequential(new IntakeSolenoidCommand());
 		// Robot is in center, ready to go to one of two Platforms of the
 		// Switch.
-		addSequential(new DriveStraightCommand(beginningSwitchDist.getDouble(0.2)));
 		if (startPosition == 'C') {
+			addSequential(new DriveStraightCommand(beginningSwitchDist.getDouble(0.2)));
 			// Switch plate is on the left.
 			if (switchPosition == 'L') {
 				addSequential(new TurnCommand(switchAngle.getDouble(30), false));
