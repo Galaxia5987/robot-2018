@@ -8,6 +8,7 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
+import org.usfirst.frc.team5987.robot.commands.AutoCommandGroup;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
@@ -106,6 +107,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new LiftCommand());
 		SmartDashboard.putData(new PathCommand());
+		SmartDashboard.putData(new AutoCommandGroup('C'));
 		ntSetpoint.setDouble(0);
 	}
 

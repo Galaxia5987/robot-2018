@@ -1,9 +1,10 @@
 package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
-import org.usfirst.frc.team5987.robot.subsystems.NetworkTable;
-import org.usfirst.frc.team5987.robot.subsystems.NetworkTableEntry;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -11,8 +12,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class AutoCommandGroup extends CommandGroup {
-
-	public AutoCommandGroup() {
+	
+	public AutoCommandGroup(char startPosition) {
 		/**
 		 * The game specific message which includes data about the Scale and
 		 * Switches Plates randomanization.
@@ -22,12 +23,11 @@ public class AutoCommandGroup extends CommandGroup {
 		/**
 		 * Determines where the Robot was placed in the beginning of the game.
 		 */
-		NetworkTableEntry robotInitPosition = Robot.driveSubsystem.driveTable.getEntry("Robot init position");
 
 		// Positions of the alliance Switch and Scale Plates.
 		char switchPosition = gameData.charAt(0), scalePosition = gameData.charAt(1);
 
-		public NetworkTable autoTable = NetworkTableInstance.getDefault().getTable("Autonomous");
+		NetworkTable autoTable = NetworkTableInstance.getDefault().getTable("Autonomous");
 
 		/**
 		 * Distance from the alliance wall to the auto line. REMEMBER TO ADD A
@@ -65,17 +65,18 @@ public class AutoCommandGroup extends CommandGroup {
 		 */
 		NetworkTableEntry secondSwitchDist = autoTable.getEntry("second switch distance");
 
+		addSequential(new IntakeSolenoidCommand());
 		// Robot is in center, ready to go to one of two Platforms of the
 		// Switch.
-		addSequential(DriveStraightCommand(beginningSwitchDist));
-		if (robotInitPosition == 'C') {
+		addSequential(new DriveStraightCommand(beginningSwitchDist.getDouble(0.2)));
+		if (startPosition == 'C') {
 			// Switch plate is on the left.
 			if (switchPosition == 'L') {
-				addSequential(TurnCommand(switchAngle));
+				addSequential(new TurnCommand(switchAngle.getDouble(30), false));
 			}
 			// Switch plate in on the right.
 			if (switchPosition == 'R') {
-				addSequential(new TurnCommand(-switchAngle));
+				addSequential(new TurnCommand(-switchAngle.getDouble(30), false));
 			}
 			addParallel(new LiftCommand(LiftCommand.liftStates.SWITCH));
 			addSequential(new PathCommand());
