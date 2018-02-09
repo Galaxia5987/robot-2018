@@ -8,6 +8,12 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.*;
+
+
+import org.usfirst.frc.team5987.robot.commands.LiftCommand.liftStates;
+
+import auxiliary.DPadButton;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -31,9 +37,20 @@ public class OI {
 	Button select = new JoystickButton(xbox, 7);
 	Button start = new JoystickButton(xbox, 8);
 
+	DPadButton d_up = new DPadButton(xbox,0);
+	DPadButton d_down = new DPadButton(xbox,4);
+	DPadButton d_dl = new DPadButton(xbox,5);
+	DPadButton d_left = new DPadButton(xbox,6);
+	DPadButton d_lu = new DPadButton(xbox,7);
+
 	public OI() {
-		b.whileHeld(new ShootCubeCommand(1, false));
-		x.whileHeld(new ShootCubeCommand(-1, false));
+		d_down.whenPressed(new LiftCommand(liftStates.BOTTOM));
+		d_dl.whenPressed(new LiftCommand(liftStates.SWITCH));
+		d_left.whenPressed(new LiftCommand(liftStates.SCALE_DOWN));
+		d_lu.whenPressed(new LiftCommand(liftStates.SCALE_MID));
+		d_up.whenPressed(new LiftCommand(liftStates.SCALE_TOP));
+		b.whileHeld(new ShootCubeCommand(0.75, false));
+		x.whileHeld(new ShootCubeCommand(-0.75, false));
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());
 		start.toggleWhenActive(new ClimbCommand());

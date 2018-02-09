@@ -5,6 +5,7 @@ import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -15,7 +16,7 @@ public class LiftCommand extends Command {
 	NetworkTableEntry ntSetpoint = Robot.liftSubsystem.LiftTable.getEntry("Setpoint");
 
 	public enum liftStates {
-		BOTTOM, SWITCH, SCALE
+		BOTTOM, SWITCH, SCALE_DOWN, SCALE_MID, SCALE_TOP, CLIMB
 
 	}
 	
@@ -33,16 +34,27 @@ public class LiftCommand extends Command {
 	public LiftCommand(liftStates state) {
 		this(0, false);
 		switch (state) {
+		default:
 		case BOTTOM:
 			this.position = 0.0;
 			break;
 		case SWITCH:
-			this.position = 0.77;
+			this.position = 1.4;
 			break;
-		case SCALE:
-			this.position = 2.10;
+		case SCALE_DOWN:
+			this.position = 1.5;
+			break;
+		case SCALE_MID:
+			this.position = 1.75;
+			break;
+		case SCALE_TOP:
+			this.position = 2;
+			break;
+		case CLIMB:
+			this.position = 1.65;
 			break;
 		}
+		SmartDashboard.putNumber("LiftCommand.position", this.position);
 	
 	}
 
