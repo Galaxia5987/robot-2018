@@ -99,7 +99,7 @@ public class LiftSubsystem extends Subsystem {
 	private NetworkTableEntry ntNomOutRev = LiftTable.getEntry("Nom Out Rev");
 	private NetworkTableEntry ntPeakOutRev = LiftTable.getEntry("Peak Out Rev");
 	private double setpointMeters;
-
+	
 	public LiftSubsystem(){
 		// The PID values are defined in the robo-rio webdash. Not NT!!!
 		/* top PID */
@@ -144,6 +144,22 @@ public class LiftSubsystem extends Subsystem {
 		ntPeakOutFwd.setDouble(ntPeakOutFwd.getDouble(1));
 		ntNomOutRev.setDouble(ntNomOutRev.getDouble(0));
 		ntPeakOutRev.setDouble(ntPeakOutRev.getDouble(-1));
+	}
+	
+	/**
+	 * Return the state of the lift.
+	 * @return State of the lift.
+	 */
+	public States getState(){
+		return state;
+	}
+	
+	/**
+	 * Change the state of the lift.
+	 * @param newState - State to set
+	 */
+	public void setState(States newState){
+		state = newState;
 	}
 	
     public void configNominalAndPeakOutputs() {
