@@ -34,23 +34,24 @@ public class LiftCommand extends Command {
 	public LiftCommand(liftStates state) {
 		this(0, false);
 		switch (state) {
+		default:
 		case BOTTOM:
 			this.position = 0.0;
 			break;
 		case SWITCH:
-			this.position = 0.77;
+			this.position = 1.4;
 			break;
 		case SCALE_DOWN:
-			this.position = 1.8;
+			this.position = 1.5;
 			break;
 		case SCALE_MID:
-			this.position = 1.9;
+			this.position = 1.75;
 			break;
 		case SCALE_TOP:
 			this.position = 2;
 			break;
 		case CLIMB:
-			this.position = 2;
+			this.position = 1.65;
 			break;
 		}
 		SmartDashboard.putNumber("LiftCommand.position", this.position);
