@@ -71,7 +71,17 @@ public class Robot extends TimedRobot {
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
-
+	NetworkTableEntry ntPitch = driveTable.getEntry("Pitch");
+	NetworkTableEntry ntYaw = driveTable.getEntry("Yaw");
+	
+	NetworkTableEntry ntAcs1 = driveTable.getEntry("Acs1");
+	NetworkTableEntry ntAcs2 = driveTable.getEntry("Acs2");
+	NetworkTableEntry ntAcs3 = driveTable.getEntry("Acs3");
+	
+	NetworkTableEntry ntGyroX = driveTable.getEntry("GyroX");
+	NetworkTableEntry ntGyroY = driveTable.getEntry("GyroY");
+	NetworkTableEntry ntGyroZ = driveTable.getEntry("GyroZ");
+	
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
 	CameraServer cs;
 	
@@ -182,6 +192,7 @@ public class Robot extends TimedRobot {
 //		driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
 		liftSubsystem.configNominalAndPeakOutputs();
+		liftSubsystem.setState(liftSubsystem.state.RUNNING);
 
 	}
 
@@ -196,6 +207,17 @@ public class Robot extends TimedRobot {
 //		double joyY = m_oi.rightStick.getY();
 //		SmartDashboard.putNumber("Joy Y", joyY);
 //		liftSubsystem.setPrecentSpeed(joyY);
+		ntPitch.setDouble(driveSubsystem.getPitch());
+		ntYaw.setDouble(driveSubsystem.getYaw());
+
+		ntAcs1.setDouble(navx.getRawAccelX());
+		ntAcs2.setDouble(navx.getRawAccelY());
+		ntAcs3.setDouble(navx.getRawAccelZ());
+		
+		ntGyroX.setDouble(navx.getRawGyroX());
+		ntGyroY.setDouble(navx.getRawGyroY());
+		ntGyroZ.setDouble(navx.getRawGyroZ());
+		
 		liftSubsystem.update();
 		clingyShiba.feed();
 		inTakeCanine.feed();

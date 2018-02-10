@@ -162,6 +162,13 @@ public class LiftSubsystem extends Subsystem {
 	 * @param newState - State to set
 	 */
 	public void setState(States newState){
+		switch(newState) {
+			case RUNNING:
+				ntIsEnabled.setBoolean(true); break;
+			case MECHANISM_DISABLED:
+				ntIsEnabled.setBoolean(false); break;
+			default: break;
+		}
 		state = newState;
 	}
 	

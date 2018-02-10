@@ -308,6 +308,15 @@ public class DriveSubsystem extends Subsystem {
 		return GYRO_REVERSED ? -rawAngle : rawAngle;
 	}
     
+    public double getPitch(){
+    	return Robot.navx.getPitch();
+    }
+    
+    public double getYaw(){
+    	return Robot.navx.getYaw();
+    }
+    
+    
 	/**
 	 * Get the angle of the navX
 	 * @return angle in RADIANS

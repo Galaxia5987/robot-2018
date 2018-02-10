@@ -66,9 +66,9 @@ public class AutoCommandGroup extends CommandGroup {
 			addSequential(new ShootCubeCommand(1, true));	
 		}
 
-//		if (robotInitPosition != scalePosition) {
-//			addSequential(DriveStraightCommand(autoLineDistance));
-//		}
+		if (startPosition != scalePosition) {
+			addSequential(new DriveStraightCommand(autoLineDistance.getDouble(0)));
+		}
 //		addSequential(ArriveToScaleGroupCommand()); // TODO: Merge branch of arriving to the Scale and add here.
 //		addSequential(PutCubeOnScaleGroupCommand()); // TODO: Merge branch of putting a Power Cube on the Scale and add here.
 	}
