@@ -34,7 +34,6 @@ public class CommandGroup_ScaleStop extends CommandGroup {
     	}
     	else{
     		addSequential(new TurnAngle(90  * angleMultiplier)); //turn to the inwards of the platform
-    		addSequential(new DriveDistanceCM(487.28)); //NOT EXACT
     	}
     	
         // To run multiple commands at the same time,
