@@ -7,13 +7,15 @@
 
 package org.usfirst.frc.team5987.robot;
 
-import org.usfirst.frc.team5987.robot.commands.*;
-
-
+import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
+import org.usfirst.frc.team5987.robot.commands.DriveToBumpCommand;
+import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
+import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand.liftStates;
+import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
+import org.usfirst.frc.team5987.robot.commands.TakeCommand;
 
 import auxiliary.DPadButton;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -54,5 +56,6 @@ public class OI {
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());
 		start.toggleWhenActive(new ClimbCommand());
+		select.whenPressed(new DriveToBumpCommand(0.35));
 	}
 }

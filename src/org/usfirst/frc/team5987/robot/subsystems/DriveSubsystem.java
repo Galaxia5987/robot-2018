@@ -107,6 +107,10 @@ public class DriveSubsystem extends Subsystem {
 	NetworkTableEntry ntGyroPIDOut = driveTable.getEntry("Gyro PID Out");
 	NetworkTableEntry ntRightSpeed = driveTable.getEntry("Right Velocity");
 	NetworkTableEntry ntLeftSpeed = driveTable.getEntry("Left Velocity");
+	
+	public NetworkTableEntry ntLeftDistance = driveTable.getEntry("Left Distance");
+	public NetworkTableEntry ntRightDistance = driveTable.getEntry("Right Distance");
+	
 	private NetworkTableEntry ntPIDType = driveTable.getEntry("PID Type");
 	
 	private static MiniPID rightPID;
@@ -246,14 +250,21 @@ public class DriveSubsystem extends Subsystem {
 		double rightError = rightOut - getRightSpeed();
 		ntRightError.setDouble(rightError);
 		ntRightSpeed.setDouble(getRightSpeed());
+		ntRightDistance.setDouble(getRightDistance());
+		ntLeftDistance.setDouble(getLeftDistance());
 		rightPID.setSetpoint(rightOut);
 	}
+	
+	
+	
 	
 	/**
 	 * Set the speed of the two right motors
 	 * @param speed between -1 and 1
 	 */
 	public void setRightSpeed(double speed) {
+		if(speed<-1) speed =-1;
+		if(speed>1) speed=1;
 		driveRightRearMotor.set(speed);
 		driveRightFrontMotor.set(speed);
 	}
@@ -263,6 +274,8 @@ public class DriveSubsystem extends Subsystem {
 	 * @param speed between -1 and 1
 	 */
 	public void setLeftSpeed(double speed) {
+		if(speed<-1) speed =-1;
+		if(speed>1) speed=1;
 		driveLeftRearMotor.set(speed);
 		driveLeftFrontMotor.set(speed);
 	}

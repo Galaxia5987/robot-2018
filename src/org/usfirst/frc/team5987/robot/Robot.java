@@ -230,6 +230,9 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("left Dis", driveSubsystem.getLeftDistance());
 		SmartDashboard.putNumber("right Dis", driveSubsystem.getRightDistance());
 
+
+		driveSubsystem.ntRightDistance.setDouble(driveSubsystem.getRightDistance());
+		driveSubsystem.ntLeftDistance.setDouble(driveSubsystem.getLeftDistance());
 //		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
 //		driveSubsystem.setSetpoints(-0.3, -1);
 
