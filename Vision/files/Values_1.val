@@ -1,4 +1,4 @@
-self.command_s = "area,8000,30720;convexhull_triangle,0.75,1;aspectratio,0.8694,1.3694"
+self.command_s = "area,8000,30720;convexhull_triangle,0.75,1;aspectratio,0.2847,0.8847"
 self.draw_contours_b = False
 self.draw_hulls_b = False
 self.dirode_iterations_i = 2
