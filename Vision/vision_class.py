@@ -307,6 +307,32 @@ class Vision:
             except:
                 pass
 
+    def convexhull_triangle(self,c):
+        hull_area=cv2.contourArea(cv2.convexHull(c))
+        tl,tr,bl,br=self.rotated_cornecrs(c)
+
+        temp_w=tl-tr
+        width=math.sqrt(temp_w[0]**2+temp_w[1]**2)
+
+        temp_h=tr-br
+        height=math.sqrt(temp_h[0]**2+temp_h[1]**2)
+
+        triangle_area=height*width/2
+        return triangle_area/hull_area
+
+    def convexhull_rectabgle(self,c):
+        hull_area=cv2.contourArea(cv2.convexHull(c))
+        tl,tr,bl,br=self.rotated_cornecrs(c)
+
+        temp_w=tl-tr
+        width=math.sqrt(temp_w[0]**2+temp_w[1]**2)
+
+        temp_h=tr-br
+        height=math.sqrt(temp_h[0]**2+temp_h[1]**2)
+
+        rectangle_area=height*width
+        return rectangle_area/hull_area
+
     def get_contours(self):
         # Executes a command line from SmartDashboard
         command = self.get_item("Command", self.command_s)
@@ -342,38 +368,37 @@ class Vision:
     def hull(self, c):
         return cv2.contourArea(c) / cv2.contourArea(cv2.convexHull(c))
 
+    def rotated_cornecrs(self,c):
+        box=cv2.boxPoints(cv2.minAreaRect(c))
+        box = list(box)
+        bottom = []
+
+        def sortbyindex1(arr):
+            return arr[1]
+
+        def sortbyindex0(arr):
+            return arr[0]
+
+        box.sort(key=sortbyindex1)
+        bottom.append(box[2])
+        bottom.append(box[3])
+
+        box.pop(3)
+        box.pop(2)
+        top = box
+
+        top.sort(key=sortbyindex0)
+        bottom.sort(key=sortbyindex0)
+
+        top_left = top[0]
+        top_right = top[1]
+        bottom_left = bottom[0]
+        bottom_right = bottom[1]
+
+        return top_left, top_right, bottom_left, bottom_right
+
     def aspectratio(self, c):
-        def order(box):
-            box = list(box)
-            bottom = []
-
-            def sortbyindex1(arr):
-                return arr[1]
-
-            def sortbyindex0(arr):
-                return arr[0]
-
-            box.sort(key=sortbyindex1)
-            bottom.append(box[2])
-            bottom.append(box[3])
-
-            box.pop(3)
-            box.pop(2)
-            top = box
-
-            top.sort(key=sortbyindex0)
-            bottom.sort(key=sortbyindex0)
-
-            top_left = top[0]
-            top_right = top[1]
-            bottom_left = bottom[0]
-            bottom_right = bottom[1]
-
-            return top_left, top_right, bottom_left, bottom_right
-
-        min_box=cv2.boxPoints(cv2.minAreaRect(c))
-
-        top_left, top_right, bottom_left, bottom_right = order(min_box)
+        top_left, top_right, bottom_left, bottom_right = self.rotated_cornecrs(c)
 
         temp_h = top_left-bottom_left
         temp_w = bottom_left-bottom_right
@@ -427,38 +452,7 @@ class Vision:
         height=0
         some=len(self.contours)
         for cont in self.contours:
-            min_box = cv2.boxPoints(cv2.minAreaRect(cont))
-
-            def order(box):#gets the 4 extreme points of the min area rect and sorts them
-                box = list(box)
-                bottom = []
-
-                def sortbyindex1(arr):
-                    return arr[1]
-
-                def sortbyindex0(arr):
-                    return arr[0]
-
-                box.sort(key=sortbyindex1)
-                bottom.append(box[2])
-                bottom.append(box[3])
-
-                box.pop(3)
-                box.pop(2)
-                top = box
-
-                top.sort(key=sortbyindex0)
-                bottom.sort(key=sortbyindex0)
-
-                top_left = top[0]
-                top_right = top[1]
-                bottom_left = bottom[0]
-                bottom_right = bottom[1]
-
-                return top_left, top_right, bottom_left, bottom_right
-
-
-            top_left, _, bottom_left, _ = order(min_box)
+            top_left, _, bottom_left, _ = self.rotated_cornecrs(cont)
             temp_h = top_left - bottom_left
             height += math.sqrt(temp_h[0] ** 2 + temp_h[1] ** 2)
         try:
