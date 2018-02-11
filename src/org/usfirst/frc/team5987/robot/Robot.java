@@ -14,6 +14,7 @@ import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 
 import org.usfirst.frc.team5987.robot.commands.PathCommand;
+import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
@@ -119,6 +120,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new LiftCommand());
 		SmartDashboard.putData(new PathCommand());
 		SmartDashboard.putData(new AutoCommandGroup('C'));
+		SmartDashboard.putData(new ShootCubeCommand(1, true));
 		ntSetpoint.setDouble(0);
 	}
 
@@ -139,7 +141,7 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		liftSubsystem.update();
-		liftSubsystem.setSetpoint(0);
+//		liftSubsystem.setSetpoint(0);
 	}
 
 	/**
@@ -181,6 +183,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -192,7 +195,7 @@ public class Robot extends TimedRobot {
 //		driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
 		liftSubsystem.configNominalAndPeakOutputs();
-		liftSubsystem.setState(liftSubsystem.state.RUNNING);
+		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 
 	}
 

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class IntakeSolenoidCommand extends Command {
-	private enum opMode {
+	public enum opMode {
 		TOGGLE,
 		OPEN,
 		CLOSE

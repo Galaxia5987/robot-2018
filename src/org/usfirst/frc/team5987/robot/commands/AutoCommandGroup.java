@@ -48,7 +48,7 @@ public class AutoCommandGroup extends CommandGroup {
 		 */
 		NetworkTableEntry switchAngle = autoTable.getEntry("switch angle");
 
-		addSequential(new IntakeSolenoidCommand());
+		addSequential(new IntakeSolenoidCommand(false));
 		// Robot is in center, ready to go to one of two Platforms of the
 		// Switch.
 		if (startPosition == 'C') {

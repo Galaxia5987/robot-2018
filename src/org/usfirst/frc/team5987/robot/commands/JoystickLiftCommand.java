@@ -8,27 +8,41 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class JoystickLiftCommand extends Command {
-	private final double CHANGE_DOWN_SPEED = 0.02;
-	private final double CHANGE_UP_SPEED = 0.08;
+	/**
+	 * The Y value area in which the xbox joystick won't make the lift move.
+	 */
+	private static final double XBOX_JOYSTICK_DEAD_BAND = 0.3;
+	/**
+	 * The rate at which the lift will goes down with the xbox joystick.
+	 */
+	private static final double DOWN_SPEED_RATE = 0.02;
+	/**
+	 * The rate at which the lift will goes up with the xbox joystick.
+	 */
+	private static final double UP_SPEED_RATE = 0.08;
     public JoystickLiftCommand() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.liftSubsystem);
     }
-
+    
     // Called just before this Command runs the first time
     protected void initialize() {
     }
-
+    
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double y = -Robot.m_oi.xbox.getY();
+    	double y = -Robot.m_oi.xbox.getY(); // invert the input to make up positive and down negative
+    	if(Math.abs(y) < XBOX_JOYSTICK_DEAD_BAND)
+    		return;
+    	// MAPPING (|dead-band to 1| -> |0 to 1|) AND shit (shit's on fire yo)
+    	y -= y > 0 ? XBOX_JOYSTICK_DEAD_BAND : -XBOX_JOYSTICK_DEAD_BAND;
+    	y *= 1 / (1 - XBOX_JOYSTICK_DEAD_BAND);
     	double change;
     	if(y > 0)
-    		change = y * CHANGE_UP_SPEED;
+    		change = y * UP_SPEED_RATE;
     	else
-    		change = y * CHANGE_DOWN_SPEED;
-    	if(Math.abs(y)> 0.1)
-    		Robot.liftSubsystem.setSetpoint(Robot.liftSubsystem.getHeight() + change);
+    		change = y * DOWN_SPEED_RATE;
+		Robot.liftSubsystem.setSetpoint(Robot.liftSubsystem.getHeight() + change);
     }
 
     // Make this return true when this Command no longer needs to run execute()

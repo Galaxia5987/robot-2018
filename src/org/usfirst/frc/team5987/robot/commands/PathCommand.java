@@ -96,7 +96,7 @@ public class PathCommand extends Command {
     	SmartDashboard.putNumber("velo left", velocitys[0]);
     	SmartDashboard.putNumber("velo right", velocitys[1]);
     	
-    	Robot.driveSubsystem.updatePID();
+    	Robot.driveSubsystem.updatePID(); // TODO: remove comment
     	
     }
 

@@ -24,6 +24,7 @@ public class ShootCubeCommand extends Command {
 
 	protected void initialize() {
 		timer.reset();
+		timer.start();
 	}
 
 	protected void execute() {

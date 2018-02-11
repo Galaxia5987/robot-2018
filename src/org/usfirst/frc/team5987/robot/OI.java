@@ -8,10 +8,12 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
+import org.usfirst.frc.team5987.robot.commands.CommandGroup_CenterSwitch;
 import org.usfirst.frc.team5987.robot.commands.DriveToBumpCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand.liftStates;
+import org.usfirst.frc.team5987.robot.commands.PathCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
 
@@ -51,11 +53,10 @@ public class OI {
 		d_left.whenPressed(new LiftCommand(liftStates.SCALE_DOWN));
 		d_lu.whenPressed(new LiftCommand(liftStates.SCALE_MID));
 		d_up.whenPressed(new LiftCommand(liftStates.SCALE_TOP));
-		b.whileHeld(new ShootCubeCommand(0.75, false));
+		b.whileHeld(new ShootCubeCommand(0.75, true));
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());
-		start.toggleWhenActive(new ClimbCommand());
-		select.whenPressed(new DriveToBumpCommand(0.35));
+		start.toggleWhenActive(new PathCommand());
 	}
 }

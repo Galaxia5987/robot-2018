@@ -232,14 +232,15 @@ public class LiftSubsystem extends Subsystem {
 	    		
 	    	case ZEROING:
 	    		ntState.setString("ZEROING");
+	    		if(reachedBottom()){
+	    			setState(States.RUNNING);;
+	    			liftMotor.setSelectedSensorPosition(0, 0, TALON_TIMEOUT_MS); // zero
+	    			break;
+	    		}
 	    		// move the lift down
 	    		setSetpoint(getHeight() - ZERO_RATE);
 	    		limitAbsoluteOutput(MAX_ZEROING_OUTPUT);
 	    		setPosition();
-	    		if(reachedBottom()){
-	    			state = States.RUNNING;
-	    			liftMotor.setSelectedSensorPosition(0, 0, TALON_TIMEOUT_MS); // zero
-	    		}
 	    		break;
 	    		
 	    	case RUNNING:
@@ -257,7 +258,7 @@ public class LiftSubsystem extends Subsystem {
 	    		if(reachedBottom()){
 	    			if(setpointMeters > getHeight()) // going up
 	    				liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
-//	    			setSetpoint(getHeight());
+//	    			setSetpoint(getHeight()+0.01);
 	    		}
 	    		setPosition();
 	    		break;

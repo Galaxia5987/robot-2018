@@ -26,10 +26,10 @@ public class DriveSubsystem extends Subsystem {
 	private static double kI = 0.0; 
 	private static double kD = 0.0;
 	private static double kF = 0.33;
-	private static double TurnKp = 0.15; 
+	private static double TurnKp = 0.3; 
 	private static double TurnKi = 0.0; 
 	private static double TurnKd = 0.0;
-	private static double TurnKf = 0.33;
+	private static double TurnKf = 0.4;
 	public enum PIDTypes{
 		STRAIGHT,
 		TURN
@@ -73,7 +73,7 @@ public class DriveSubsystem extends Subsystem {
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
 	
 	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, false);
-	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, true);
+	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, false);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
 	private static final AnalogInput colorSensor = new AnalogInput(RobotMap.colorSensor);
