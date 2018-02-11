@@ -354,7 +354,6 @@ class Vision:
                             self.hulls.append(cv2.convexHull(c, returnPoints=False))
                 # Updates the contour list
                 self.contours = possible_fit
-                print(self.contours)
 
     def area(self, c):
         return cv2.contourArea(c)
