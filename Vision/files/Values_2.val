@@ -1,7 +1,7 @@
-self.command_s = "area,50,1000000;extent,0.85,1"
+self.command_s = "area,2400,300000;edge_points,6,6"
 self.draw_contours_b = True
 self.draw_hulls_b = True
-self.dirode_iterations_i = 3
+self.dirode_iterations_i = 5
 self.find_center_b = True
 self.focal = 638.6086956521739
-self.target_height = 41
+self.target_height = 28

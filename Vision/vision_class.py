@@ -98,10 +98,10 @@ class Vision:
         except AttributeError:
             print(colored.red('ERROR: Camera Not Connected or In Use'))
             exit(13)
-
         NetworkTables.initialize(server=nt_server)
         self.table = NetworkTables.getTable("Vision") # initialize Vision networktables
         sleep(1)
+        self.set_item("Raspberry IP:",ip)
         self.check_files() # make sure the files with the surfix exist, if not, create them
         self.set_range() # set the hsv range
         self.init_values() # set all the values
@@ -274,6 +274,14 @@ class Vision:
                               cv2.boundingRect(self.contours[x])[1] + cv2.boundingRect(self.contours[x])[3]),
                               (0, 255, 0), 2)
                 # Draws hulls on the frame, if asked so on SmartDashboard
+                hull=cv2.convexHull(self.contours[x])
+                epsilon = 0.015*cv2.arcLength(hull,True)
+                approx = cv2.approxPolyDP(hull,epsilon,True)
+                hullpoints = cv2.convexHull(approx,returnPoints=True)
+                if len(hullpoints) > 0:
+                    for i in range(0,len(hullpoints)):
+                        cv2.line(self.show_frame, tuple(hullpoints[i-1][0]), tuple(hullpoints[i][0]), [0, 255, 0], 2)
+                        cv2.circle(self.show_frame, tuple(hullpoints[i][0]), 5, [0, 0, 255], -1)
                 if len(self.hulls) > 0 and self.get_item("Draw hulls", self.draw_hulls_b):
                     # Finds all defects in the outline compared to the hull
                     defects = cv2.convexityDefects(self.contours[x], self.hulls[x])
@@ -288,11 +296,27 @@ class Vision:
     def dirode(self):
         # Dialates and erodes the mask to reduce static and make the image clearer
         # The kernel both functions will use
-        kernel = np.ones((5, 5), dtype=np.uint8)
+        kernel = (
+            (0,1,0),
+            (1,1,1),
+            (0,1,0)
+        )
+        kernel=np.array(kernel,dtype=np.uint8)
         self.mask = cv2.erode(self.mask, kernel,
                               iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
         self.mask = cv2.dilate(self.mask, kernel,
                                iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
+    def eilate(self):
+        kernel = (
+            (0,1,0),
+            (1,1,1),
+            (0,1,0)
+        )
+        kernel=np.array(kernel,dtype=np.uint8)
+        self.mask = cv2.dilate(self.mask, kernel,
+                               iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
+        self.mask = cv2.erode(self.mask, kernel,
+                              iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
 
     def find_center(self):
         # Finds the average of all centers of all contours
@@ -348,7 +372,7 @@ class Vision:
                 possible_fit = []
                 for c in self.contours:
                     method = getattr(vision, key)
-                    if max > method(c) > min:
+                    if max >= method(c) >= min:
                         possible_fit.append(c)
                         if key == 'hull':
                             self.hulls.append(cv2.convexHull(c, returnPoints=False))
@@ -410,6 +434,54 @@ class Vision:
     def diameterratio(self, c):
         return (np.sqrt(4 * cv2.contourArea(c) / np.pi)) / (cv2.minEnclosingCircle(c)[1] * 2)
 
+    def edge_points(self,c):
+        hull=cv2.convexHull(c)
+        epsilon = 0.015*cv2.arcLength(hull,True)
+        approx = cv2.approxPolyDP(hull,epsilon,True)
+        hullpoints = cv2.convexHull(approx,returnPoints=True)
+        return len(hullpoints)
+
+    def distance_cube(self):
+        top=[]
+        middle=[]
+        bottom=[]
+        def index1(point):
+            return point[0][1]
+
+        self.contours.sort(key=cv2.contourArea,reverse=True)
+        hull=cv2.convexHull(self.contours[0])
+        epsilon = 0.015*cv2.arcLength(hull,True)
+        approx = cv2.approxPolyDP(hull,epsilon,True)
+        hullpoints = list(cv2.convexHull(approx,returnPoints=True))
+        hullpoints.sort(key=index1)
+
+        top.append(hullpoints[0][0])
+        top.append(hullpoints[1][0])
+
+        middle.append(hullpoints[2][0])
+        middle.append(hullpoints[3][0])
+
+        bottom.append(hullpoints[4][0])
+        bottom.append(hullpoints[5][0])
+
+        th1=middle[0]-bottom[0]
+        th2=middle[1]-bottom[1]
+
+        height1=math.sqrt(th1[0]**2+th1[1]**2)
+        height2=math.sqrt(th2[0]**2+th2[1]**2)
+
+        self.center=(middle[0]+top[0]+bottom[0]+middle[1]+top[1]+bottom[1])/6
+        height=(height1+height2)/2
+
+        try:
+            distance = self.target_height * self.focal / height / 100
+        except ZeroDivisionError:
+            distance=None
+        self.distance=distance
+        self.set_item('Switch Distance',self.distance)
+        return self.distance
+
+
     def get_two(self):
         # gets the two closest contours
         dif = (10+(5.26))/41
@@ -459,7 +531,7 @@ class Vision:
         except ZeroDivisionError:
             pass
         try:
-            distance = self.target_height * self.focal / height / 2
+            distance = self.target_height * self.focal / height / 100
         except ZeroDivisionError:
             distance=None
         self.distance=distance
@@ -515,8 +587,10 @@ class Vision:
                 self.check_files()
                 self.init_values()
             self.filter_hsv()
+            if self.surfix is '2':
+                self.eilate()
             self.dirode()
-            _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+            _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             self.contours = list(contours)
             self.get_contours()
             if len(self.contours) > 0:
@@ -527,6 +601,10 @@ class Vision:
                         self.sees_target = True
                         self.get_distance()
                         self.get_angle()
+                elif self.surfix is '2':
+                    self.sees_target = True
+                    self.distance_cube()
+                    self.get_angle()
                 else:
                     self.sees_target = True
                 self.draw_contours()
@@ -537,7 +615,7 @@ class Vision:
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-vision = Vision('0')
+vision = Vision('2')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
