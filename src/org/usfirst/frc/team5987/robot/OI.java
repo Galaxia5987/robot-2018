@@ -53,7 +53,7 @@ public class OI {
 		d_left.whenPressed(new LiftCommand(liftStates.SCALE_DOWN));
 		d_lu.whenPressed(new LiftCommand(liftStates.SCALE_MID));
 		d_up.whenPressed(new LiftCommand(liftStates.SCALE_TOP));
-		b.whileHeld(new ShootCubeCommand(0.75, true));
+		b.whileHeld(new ShootCubeCommand(0.75, false));
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());

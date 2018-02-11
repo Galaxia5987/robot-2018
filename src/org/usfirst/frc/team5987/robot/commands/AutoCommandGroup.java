@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
@@ -61,8 +62,10 @@ public class AutoCommandGroup extends CommandGroup {
 			if (switchPosition == 'R') {
 				addSequential(new TurnCommand(-switchAngle.getDouble(30), false));
 			}
-			addParallel(new LiftCommand(LiftCommand.liftStates.SWITCH));
+			addSequential(new WaitCommand(1));
 			addSequential(new PathCommand());
+			addSequential(new LiftCommand(LiftCommand.liftStates.SWITCH));
+
 			addSequential(new ShootCubeCommand(1, true));	
 		}
 

@@ -11,7 +11,7 @@ public class JoystickLiftCommand extends Command {
 	/**
 	 * The Y value area in which the xbox joystick won't make the lift move.
 	 */
-	private static final double XBOX_JOYSTICK_DEAD_BAND = 0.3;
+	private static final double XBOX_JOYSTICK_DEAD_BAND = 0.2;
 	/**
 	 * The rate at which the lift will goes down with the xbox joystick.
 	 */

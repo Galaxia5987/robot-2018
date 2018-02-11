@@ -232,7 +232,7 @@ public class LiftSubsystem extends Subsystem {
 	    		
 	    	case ZEROING:
 	    		ntState.setString("ZEROING");
-	    		if(reachedBottom()){
+	    		if(true){ // TODO: change to reachedBottom()
 	    			setState(States.RUNNING);;
 	    			liftMotor.setSelectedSensorPosition(0, 0, TALON_TIMEOUT_MS); // zero
 	    			break;
@@ -256,7 +256,7 @@ public class LiftSubsystem extends Subsystem {
 	    			setSetpoint(getHeight());
 	    		}
 	    		if(reachedBottom()){
-	    			if(setpointMeters > getHeight()) // going up
+	    			if(setpointMeters > getHeight() && getHeight() > 0) // going up
 	    				liftMotor.clearStickyFaults(TALON_TIMEOUT_MS);
 //	    			setSetpoint(getHeight()+0.01);
 	    		}

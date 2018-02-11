@@ -29,7 +29,7 @@ public class TurnCommand extends Command {
 	/**
 	 * If the absolute angle error is less than that, the command will stop
 	 */
-	private static final double MIN_DEGREES_ERROR = 1; 
+	private static final double MIN_DEGREES_ERROR = 2.5; 
 	private static final double TURN_CONTROL_FACTOR = 1;
 	private DistanceMotionProfile mp;
 	private boolean isRelative;
@@ -133,7 +133,8 @@ public class TurnCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Math.abs(degreesError) < MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < DriveSubsystem.MIN_VELOCITY / 2 ;
+        return (Math.abs(degreesError) < MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < DriveSubsystem.MIN_VELOCITY / 2 
+        		|| Robot.ntSwitchTarget.getBoolean(false);
     }
 
     // Called once after isFinished returns true

@@ -27,7 +27,7 @@ public class DriveSubsystem extends Subsystem {
 	private static double kD = 0.0;
 	private static double kF = 0.33;
 	private static double TurnKp = 0.3; 
-	private static double TurnKi = 0.0; 
+	private static double TurnKi = 0.02; 
 	private static double TurnKd = 0.0;
 	private static double TurnKf = 0.4;
 	public enum PIDTypes{
