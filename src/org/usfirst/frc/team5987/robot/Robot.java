@@ -121,6 +121,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new PathCommand());
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
+		SmartDashboard.putData(new TurnCommand(15, true));
 		ntSetpoint.setDouble(0);
 	}
 

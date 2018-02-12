@@ -133,8 +133,7 @@ public class TurnCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Math.abs(degreesError) < MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < DriveSubsystem.MIN_VELOCITY / 2 
-        		|| Robot.ntSwitchTarget.getBoolean(false);
+        return (Math.abs(degreesError) < MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < DriveSubsystem.MIN_VELOCITY / 2 ;
     }
 
     // Called once after isFinished returns true
