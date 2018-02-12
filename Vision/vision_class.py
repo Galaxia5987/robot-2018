@@ -293,6 +293,7 @@ class Vision:
                         cv2.line(self.show_frame, start, end, [0, 255, 0], 2)
                         cv2.circle(self.show_frame, far, 5, [0, 0, 255], -1)
 
+
     def dirode(self):
         # Dialates and erodes the mask to reduce static and make the image clearer
         # The kernel both functions will use
@@ -344,7 +345,7 @@ class Vision:
         triangle_area=height*width/2
         return triangle_area/hull_area
 
-    def convexhull_rectabgle(self,c):
+    def convexhull_rectangle(self,c):
         hull_area=cv2.contourArea(cv2.convexHull(c))
         tl,tr,bl,br=self.rotated_cornecrs(c)
 
@@ -441,18 +442,19 @@ class Vision:
         hullpoints = cv2.convexHull(approx,returnPoints=True)
         return len(hullpoints)
 
-    def distance_cube(self):
-        top=[]
-        middle=[]
-        bottom=[]
+    def sort_edge_points(self,c):
+        top = []
+        middle = []
+        bottom = []
+
         def index1(point):
             return point[0][1]
 
-        self.contours.sort(key=cv2.contourArea,reverse=True)
-        hull=cv2.convexHull(self.contours[0])
-        epsilon = 0.015*cv2.arcLength(hull,True)
-        approx = cv2.approxPolyDP(hull,epsilon,True)
-        hullpoints = list(cv2.convexHull(approx,returnPoints=True))
+        self.contours.sort(key=cv2.contourArea, reverse=True)
+        hull = cv2.convexHull(c)
+        epsilon = 0.015 * cv2.arcLength(hull, True)
+        approx = cv2.approxPolyDP(hull, epsilon, True)
+        hullpoints = list(cv2.convexHull(approx, returnPoints=True))
         hullpoints.sort(key=index1)
 
         top.append(hullpoints[0][0])
@@ -463,6 +465,12 @@ class Vision:
 
         bottom.append(hullpoints[4][0])
         bottom.append(hullpoints[5][0])
+        hullpoints=[top[0],top[1],middle[0],middle[1],bottom[0],bottom[1]]
+
+        return hullpoints, top, middle, bottom
+
+    def distance_cube(self):
+        _,top,middle,bottom=self.sort_edge_points(self.contours[0])
 
         th1=middle[0]-bottom[0]
         th2=middle[1]-bottom[1]
@@ -481,6 +489,25 @@ class Vision:
         self.set_item('Switch Distance',self.distance)
         return self.distance
 
+    def is_cube(self, points):
+        cube = 0
+        alphas = []
+        for i in range(0, points.length):
+            j = i+1
+            if j > points.length:
+                j = 0
+            x = points[j][0] - points[i][0]
+            y = points[j][1] - points[i][1]
+            alpha = math.atan(y/x) * 180/math.pi
+            alphas.append(alpha)
+        if points.length is 6:
+            counter = 0
+            for i in range(0, points.length/2):
+                if abs(alphas[i] - alphas[i+3]) > 5:
+                    counter+=1
+            if counter == 3:
+                cube = True
+        return 1
 
     def get_two(self):
         # gets the two closest contours

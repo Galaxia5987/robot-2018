@@ -1,4 +1,4 @@
-self.command_s = "area,9600,300000;edge_points,6,6"
+self.command_s = "area,9600,300000;edge_points,6,6;is_cube,1,1"
 self.draw_contours_b = True
 self.draw_hulls_b = True
 self.dirode_iterations_i = 5
