@@ -492,22 +492,23 @@ class Vision:
     def is_cube(self, points):
         cube = 0
         alphas = []
-        for i in range(0, points.length):
+        length = len(points)
+        for i in range(0, length):
             j = i+1
-            if j > points.length:
+            if j > length:
                 j = 0
             x = points[j][0] - points[i][0]
             y = points[j][1] - points[i][1]
             alpha = math.atan(y/x) * 180/math.pi
             alphas.append(alpha)
-        if points.length is 6:
+        if length is 6:
             counter = 0
-            for i in range(0, points.length/2):
+            for i in range(0, length/2):
                 if abs(alphas[i] - alphas[i+3]) > 5:
                     counter+=1
             if counter == 3:
-                cube = True
-        return 1
+                cube = 1
+        return cube
 
     def get_two(self):
         # gets the two closest contours
