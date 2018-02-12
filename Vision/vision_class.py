@@ -282,6 +282,13 @@ class Vision:
                     for i in range(0,len(hullpoints)):
                         cv2.line(self.show_frame, tuple(hullpoints[i-1][0]), tuple(hullpoints[i][0]), [0, 255, 0], 2)
                         cv2.circle(self.show_frame, tuple(hullpoints[i][0]), 5, [0, 0, 255], -1)
+                    _, top, middle, bottom = self.sort_edge_points(self.contours[x])
+                    # cv2.circle(self.show_frame, tuple(top[0]), 3, [0, 0, 255], -1)
+                    # cv2.circle(self.show_frame, tuple(top[1]), 3, [0, 255, 255], -1)
+                    # cv2.circle(self.show_frame, tuple(middle[0]), 3, [0, 255, 0], -1)
+                    # cv2.circle(self.show_frame, tuple(middle[1]), 3, [255, 255, 0], -1)
+                    # cv2.circle(self.show_frame, tuple(bottom[0]), 3, [255, 0, 0], -1)
+                    # cv2.circle(self.show_frame, tuple(bottom[1]), 3, [255, 0, 255], -1)
                 if len(self.hulls) > 0 and self.get_item("Draw hulls", self.draw_hulls_b):
                     # Finds all defects in the outline compared to the hull
                     defects = cv2.convexityDefects(self.contours[x], self.hulls[x])
@@ -465,9 +472,12 @@ class Vision:
 
         bottom.append(hullpoints[4][0])
         bottom.append(hullpoints[5][0])
-        hullpoints=[top[0],top[1],middle[0],middle[1],bottom[0],bottom[1]]
 
-        return hullpoints, top, middle, bottom
+        hullpoints = list(cv2.convexHull(approx, returnPoints=True))
+        hullpoints_list=[list(x[0]) for x in hullpoints]
+        #hullpoints=[top[0],top[1],middle[1],bottom[1],bottom[0],middle[0]]
+
+        return hullpoints_list, top, middle, bottom
 
     def distance_cube(self):
         _,top,middle,bottom=self.sort_edge_points(self.contours[0])
@@ -489,22 +499,29 @@ class Vision:
         self.set_item('Switch Distance',self.distance)
         return self.distance
 
-    def is_cube(self, points):
+    def is_cube(self, c):
+        points,_,_,_=self.sort_edge_points(c)
         cube = 0
         alphas = []
         length = len(points)
         for i in range(0, length):
-            j = i+1
-            if j > length:
-                j = 0
+            j = i-1
             x = points[j][0] - points[i][0]
             y = points[j][1] - points[i][1]
-            alpha = math.atan(y/x) * 180/math.pi
+            try:
+                alpha = math.atan(y/x) * 180/math.pi
+            except ZeroDivisionError:
+                alpha = 90
             alphas.append(alpha)
+            cv2.putText(self.show_frame, "o {}".format(i), tuple(points[i]), self.font, 0.5, 255)
+            cv2.putText(self.show_frame, "o {}".format(j), tuple(points[j]), self.font, 0.5, 255)
+            cv2.line(self.show_frame, tuple(points[i]), (points[i][0]+x, points[i][1]+y), [0, 0, 255], 2)
+            # print("i "+str(i)+" j "+str(j)+" x "+str(x)+" y "+str(y)+" alpha "+str(alpha))
+        # print(alphas)
         if length is 6:
             counter = 0
-            for i in range(0, length/2):
-                if abs(alphas[i] - alphas[i+3]) > 5:
+            for i in range(0, int(length/2)):
+                if abs(alphas[i] - alphas[i+3]) <= 15:
                     counter+=1
             if counter == 3:
                 cube = 1
