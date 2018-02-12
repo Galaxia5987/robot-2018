@@ -232,8 +232,8 @@ public class LiftSubsystem extends Subsystem {
 	    		
 	    	case ZEROING:
 	    		ntState.setString("ZEROING");
-	    		if(true){ // TODO: change to reachedBottom()
-	    			setState(States.RUNNING);;
+	    		if(reachedBottom()){ // TODO: change to ?
+	    			setState(States.RUNNING);
 	    			liftMotor.setSelectedSensorPosition(0, 0, TALON_TIMEOUT_MS); // zero
 	    			break;
 	    		}

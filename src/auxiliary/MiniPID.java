@@ -1,4 +1,7 @@
 package auxiliary;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Small, easy to use PID implementation with advanced controller capability.
  * <br>
@@ -390,8 +393,14 @@ public class MiniPID {
 
 		// And, finally, we can just add the terms up
 		output = Foutput + Poutput + Ioutput + Doutput;
-
+		SmartDashboard.putString("MiniPID F", ""+Foutput);
+		SmartDashboard.putString("MiniPID 'I'", ""+Foutput);
+		SmartDashboard.putString("MiniPID P", ""+Poutput);
+		SmartDashboard.putString("MiniPID I", ""+Ioutput);
+		SmartDashboard.putString("MiniPID D", ""+Doutput);
 		// Figure out what we're doing with the error.
+		if(Math.abs(errorSum) == Double.POSITIVE_INFINITY)
+			errorSum  = error;
 		if (minOutput != maxOutput && !bounded(output, minOutput, maxOutput)) {
 			errorSum = error;
 			// reset the error sum to a sane level
@@ -430,6 +439,9 @@ public class MiniPID {
 		// Ioutput, Doutput );
 
 		lastOutput = output;
+		SmartDashboard.putString("MiniPID Out", ""+output);
+		SmartDashboard.putString("MiniPID Actual", ""+actual);
+		SmartDashboard.putString("MiniPID Setpoint", ""+setpoint);
 		return output;
 	}
 

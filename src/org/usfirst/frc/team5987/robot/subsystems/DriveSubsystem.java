@@ -23,7 +23,7 @@ public class DriveSubsystem extends Subsystem {
 	/***********************CONSTANTS************************/
 	// PIDF constants for controlling velocity for wheels
 	private static double kP = 0.15; 
-	private static double kI = 0.0; 
+	private static double kI = 0.0001; 
 	private static double kD = 0.0;
 	private static double kF = 0.33;
 	private static double TurnKp = 0.3; 
@@ -31,13 +31,18 @@ public class DriveSubsystem extends Subsystem {
 	private static double TurnKd = 0.0;
 	private static double TurnKf = 0.4;
 	public enum PIDTypes{
+		/**
+		 * Normal PID constants
+		 */
 		STRAIGHT,
+		/**
+		 * Turning in place PID constants
+		 */
 		TURN
 	}
 	private PIDTypes pidType = PIDTypes.STRAIGHT;
 	// Gyro PID
 	private static double gyroKp = 0.015;
-//	private static double gyroKp = 0;
 	private static double gyroKi = 0; 
 	private static double gyroKd = 0;
 	private static final boolean GYRO_REVERSED = true;
@@ -62,8 +67,10 @@ public class DriveSubsystem extends Subsystem {
 	 * Mapping between 0-5V to METER for the analog input
 	 */
 	public static final double ultransonicMeterFactor = 1.024;
-	private static final boolean rightInverted = true; // inverts the right motors & right encoder
-	private static final boolean leftInverted = false; // inverts the left motors & left encoder
+	private static final boolean rightInverted = true; // inverts the right motor
+	private static final boolean leftInverted = false; // inverts the left motors
+	private static final boolean rightEncoderInverted = false; // inverts the right encoder
+	private static final boolean leftEncoderInverted = false; // inverts the left encoder
 	/*******************************************************/
 	
 	
@@ -72,8 +79,8 @@ public class DriveSubsystem extends Subsystem {
 	private static final Victor driveLeftRearMotor = new Victor(RobotMap.driveLeftRearMotor);
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
 	
-	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, false);
-	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, false);
+	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, rightEncoderInverted);
+	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, leftEncoderInverted);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
 	private static final AnalogInput colorSensor = new AnalogInput(RobotMap.colorSensor);
@@ -212,10 +219,14 @@ public class DriveSubsystem extends Subsystem {
 			break;
 		}
 		
-		
+		double rightCurrent = getRightSpeed();
+		double leftCurrent = getLeftSpeed();
 		double rightOut = rightPID.getOutput(getRightSpeed());
 		double leftOut = leftPID.getOutput(getLeftSpeed());
-		
+		SmartDashboard.putString("updatePID Right Current", ""+rightCurrent);
+		SmartDashboard.putString("updatePID Left Current", ""+leftCurrent);
+		SmartDashboard.putString("updatePID Right Out", ""+rightOut);
+		SmartDashboard.putString("updatePID Left Out", ""+leftOut);
 		setRightSpeed(rightOut);
 		setLeftSpeed(leftOut);
 	}
@@ -253,6 +264,8 @@ public class DriveSubsystem extends Subsystem {
 		ntRightDistance.setDouble(getRightDistance());
 		ntLeftDistance.setDouble(getLeftDistance());
 		rightPID.setSetpoint(rightOut);
+		SmartDashboard.putString("setSetpoints Left Out", ""+leftOut);
+		SmartDashboard.putString("setSetpoints Left Out", ""+leftOut);
 	}
 	
 	
