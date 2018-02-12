@@ -102,6 +102,7 @@ class Vision:
         self.table = NetworkTables.getTable("Vision") # initialize Vision networktables
         sleep(1)
         self.set_item("Raspberry IP:",ip)
+        self.set_item("Raspberry Close", False)
         self.check_files() # make sure the files with the surfix exist, if not, create them
         self.set_range() # set the hsv range
         self.init_values() # set all the values
@@ -119,7 +120,7 @@ class Vision:
         def index():#returns the HTML template (lower case 't')
             return render_template('index.html')
 
-        @self.app.route('/video_feed')
+        @self.app.route('/mjpg/video.mjpg')
         def video_feed(): #initiate the feed
             return Response(self.gen(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -584,13 +585,13 @@ class Vision:
         return self.distance # for meters
 
     def gen(self):
-        while not stop:
+        while not self.get_item("Raspberry Stop",stop):
             jpg = cv2.imencode('.jpg', self.show_frame)[1].tostring()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
             key = cv2.waitKey(1)
 
     def gen_mask(self):
-        while not stop:
+        while not self.get_item("Raspberry Stop",stop):
             jpg = cv2.imencode('.jpg', self.mask)[1].tostring()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
             key = cv2.waitKey(1)
@@ -601,16 +602,16 @@ class Vision:
             self.show_frame = self.frame.copy()
         else:
             global stop
-            while not stop:
+            while not self.get_item("Raspberry Stop",stop):
                 _, self.frame = self.cam.read()
                 self.show_frame = self.frame.copy()
 
     def show(self, once=False):
         global stop
         if is_stream:
-            self.app.run(host=ip, debug=False)
+            self.app.run(host=ip,port=80, debug=False)
         if is_local:
-            while not stop:
+            while not self.get_item("Raspberry Stop",stop):
                 cv2.imshow('Frame', self.show_frame)
                 if mask:
                     try:
@@ -626,7 +627,7 @@ class Vision:
 
     def analyse(self):
         global stop
-        while not stop:
+        while not self.get_item("Raspberry Stop",stop):
             if self.surfix is not self.get_item("Filter Mode",self.surfix):
                 self.surfix=self.get_item("Filter Mode",self.surfix)
                 self.check_files()
@@ -669,7 +670,7 @@ threading._start_new_thread(vision.get_frame, ())
 threading._start_new_thread(vision.analyse, ())
 vision.show()
 
-# while not stop:
+# while not self.get_item("Raspberry Stop",stop):
 #    vision.get_frame()
 #    vision.analyse()
 #    vision.show()
