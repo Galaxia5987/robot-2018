@@ -1,20 +1,17 @@
 import cv2
 import numpy as np
-#from matplotlib import pyplot as plt
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 while True:
+    kernel = (
+        (0, 1, 0),
+        (1, 1, 1),
+        (0, 1, 0)
+    )
     _, img = cam.read()
-    #img = cv2.imread('cube.jpg')
-    #img0 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.blur(img, ksize=(15,15))
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, (20, 216, 23), (46, 255, 202))
-    kernel = np.ones((3, 3), dtype=np.uint8)
-    kernel = (
-        (0,1,0),
-        (1,1,1),
-        (0,1,0)
-    )
     kernel=np.array(kernel,dtype=np.uint8)
     mask = cv2.erode(mask, kernel=kernel, iterations=3)
     mask = cv2.dilate(mask, kernel=kernel, iterations=3)
@@ -43,21 +40,6 @@ while True:
     key = cv2.waitKey(1)
     if key is ord('q'):
         break
-# sobelx = cv2.Sobel(img,cv2.CV_64F,1,0,ksize=5)  # x
-# sobely = cv2.Sobel(img,cv2.CV_64F,0,1,ksize=5)  # y
-#canny = cv2.Canny(mask,125,255)
-
-
-# plt.subplot(2,2,1),plt.imshow(img0)
-# plt.title('Original'), plt.xticks([]), plt.yticks([])
-# plt.subplot(2,2,2),plt.imshow(mask, cmap = 'gray')
-# plt.title('Mask'), plt.xticks([]), plt.yticks([])
-# plt.subplot(2,2,3),plt.imshow(thresh, cmap = 'gray')
-# plt.title('Laplacian'), plt.xticks([]), plt.yticks([])
-# plt.subplot(2,2,4),plt.imshow(img1)
-# plt.title('Contours'), plt.xticks([]), plt.yticks([])
-#
-# plt.show()
 
 
 
