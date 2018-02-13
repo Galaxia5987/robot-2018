@@ -26,7 +26,12 @@ public class ArriveToSwitchGroupCommand extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new TurnToTargetGroupCommand());
-    	addSequential(new DriveStraightCommand(Robot.ntSwitchDistance, SWITCH_DISTANCE_ADDITION));
+    	
+//    	addSequential(new TurnToTargetGroupCommand());
+//    	addSequential(new DriveStraightCommand(Robot.ntSwitchDistance, SWITCH_DISTANCE_ADDITION));
+//    	addSequential(new DriveStraightCommand(0.1));
+    	addSequential(new TurnCommand(15, true));
+    	addSequential(new DriveStraightCommand(0.1));
+    	addSequential(new TurnCommand(15, true));
     }
 }

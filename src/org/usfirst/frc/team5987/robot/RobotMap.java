@@ -23,12 +23,10 @@ public class RobotMap {
 	
 	public static int climbMotor1 = 4;
 	public static int climbMotor2 = 5;
-	public static int climbMotor3 = 6;
-	public static int climb1PDP = 13;
-	public static int climb2PDP = 14;
-	public static int climb3PDP = 15;
+	public static int climb1PDP = 14;
+	public static int climb2PDP = 15;
 	
-	public static final int[] climbPDPs = new int[] {climb1PDP, climb2PDP, climb3PDP}; // TODO: CHANGE!
+	public static final int[] climbPDPs = new int[] {climb1PDP, climb2PDP}; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 
@@ -99,8 +97,8 @@ public class RobotMap {
 
 	
 	/*----------------INTAKE---------------*/
-	public static final int intakeSolenoid1 = 2;
-	public static final int intakeSolenoid2 = 3;
+	public static final int intakeSolenoid1 = 0;
+	public static final int intakeSolenoid2 = 1;
 	/*-------------------------------------*/
 	
 }

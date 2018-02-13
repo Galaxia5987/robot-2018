@@ -16,6 +16,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnTillSeesTargetCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
 import org.usfirst.frc.team5987.robot.subsystems.ClimbSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
@@ -48,9 +49,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-	
+
 	public static final PowerDistributionPanel PDP = new PowerDistributionPanel();
-	
+
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
 	public static final ExampleSubsystem kExampleSubsystem = new ExampleSubsystem();
@@ -58,14 +59,14 @@ public class Robot extends TimedRobot {
 	public static final DriveSubsystem driveSubsystem = new DriveSubsystem();
 	public static final GripperSubsystem gripperSubsystem = new GripperSubsystem();
 	public static final LiftSubsystem liftSubsystem = new LiftSubsystem();
-	
-	public static OI m_oi;
-	
-	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30,0.5);
-	public static final Watch_Doge inTakeCanine = new Watch_Doge(PDP, intakeSubsystem, RobotMap.intakePDPs, 27,0.5);
-	public static final Watch_Doge climbingCatahoulaLeopard = new Watch_Doge(PDP, climbSubsystem, RobotMap.climbPDPs, 30, 2);
 
-	
+	public static OI m_oi;
+
+	public static final Watch_Doge clingyShiba = new Watch_Doge(PDP, gripperSubsystem, RobotMap.gripperPDPs, 30, 0.5);
+	public static final Watch_Doge inTakeCanine = new Watch_Doge(PDP, intakeSubsystem, RobotMap.intakePDPs, 27, 0.5);
+	public static final Watch_Doge climbingCatahoulaLeopard = new Watch_Doge(PDP, climbSubsystem, RobotMap.climbPDPs,
+			30, 2);
+
 	NetworkTable LiftTable = liftSubsystem.LiftTable;
 	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	public static NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
@@ -74,20 +75,20 @@ public class Robot extends TimedRobot {
 	NetworkTableEntry ntAngle = driveTable.getEntry("Angle");
 	NetworkTableEntry ntPitch = driveTable.getEntry("Pitch");
 	NetworkTableEntry ntYaw = driveTable.getEntry("Yaw");
-	
+
 	NetworkTableEntry ntAcs1 = driveTable.getEntry("Acs1");
 	NetworkTableEntry ntAcs2 = driveTable.getEntry("Acs2");
 	NetworkTableEntry ntAcs3 = driveTable.getEntry("Acs3");
-	
+
 	NetworkTableEntry ntGyroX = driveTable.getEntry("GyroX");
 	NetworkTableEntry ntGyroY = driveTable.getEntry("GyroY");
 	NetworkTableEntry ntGyroZ = driveTable.getEntry("GyroZ");
-	
+
 	NetworkTableEntry ntSetpoint = LiftTable.getEntry("Setpoint");
 	CameraServer cs;
-	
+
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
-	
+
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -95,10 +96,7 @@ public class Robot extends TimedRobot {
 	public static NetworkTableEntry ntSwitchTarget = visionTable.getEntry("Sees Target");
 	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
 
-
-	
 	Compressor compressor = new Compressor(1);
-
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -108,8 +106,8 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		navx.reset();
 		m_oi = new OI();
-		m_chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
+		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
@@ -121,7 +119,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new PathCommand());
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
-		SmartDashboard.putData(new TurnCommand(15, true));
+		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));
+		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		ntSetpoint.setDouble(0);
 	}
 
@@ -142,7 +141,7 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		liftSubsystem.update();
-//		liftSubsystem.setSetpoint(0);
+		// liftSubsystem.setSetpoint(0);
 	}
 
 	/**
@@ -152,21 +151,29 @@ public class Robot extends TimedRobot {
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString code to get the auto name from the text box below the Gyro
 	 *
-	 * <p>You can add additional auto modes by adding additional commands to the
+	 * <p>
+	 * You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons
 	 * to the switch structure below with additional strings & commands.
 	 */
 	@Override
 	public void autonomousInit() {
 		navx.reset();
+		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
+		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
+		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
 		m_autonomousCommand = m_chooser.getSelected();
 
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+//		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
+//		switch (autoSelected) {
+//		case "Default Auto":
+//			m_autonomousCommand = new MyAutoCommand();
+//			break;
+//		case "Default Auto":
+//		default:
+//			m_autonomousCommand = null;
+//			break;
+//		}
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
@@ -180,24 +187,27 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		liftSubsystem.displaySensorValues();
+		liftSubsystem.update();
+		clingyShiba.feed();
+		inTakeCanine.feed();
 	}
 
 	@Override
 	public void teleopInit() {
-		
+
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		navx.reset(); // TODO: remove 
+		navx.reset(); // TODO: remove
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
-//		driveSubsystem.setSetpoints(1, 1);
+		// driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
 		liftSubsystem.configNominalAndPeakOutputs();
-		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
-
+//		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 	}
 
 	/**
@@ -206,39 +216,40 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-        // liftSubsystem.update();
+		// liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
-//		double joyY = m_oi.rightStick.getY();
-//		SmartDashboard.putNumber("Joy Y", joyY);
-//		liftSubsystem.setPrecentSpeed(joyY);
+		// double joyY = m_oi.rightStick.getY();
+		// SmartDashboard.putNumber("Joy Y", joyY);
+		// liftSubsystem.setPrecentSpeed(joyY);
 		ntPitch.setDouble(driveSubsystem.getPitch());
 		ntYaw.setDouble(driveSubsystem.getYaw());
 
 		ntAcs1.setDouble(navx.getRawAccelX());
 		ntAcs2.setDouble(navx.getRawAccelY());
 		ntAcs3.setDouble(navx.getRawAccelZ());
-		
+
 		ntGyroX.setDouble(navx.getRawGyroX());
 		ntGyroY.setDouble(navx.getRawGyroY());
 		ntGyroZ.setDouble(navx.getRawGyroZ());
-		
+
 		liftSubsystem.update();
 		clingyShiba.feed();
 		inTakeCanine.feed();
 		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
-		liftSubsystem.update();
 		ntAngle.setDouble(driveSubsystem.getAngle());
-//		driveSubsystem.setLeftSpeed(-m_oi.left.getY());
-//		driveSubsystem.setRightSpeed(-m_oi.right.getY());
+		// driveSubsystem.setLeftSpeed(-m_oi.left.getY());
+		// driveSubsystem.setRightSpeed(-m_oi.right.getY());
 		SmartDashboard.putNumber("left Dis", driveSubsystem.getLeftDistance());
 		SmartDashboard.putNumber("right Dis", driveSubsystem.getRightDistance());
 
-
 		driveSubsystem.ntRightDistance.setDouble(driveSubsystem.getRightDistance());
 		driveSubsystem.ntLeftDistance.setDouble(driveSubsystem.getLeftDistance());
-//		driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1), ntRightSP.getDouble(-0.1));
-//		driveSubsystem.setSetpoints(-0.3, -1);
+		// driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1),
+		// ntRightSP.getDouble(-0.1));
+		// driveSubsystem.setSetpoints(-0.3, -1);
+
+		SmartDashboard.putBoolean("inTake", intakeSubsystem.getSolenoid());
 
 	}
 

@@ -29,7 +29,7 @@ public class TurnCommand extends Command {
 	/**
 	 * If the absolute angle error is less than that, the command will stop
 	 */
-	private static final double MIN_DEGREES_ERROR = 2.5; 
+	private static final double MIN_DEGREES_ERROR = 1; 
 	private static final double TURN_CONTROL_FACTOR = 1;
 	private DistanceMotionProfile mp;
 	private boolean isRelative;
@@ -78,7 +78,6 @@ public class TurnCommand extends Command {
     
     // Called just before this Command runs the first time
     protected void initialize() {
-    	priorPIDType = Robot.driveSubsystem.getPIDType();
     	Robot.driveSubsystem.setPIDType(DriveSubsystem.PIDTypes.TURN);
     	if(ntAngle != null)
     		angle = ntAngle.getDouble(0);
@@ -141,7 +140,7 @@ public class TurnCommand extends Command {
     	Robot.driveSubsystem.setLeftSpeed(0);
     	Robot.driveSubsystem.setRightSpeed(0);
     	Robot.driveSubsystem.setSetpoints(0, 0);
-    	Robot.driveSubsystem.setPIDType(priorPIDType);
+    	Robot.driveSubsystem.setPIDType(DriveSubsystem.PIDTypes.STRAIGHT);
     }
 
     // Called when another command which requires one or more of the same

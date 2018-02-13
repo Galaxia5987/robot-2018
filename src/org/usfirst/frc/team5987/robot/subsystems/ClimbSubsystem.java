@@ -15,7 +15,6 @@ public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 
 	public final boolean motor1Reversed = false;
 	public final boolean motor2Reversed = false;
-	public final boolean motor3Reversed = false;
 
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
@@ -25,14 +24,12 @@ public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 	// Motors for climbing
 	SafeVictorSPX motor1 = new SafeVictorSPX(RobotMap.climbMotor1);
 	SafeVictorSPX motor2 = new SafeVictorSPX(RobotMap.climbMotor2);
-	SafeVictorSPX motor3 = new SafeVictorSPX(RobotMap.climbMotor3);
 
 	Timer downTimer = new Timer();
 	
 	public ClimbSubsystem() {
 		motor1.setInverted(motor1Reversed);
 		motor2.setInverted(motor2Reversed);
-		motor3.setInverted(motor3Reversed);
 	}
 
 	/**
@@ -42,12 +39,11 @@ public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 	 *            - speed of the motors
 	 */
 	public void set(double speed) {
-		speed = (speed < 0) ? 0 : speed; // If the speed given to the motors is negative, the 
+		speed = (speed > 0) ? 0 : speed; // If the speed given to the motors is negative, the 
 										 // speed is set to zero (0). This is done because
 										 // the robot cannot descend as result of the ratchet mechanism.
 		motor1.set(speed);
 		motor2.set(speed);
-		motor3.set(speed);
 	}
 	
 	@Override
@@ -55,7 +51,6 @@ public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 	{
 		motor1.disable();
 		motor2.disable();
-		motor3.disable();
 		downTimer.reset();
 		downTimer.start();
 	}
@@ -64,7 +59,6 @@ public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 	public void necromancy() {
 		motor1.enable();
 		motor2.enable();
-		motor3.enable();
 	}
 	
 	@Override
@@ -79,6 +73,6 @@ public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 	
 	@Override
 	public boolean ded() {
-		return motor1.status() && motor2.status() && motor3.status();
+		return motor1.status() && motor2.status();
 	}
 }
