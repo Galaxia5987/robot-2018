@@ -450,7 +450,7 @@ class Vision:
         hullpoints = cv2.convexHull(approx,returnPoints=True)
         return len(hullpoints)
 
-    def sort_edge_points(self,c):
+    def sort_edge_points(self, c):
         top = []
         middle = []
         bottom = []
@@ -509,11 +509,16 @@ class Vision:
             j = i-1
             x = points[j][0] - points[i][0]
             y = points[j][1] - points[i][1]
+            if x < 20 and y < 20:
+                points.pop(j)
+                continue
             try:
                 alpha = math.atan(y/x) * 180/math.pi
             except ZeroDivisionError:
                 alpha = 90
             alphas.append(alpha)
+            if alphas[i] == alphas[j]:
+                points.pop(j)
             cv2.putText(self.show_frame, "o {}".format(i), tuple(points[i]), self.font, 0.5, 255)
             cv2.putText(self.show_frame, "o {}".format(j), tuple(points[j]), self.font, 0.5, 255)
             cv2.line(self.show_frame, tuple(points[i]), (points[i][0]+x, points[i][1]+y), [0, 0, 255], 2)
