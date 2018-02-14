@@ -58,22 +58,13 @@ print('NetworkTables Server: ' + colored.green(nt_server))
 
 # ------------getting the ip------------------------------------------------------
 import netifaces as ni
-
-ip = None
-for interface in ni.interfaces():
-    if ip is None:
-        try:
-            ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
-            start = ip.split('.')[0]
-            if start == '127':
-                ip = None
-        except KeyError:
-            pass
-    else:
-        break
+try:
+    ip = ni.ifaddresses(['eth0'])[ni.AF_INET][0]['addr']
+except:
+    ip = ni.ifaddresses(['wifi0'])[ni.AF_INET][0]['addr']
 print('IP: ' + colored.green(ip))
 # -----------------------------Starting The Vision Class--------------------------------------------------------------
-
+import os
 import cv2
 import numpy as np
 import math
@@ -102,7 +93,6 @@ class Vision:
         self.table = NetworkTables.getTable("Vision") # initialize Vision networktables
         sleep(1)
         self.set_item("Raspberry IP:",ip)
-        self.set_item("Raspberry Close", False)
         self.check_files() # make sure the files with the surfix exist, if not, create them
         self.set_range() # set the hsv range
         self.init_values() # set all the values
@@ -219,7 +209,11 @@ class Vision:
         try:
             _ = open("files/Colors_"+self.surfix+".val", 'r')
         except FileNotFoundError:
-            self.range_finder()
+            file=open('files/Colors_'+self.surfix+'.val','w+')
+            file.write(
+                'self.lower_range,self.upper_range = (0,0,0),(0,0,0)'
+            )
+            file.close()
 
         try:
             _ = open("files/Values_"+self.surfix+".val", 'r')
@@ -283,7 +277,6 @@ class Vision:
                     for i in range(0,len(hullpoints)):
                         cv2.line(self.show_frame, tuple(hullpoints[i-1][0]), tuple(hullpoints[i][0]), [0, 255, 0], 2)
                         cv2.circle(self.show_frame, tuple(hullpoints[i][0]), 5, [0, 0, 255], -1)
-                    _, top, middle, bottom = self.sort_edge_points(self.contours[x])
                     # cv2.circle(self.show_frame, tuple(top[0]), 3, [0, 0, 255], -1)
                     # cv2.circle(self.show_frame, tuple(top[1]), 3, [0, 255, 255], -1)
                     # cv2.circle(self.show_frame, tuple(middle[0]), 3, [0, 255, 0], -1)
@@ -450,7 +443,7 @@ class Vision:
         hullpoints = cv2.convexHull(approx,returnPoints=True)
         return len(hullpoints)
 
-    def sort_edge_points(self, c):
+    def sort_edge_points(self,c):
         top = []
         middle = []
         bottom = []
@@ -497,39 +490,40 @@ class Vision:
         except ZeroDivisionError:
             distance=None
         self.distance=distance
-        self.set_item('Switch Distance',self.distance)
+        self.set_item('Distance',self.distance)
         return self.distance
 
     def is_cube(self, c):
         points,_,_,_=self.sort_edge_points(c)
         cube = 0
         alphas = []
-        length = len(points)
-        for i in range(0, length):
+        i=0
+        shift=0
+        while i < len(points):
             j = i-1
             x = points[j][0] - points[i][0]
             y = points[j][1] - points[i][1]
-            if x < 20 and y < 20:
-                points.pop(j)
-                continue
             try:
                 alpha = math.atan(y/x) * 180/math.pi
             except ZeroDivisionError:
                 alpha = 90
             alphas.append(alpha)
-            if alphas[i] == alphas[j]:
-                points.pop(j)
+            # if x < 10 and y < 10:
+            #     alphas[j-shift] = alphas[i-shift]+alphas[j-shift]
+            #     alphas.pop(i-shift)
+            #     shift+=1
             cv2.putText(self.show_frame, "o {}".format(i), tuple(points[i]), self.font, 0.5, 255)
             cv2.putText(self.show_frame, "o {}".format(j), tuple(points[j]), self.font, 0.5, 255)
             cv2.line(self.show_frame, tuple(points[i]), (points[i][0]+x, points[i][1]+y), [0, 0, 255], 2)
+            i+=1
             # print("i "+str(i)+" j "+str(j)+" x "+str(x)+" y "+str(y)+" alpha "+str(alpha))
         # print(alphas)
-        if length is 6:
+        if len(alphas) is 6:
             counter = 0
-            for i in range(0, int(length/2)):
-                if abs(alphas[i] - alphas[i+3]) <= 15:
+            for i in range(0, int(len(alphas)/2)):
+                if abs(alphas[i] - alphas[i+3]) <= 25:
                     counter+=1
-            if counter == 3:
+            if counter >= 2:
                 cube = 1
         return cube
 
@@ -559,9 +553,9 @@ class Vision:
         """
         x_dif = self.center[0] - self.frame.shape[1]/2
         rad=math.atan(x_dif / self.focal)*-1 # because... math... apparently
-        self.degrees=rad/math.pi*180
-        self.set_item('Switch Degrees',self.degrees)
-        return self.degrees
+        self.angle=rad/math.pi*180
+        self.set_item('Angle',self.angle)
+        return self.angle
 
 
     def get_distance(self):
@@ -586,14 +580,13 @@ class Vision:
         except ZeroDivisionError:
             distance=None
         self.distance=distance
-        self.set_item('Switch Distance',self.distance)
+        self.set_item('Distance',self.distance)
         return self.distance # for meters
 
     def gen(self):
         while not self.get_item("Raspberry Stop",stop):
             jpg = cv2.imencode('.jpg', self.show_frame)[1].tostring()
             yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + jpg + b'\r\n')
-            key = cv2.waitKey(1)
 
     def gen_mask(self):
         while not self.get_item("Raspberry Stop",stop):
@@ -635,6 +628,8 @@ class Vision:
         while not self.get_item("Raspberry Stop",stop):
             if self.surfix is not self.get_item("Filter Mode",self.surfix):
                 self.surfix=self.get_item("Filter Mode",self.surfix)
+                if self.surfix is '-1':
+                    os.system('sudo reboot')
                 self.check_files()
                 self.init_values()
             self.filter_hsv()
@@ -661,12 +656,12 @@ class Vision:
                 self.draw_contours()
             else:
                 self.sees_target = False
-            self.set_item("Sees target", self.sees_target)
+            self.set_item("Sees Target", self.sees_target)
 
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-vision = Vision('2')
+vision = Vision('0')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
@@ -682,4 +677,3 @@ vision.show()
 
 if not is_local and not is_stream:
     _ = input('Press ' + colored.cyan('Enter') + ' To End It All')
-stop = True

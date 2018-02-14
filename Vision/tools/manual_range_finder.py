@@ -60,48 +60,28 @@ def get_trackbar_values(range_filter):
 
 
 def main():
-    args = get_arguments()
+    camera = cv2.VideoCapture(0)
+    camera.set(cv2.CAP_PROP_SETTINGS,1)
 
-    range_filter = args['filter'].upper()
-
-    if args['image']:
-        image = cv2.imread(args['image'])
-
-        if range_filter == 'RGB':
-            frame_to_thresh = image.copy()
-        else:
-            frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    else:
-        camera = cv2.VideoCapture(1)
-
-    setup_trackbars(range_filter)
+    setup_trackbars('HSV')
 
     while True:
-        if args['webcam']:
-            ret, image = camera.read()
 
-            if not ret:
-                break
+        ret, image = camera.read()
 
-            if range_filter == 'RGB':
-                frame_to_thresh = image.copy()
-            else:
-                frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-
-        v1_min, v2_min, v3_min, v1_max, v2_max, v3_max = get_trackbar_values(range_filter)
-
-        thresh = cv2.inRange(frame_to_thresh, (v1_min, v2_min, v3_min), (v1_max, v2_max, v3_max))
-
-        if args['preview']:
-            preview = cv2.bitwise_and(image, image, mask=thresh)
-            cv2.imshow("Preview", preview)
-        else:
-            cv2.imshow("Original", image)
-            cv2.imshow("Thresh", thresh)
-
-        if cv2.waitKey(1) & 0xFF is ord('q'):
+        if not ret:
             break
 
 
+        frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+        v1_min, v2_min, v3_min, v1_max, v2_max, v3_max = get_trackbar_values("HSV")
+
+        thresh = cv2.inRange(frame_to_thresh, (v1_min, v2_min, v3_min), (v1_max, v2_max, v3_max))
+
+        cv2.imshow("Original", image)
+        cv2.imshow("Thresh", thresh)
+        if cv2.waitKey(1) & 0xFF is ord('q'):
+            break
 if __name__ == '__main__':
     main()
