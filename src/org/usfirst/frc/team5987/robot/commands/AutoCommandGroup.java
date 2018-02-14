@@ -67,7 +67,7 @@ public class AutoCommandGroup extends CommandGroup {
 //			addSequential(new WaitCommasnd(1));
 			addSequential(new LiftCommand(LiftCommand.liftStates.SWITCH));
 
-			addSequential(new PathCommand());
+			addSequential(new PathSwitchCommand());
 
 			addSequential(new ShootCubeCommand(1, true));	
 		}

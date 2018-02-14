@@ -14,6 +14,7 @@ import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 
 import org.usfirst.frc.team5987.robot.commands.PathCommand;
+import org.usfirst.frc.team5987.robot.commands.PathSwitchCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnTillSeesTargetCommand;
@@ -116,7 +117,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new LiftCommand());
-		SmartDashboard.putData(new PathCommand());
+		SmartDashboard.putData(new PathSwitchCommand());
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));
