@@ -122,6 +122,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		ntSetpoint.setDouble(0);
+		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 	}
 
 	/**
@@ -159,7 +160,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		navx.reset();
-		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
 		m_autonomousCommand = m_chooser.getSelected();
@@ -207,7 +207,6 @@ public class Robot extends TimedRobot {
 		// driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
 		liftSubsystem.configNominalAndPeakOutputs();
-//		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 	}
 
 	/**

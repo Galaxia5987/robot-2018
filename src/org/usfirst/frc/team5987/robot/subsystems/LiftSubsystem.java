@@ -231,16 +231,17 @@ public class LiftSubsystem extends Subsystem {
 	    		break;
 	    		
 	    	case ZEROING:
-	    		ntState.setString("ZEROING");
-	    		if(reachedBottom()){ // TODO: change to ?
+//	    		ntState.setString("ZEROING");
+//	    		if(reachedBottom()){ // TODO: change to ?
 	    			setState(States.RUNNING);
 	    			liftMotor.setSelectedSensorPosition(0, 0, TALON_TIMEOUT_MS); // zero
-	    			break;
-	    		}
-	    		// move the lift down
-	    		setSetpoint(getHeight() - ZERO_RATE);
-	    		limitAbsoluteOutput(MAX_ZEROING_OUTPUT);
-	    		setPosition();
+	    			setSetpoint(0);
+//	    			break;
+//	    		}
+//	    		// move the lift down
+//	    		setSetpoint(getHeight() - ZERO_RATE);
+//	    		limitAbsoluteOutput(MAX_ZEROING_OUTPUT);
+//	    		setPosition();
 	    		break;
 	    		
 	    	case RUNNING:
@@ -311,7 +312,8 @@ public class LiftSubsystem extends Subsystem {
      * @return true if the top hull effect detects the gripper
      */
     public boolean reachedBottom(){
-    	return liftMotor.getSensorCollection().isRevLimitSwitchClosed();
+//    	return liftMotor.getSensorCollection().isRevLimitSwitchClosed();
+    	return Math.abs(getHeight()) < 0.05;
     }
     
     /**
