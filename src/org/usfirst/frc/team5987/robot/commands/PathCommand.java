@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class PathCommand extends Command {
+public abstract class PathCommand extends Command {
 
 	private double x = 0, y = 0;
 	private double h = 0.2;
@@ -22,6 +22,11 @@ public class PathCommand extends Command {
 	private double pointX;
 	private double pointY;
 	
+	/**
+	 * 
+	 * @return an array of items of Point(s) Class 
+	 */
+	public abstract Point[] getPoints(); 
 	
     public PathCommand() {
         // Use requires() here to declare subsystem dependencies
@@ -31,43 +36,22 @@ public class PathCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if (!Robot.ntSwitchTarget.getBoolean(false))
-    	{
-    		this.cancel();
-    	}
     	x = 0; y = 0;
     	preLeftDistance = Robot.driveSubsystem.getLeftDistance();
     	preRightDistance = Robot.driveSubsystem.getRightDistance();
-    	double switchDistance = Robot.ntSwitchDistance.getDouble(0);
-    	double switchAngle = Robot.ntSwitchAngle.getDouble(0) * Math.PI / 180;
-    	switchDistance = switchDistance / Math.cos(switchAngle);
-    	double dx = switchDistance * Math.cos(Robot.driveSubsystem.getAngleRadians() + switchAngle);
-    	double dy = switchDistance * Math.sin(Robot.driveSubsystem.getAngleRadians() + switchAngle);
-    	SmartDashboard.putNumber("d x", dx);
-		SmartDashboard.putNumber("d y", dy);
-		SmartDashboard.putNumber("c", switchDistance);
-		SmartDashboard.putNumber("a", Robot.driveSubsystem.getAngleRadians() + switchAngle);
-    	double startX = h * Math.cos(Robot.driveSubsystem.getAngleRadians());
+    	
+		double startX = h * Math.cos(Robot.driveSubsystem.getAngleRadians());
     	double startY = h * Math.sin(Robot.driveSubsystem.getAngleRadians());
-    	double cameraX = (0.2) * Math.cos(Robot.driveSubsystem.getAngleRadians());
-    	double cameraY = (0.2) * Math.sin(Robot.driveSubsystem.getAngleRadians());
 
-    	Point A = new Point(startX, startY);
-		Point B = new Point(cameraX + dx - 1.5, cameraY + dy);
-		Point C = new Point(cameraX + dx-0.95, cameraY + dy);
+		Point[] p = getPoints();
 		
-		SmartDashboard.putNumber("sx", startX);
-		SmartDashboard.putNumber("sy", startY);
-		SmartDashboard.putNumber("s2x", cameraX + dx - 1);
-		SmartDashboard.putNumber("s2y", cameraY + dy);
-		SmartDashboard.putNumber("s3x", cameraX + dx);
-		SmartDashboard.putNumber("s3y", cameraY + dy);
-		
-		Point[] p = {A,B,C};
+		for (int i = 0; i < p.length; i++) {
+			double[] cords = p[i].get();
+			p[i].setPoint(cords[0]+ startX, cords[1] + startY);
+		}
+				
 		train = new surfceMP(p, DriveSubsystem.MAX_VELOCITY, DriveSubsystem.ACCELERATION, DriveSubsystem.DECCELERATION, DriveSubsystem.MIN_VELOCITY, 0);
 		train.setRatio(h, 0.375);
-		preLeftDistance = Robot.driveSubsystem.getLeftDistance();
-		preRightDistance = Robot.driveSubsystem.getRightDistance();
 		endPoint = p[p.length-1];
     }
 
