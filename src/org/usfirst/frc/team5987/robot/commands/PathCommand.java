@@ -68,7 +68,7 @@ public class PathCommand extends Command {
 		train.setRatio(h, 0.375);
 		preLeftDistance = Robot.driveSubsystem.getLeftDistance();
 		preRightDistance = Robot.driveSubsystem.getRightDistance();
-		endPoint = C;
+		endPoint = p[p.length-1];
     }
 
     // Called repeatedly when this Command is scheduled to run
