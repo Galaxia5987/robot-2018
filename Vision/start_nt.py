@@ -13,6 +13,11 @@ NetworkTables.initialize(server=ip)
 time.sleep(1)
 sd = NetworkTables.getTable("SmartDashboard")
 sd.putBoolean("Raspberry Start", False)
+<<<<<<< HEAD
+=======
+sd.putBoolean("Raspberry Not Stream", False)
+sd.putBoolean("Raspberry Local", False)
+>>>>>>> 077fb96bc08efa00fd5460ff727d786d700e944a
 start = sd.getAutoUpdateValue('Raspberry Start', False)
 while not start.value:
     time.sleep(1)

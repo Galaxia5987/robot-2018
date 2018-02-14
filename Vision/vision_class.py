@@ -553,9 +553,15 @@ class Vision:
         """
         x_dif = self.center[0] - self.frame.shape[1]/2
         rad=math.atan(x_dif / self.focal)*-1 # because... math... apparently
+<<<<<<< HEAD
         self.angle=rad/math.pi*180
         self.set_item('Angle',self.angle)
         return self.angle
+=======
+        self.degrees=rad/math.pi*180
+        self.set_item('Angle',self.degrees)
+        return self.degrees
+>>>>>>> 077fb96bc08efa00fd5460ff727d786d700e944a
 
 
     def get_distance(self):
@@ -656,7 +662,11 @@ class Vision:
                 self.draw_contours()
             else:
                 self.sees_target = False
+<<<<<<< HEAD
             self.set_item("Sees Target", self.sees_target)
+=======
+            self.set_item("", self.sees_target)
+>>>>>>> 077fb96bc08efa00fd5460ff727d786d700e944a
 
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
