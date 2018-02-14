@@ -14,6 +14,7 @@ import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 
 import org.usfirst.frc.team5987.robot.commands.PathCommand;
+import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.PathSwitchCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
@@ -28,6 +29,7 @@ import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import auxiliary.Point;
 import auxiliary.Watch_Doge;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -118,6 +120,12 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new LiftCommand());
 		SmartDashboard.putData(new PathSwitchCommand());
+		SmartDashboard.putData(new PathPointsCommand(new Point[]{
+				new Point(0,0),
+				new Point(1, 0),
+				new Point (2, 2)
+				})
+				);
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));
