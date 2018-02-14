@@ -59,9 +59,18 @@ print('NetworkTables Server: ' + colored.green(nt_server))
 # ------------getting the ip------------------------------------------------------
 import netifaces as ni
 try:
-    ip = ni.ifaddresses(['eth0'])[ni.AF_INET][0]['addr']
+    ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 except:
-    ip = ni.ifaddresses(['wifi0'])[ni.AF_INET][0]['addr']
+    for interface in ni.interfaces():
+        try:
+            if not ni.ifaddresses(interface)[ni.AF_INET][0]['addr'] == '127.0.0.1':
+                ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+                break
+        except:
+            pass
+    if ip is None:
+        ip='127.0.0.1'
+
 print('IP: ' + colored.green(ip))
 # -----------------------------Starting The Vision Class--------------------------------------------------------------
 import os
@@ -498,20 +507,18 @@ class Vision:
         cube = 0
         alphas = []
         i=0
-        shift=0
         while i < len(points):
             j = i-1
             x = points[j][0] - points[i][0]
             y = points[j][1] - points[i][1]
+            if abs(x) < 20 and abs(y) < 20:
+                i+=1
+                continue
             try:
                 alpha = math.atan(y/x) * 180/math.pi
             except ZeroDivisionError:
                 alpha = 90
             alphas.append(alpha)
-            # if x < 10 and y < 10:
-            #     alphas[j-shift] = alphas[i-shift]+alphas[j-shift]
-            #     alphas.pop(i-shift)
-            #     shift+=1
             cv2.putText(self.show_frame, "o {}".format(i), tuple(points[i]), self.font, 0.5, 255)
             cv2.putText(self.show_frame, "o {}".format(j), tuple(points[j]), self.font, 0.5, 255)
             cv2.line(self.show_frame, tuple(points[i]), (points[i][0]+x, points[i][1]+y), [0, 0, 255], 2)
@@ -553,16 +560,9 @@ class Vision:
         """
         x_dif = self.center[0] - self.frame.shape[1]/2
         rad=math.atan(x_dif / self.focal)*-1 # because... math... apparently
-<<<<<<< HEAD
         self.angle=rad/math.pi*180
         self.set_item('Angle',self.angle)
         return self.angle
-=======
-        self.degrees=rad/math.pi*180
-        self.set_item('Angle',self.degrees)
-        return self.degrees
->>>>>>> 077fb96bc08efa00fd5460ff727d786d700e944a
-
 
     def get_distance(self):
         """
@@ -662,16 +662,12 @@ class Vision:
                 self.draw_contours()
             else:
                 self.sees_target = False
-<<<<<<< HEAD
             self.set_item("Sees Target", self.sees_target)
-=======
-            self.set_item("", self.sees_target)
->>>>>>> 077fb96bc08efa00fd5460ff727d786d700e944a
 
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-vision = Vision('0')
+vision = Vision('2')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
