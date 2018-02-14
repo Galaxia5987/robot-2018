@@ -92,9 +92,9 @@ public class Robot extends TimedRobot {
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Switch Angle");
+	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Angle");
 	public static NetworkTableEntry ntSwitchTarget = visionTable.getEntry("Sees Target");
-	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Switch Distance");
+	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Distance");
 
 	Compressor compressor = new Compressor(1);
 
@@ -206,7 +206,6 @@ public class Robot extends TimedRobot {
 		}
 		// driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
-		liftSubsystem.configNominalAndPeakOutputs();
 	}
 
 	/**
