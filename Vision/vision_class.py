@@ -497,7 +497,7 @@ class Vision:
         except ZeroDivisionError:
             distance=None
         self.distance=distance
-        self.set_item('Switch Distance',self.distance)
+        self.set_item('Distance',self.distance)
         return self.distance
 
     def is_cube(self, c):
@@ -560,7 +560,7 @@ class Vision:
         x_dif = self.center[0] - self.frame.shape[1]/2
         rad=math.atan(x_dif / self.focal)*-1 # because... math... apparently
         self.degrees=rad/math.pi*180
-        self.set_item('Switch Degrees',self.degrees)
+        self.set_item('Angle',self.degrees)
         return self.degrees
 
 
@@ -586,7 +586,7 @@ class Vision:
         except ZeroDivisionError:
             distance=None
         self.distance=distance
-        self.set_item('Switch Distance',self.distance)
+        self.set_item('Distance',self.distance)
         return self.distance # for meters
 
     def gen(self):
@@ -661,12 +661,12 @@ class Vision:
                 self.draw_contours()
             else:
                 self.sees_target = False
-            self.set_item("Sees target", self.sees_target)
+            self.set_item("", self.sees_target)
 
 # -----------Setting Global Variables For Thread-work----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 global vision
-vision = Vision('2')
+vision = Vision('0')
 
 # ---------------Starting The Threads--------------------------------------------------------------------------------------------------
 import threading
