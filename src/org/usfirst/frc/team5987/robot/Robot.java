@@ -144,6 +144,7 @@ public class Robot extends TimedRobot {
 		driveSubsystem.setSetpoints(0, 0);
 		driveSubsystem.setLeftSpeed(0);
 		driveSubsystem.setRightSpeed(0);
+		driveSubsystem.resetEncoders();
 
 	}
 

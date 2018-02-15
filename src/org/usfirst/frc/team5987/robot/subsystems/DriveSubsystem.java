@@ -357,4 +357,12 @@ public class DriveSubsystem extends Subsystem {
 	public double getBackDistance(){
 		return backDistanceSensor.getVoltage() * ultransonicMeterFactor;
 	}
+	
+	/**
+	 * Make the encoders distance zero
+	 */
+	public void resetEncoders(){
+		driveRightEncoder.reset();
+		driveLeftEncoder.reset();
+	}
 }
