@@ -73,12 +73,12 @@ public abstract class PathCommand extends Command {
     	double[] velocitys = train.getMotorsVelocity(pos, Robot.driveSubsystem.getAngleRadians());
     	Robot.driveSubsystem.setSetpoints(velocitys[0], velocitys[1]);
     	
-    	SmartDashboard.putNumber("x", x);
-    	SmartDashboard.putNumber("y", y);
-    	SmartDashboard.putNumber("point x", pointX);
-    	SmartDashboard.putNumber("point y", pointY);
-    	SmartDashboard.putNumber("velo left", velocitys[0]);
-    	SmartDashboard.putNumber("velo right", velocitys[1]);
+//    	SmartDashboard.putNumber("x", x);
+//    	SmartDashboard.putNumber("y", y);
+//    	SmartDashboard.putNumber("point x", pointX);
+//    	SmartDashboard.putNumber("point y", pointY);
+//    	SmartDashboard.putNumber("velo left", velocitys[0]);
+//    	SmartDashboard.putNumber("velo right", velocitys[1]);
     	
     	Robot.driveSubsystem.updatePID(); // TODO: remove comment
     	

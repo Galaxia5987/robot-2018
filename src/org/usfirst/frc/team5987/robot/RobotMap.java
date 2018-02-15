@@ -23,8 +23,8 @@ public class RobotMap {
 	
 	public static int climbMotor1 = 4;
 	public static int climbMotor2 = 5;
-	public static int climb1PDP = 14;
-	public static int climb2PDP = 15;
+	public static int climb1PDP = 12;
+	public static int climb2PDP = 13;
 	
 	public static final int[] climbPDPs = new int[] {climb1PDP, climb2PDP}; // TODO: CHANGE!
 	/*-------------------------------------*/
@@ -40,9 +40,9 @@ public class RobotMap {
 
 	/*---------------GRIPPER---------------*/
 	public static int gripperWheelLeft = 8; // TODO: CHANGE!
-	public static int gripperLeftPDP = 10; // TODO: CHANGE!
+	public static int gripperLeftPDP = 8; // TODO: CHANGE!
 	public static int gripperWheelRight = 6; // TODO: CHANGE!
-	public static int gripperRightPDP = 5; // TODO: CHANGE!
+	public static int gripperRightPDP = 3; // TODO: CHANGE!
 	
 	public static final int[] gripperPDPs = new int[] {gripperLeftPDP, gripperRightPDP};
 	/*-------------------------------------*/
@@ -55,9 +55,9 @@ public class RobotMap {
 
 	/*----------------INTAKE---------------*/
 	public static final int intakeMotorLeft = 7;
-	public static int intakeLeftPDP = 6;
+	public static int intakeLeftPDP = 2;
 	public static final int intakeMotorRight = 5;
-	public static int intakeRightPDP = 4;
+	public static int intakeRightPDP = 1;
 	
 	public static final int[] intakePDPs = new int[] {intakeLeftPDP, intakeRightPDP};
 	/*-------------------------------------*/
@@ -70,10 +70,10 @@ public class RobotMap {
 
 	/*----------------DRIVE----------------*/
 
-	public static final int driveRightEncoderChannelA = 2; // TODO: CHANGE!
-	public static final int driveRightEncoderChannelB = 3; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelA = 0; // TODO: CHANGE!
-	public static final int driveLeftEncoderChannelB = 1; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelA = 0; // TODO: CHANGE!
+	public static final int driveRightEncoderChannelB = 1; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelA = 2; // TODO: CHANGE!
+	public static final int driveLeftEncoderChannelB = 3; // TODO: CHANGE!
 
 	public static final double driveEncoderDistancePerPulse = 0.00133; // TODO:
 																	// CHANGE!

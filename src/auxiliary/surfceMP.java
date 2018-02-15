@@ -30,7 +30,7 @@ public class surfceMP {
 		double[] length = {tmp[0],tmp[1]};
 		double[] error = {tmp[2],tmp[3]};
 		
-		double Verror = velocityByDistance(0,d,0,error[0]);
+		double Verror = velocityByDistance(0,d/2,0,error[0]);
 		Verror = Verror > topVelocity ? topVelocity : Verror;
 		
 		double Vforward = 0;

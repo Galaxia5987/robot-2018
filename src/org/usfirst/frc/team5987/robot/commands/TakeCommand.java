@@ -23,7 +23,7 @@ public class TakeCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if (!isFinished()){
-			Robot.intakeSubsystem.setSpeed(-WHEELSPEED, -WHEELSPEED); // TODO: check the actual directions
+			Robot.intakeSubsystem.setSpeed(-0.4, -0.4); // TODO: check the actual directions
 			Robot.gripperSubsystem.setSpeed(-WHEELSPEED , -WHEELSPEED);
     	}
 	

@@ -114,7 +114,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
-		SmartDashboard.putData(new TurnCommand(ntSwitchAngle, true));
+		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
@@ -230,7 +230,9 @@ public class Robot extends TimedRobot {
 		// liftSubsystem.setPrecentSpeed(joyY);
 		ntPitch.setDouble(driveSubsystem.getPitch());
 		ntYaw.setDouble(driveSubsystem.getYaw());
+		ntAngle.setDouble(driveSubsystem.getAngle());
 
+		
 		ntAcs1.setDouble(navx.getRawAccelX());
 		ntAcs2.setDouble(navx.getRawAccelY());
 		ntAcs3.setDouble(navx.getRawAccelZ());
@@ -244,7 +246,6 @@ public class Robot extends TimedRobot {
 		inTakeCanine.feed();
 		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
-		ntAngle.setDouble(driveSubsystem.getAngle());
 		// driveSubsystem.setLeftSpeed(-m_oi.left.getY());
 		// driveSubsystem.setRightSpeed(-m_oi.right.getY());
 		SmartDashboard.putNumber("left Dis", driveSubsystem.getLeftDistance());

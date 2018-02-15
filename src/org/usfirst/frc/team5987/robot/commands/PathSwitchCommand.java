@@ -34,10 +34,10 @@ public class PathSwitchCommand extends PathCommand {
     	switchDistance = switchDistance / Math.cos(switchAngle);
     	double dx = switchDistance * Math.cos(Robot.driveSubsystem.getAngleRadians() + switchAngle);
     	double dy = switchDistance * Math.sin(Robot.driveSubsystem.getAngleRadians() + switchAngle);
-    	SmartDashboard.putNumber("d x", dx);
-		SmartDashboard.putNumber("d y", dy);
-		SmartDashboard.putNumber("c", switchDistance);
-		SmartDashboard.putNumber("a", Robot.driveSubsystem.getAngleRadians() + switchAngle);
+//    	SmartDashboard.putNumber("d x", dx);
+//		SmartDashboard.putNumber("d y", dy);
+//		SmartDashboard.putNumber("c", switchDistance);
+//		SmartDashboard.putNumber("a", Robot.driveSubsystem.getAngleRadians() + switchAngle);
 		
 		Point A = new Point(0, 0);
 		Point B = new Point(dx - 1.5, dy);

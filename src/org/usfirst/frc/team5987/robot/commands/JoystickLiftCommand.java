@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.OI;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -11,7 +12,7 @@ public class JoystickLiftCommand extends Command {
 	/**
 	 * The Y value area in which the xbox joystick won't make the lift move.
 	 */
-	private static final double XBOX_JOYSTICK_DEAD_BAND = 0.2;
+	private static final double XBOX_JOYSTICK_DEAD_BAND = 0;
 	/**
 	 * The rate at which the lift will goes down with the xbox joystick.
 	 */
@@ -32,7 +33,7 @@ public class JoystickLiftCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double y = -Robot.m_oi.xbox.getY(); // invert the input to make up positive and down negative
-    	if(Math.abs(y) < XBOX_JOYSTICK_DEAD_BAND)
+    	if(!Robot.m_oi.xbox.getRawButton(10))
     		return;
     	// MAPPING (|dead-band to 1| -> |0 to 1|) AND shit (shit's on fire yo)
     	y -= y > 0 ? XBOX_JOYSTICK_DEAD_BAND : -XBOX_JOYSTICK_DEAD_BAND;

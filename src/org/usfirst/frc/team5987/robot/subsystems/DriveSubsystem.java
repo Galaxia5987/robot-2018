@@ -26,10 +26,10 @@ public class DriveSubsystem extends Subsystem {
 	private static double kI = 0.0001; 
 	private static double kD = 0.0;
 	private static double kF = 0.33;
-	private static double TurnKp = 0.3; 
-	private static double TurnKi = 0.02; 
+	private static double TurnKp = 0.15; 
+	private static double TurnKi = 0.01; 
 	private static double TurnKd = 0.0;
-	private static double TurnKf = 0.4;
+	private static double TurnKf = 0.2;
 	public enum PIDTypes{
 		/**
 		 * Normal PID constants
@@ -57,11 +57,11 @@ public class DriveSubsystem extends Subsystem {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double ACCELERATION = 1;
+	public static final double ACCELERATION = 0.6;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DECCELERATION = 1;
+	public static final double DECCELERATION = 0.5;
 	public static final double ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
 	 * Mapping between 0-5V to METER for the analog input

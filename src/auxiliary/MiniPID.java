@@ -386,6 +386,8 @@ public class MiniPID {
 		// against our max Ioutput
 		// 3. prevent windup by not increasing errorSum if output is
 		// output=maxOutput
+		if(Double.isNaN(errorSum))
+			errorSum  = error;
 		Ioutput = I * errorSum;
 		if (maxIOutput != 0) {
 			Ioutput = constrain(Ioutput, -maxIOutput, maxIOutput);
@@ -394,13 +396,13 @@ public class MiniPID {
 		// And, finally, we can just add the terms up
 		output = Foutput + Poutput + Ioutput + Doutput;
 		SmartDashboard.putString("MiniPID F", ""+Foutput);
-		SmartDashboard.putString("MiniPID 'I'", ""+Foutput);
+		SmartDashboard.putString("MiniPID 'I'", ""+I);
 		SmartDashboard.putString("MiniPID P", ""+Poutput);
 		SmartDashboard.putString("MiniPID I", ""+Ioutput);
 		SmartDashboard.putString("MiniPID D", ""+Doutput);
+		SmartDashboard.putString("MiniPID errorSum", ""+errorSum);
 		// Figure out what we're doing with the error.
-		if(Math.abs(errorSum) == Double.POSITIVE_INFINITY)
-			errorSum  = error;
+		
 		if (minOutput != maxOutput && !bounded(output, minOutput, maxOutput)) {
 			errorSum = error;
 			// reset the error sum to a sane level
