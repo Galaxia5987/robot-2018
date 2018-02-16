@@ -340,7 +340,6 @@ public class DriveSubsystem extends Subsystem {
     	return Robot.navx.getYaw();
     }
     
-    
 	/**
 	 * Get the angle of the navX
 	 * @return angle in RADIANS
