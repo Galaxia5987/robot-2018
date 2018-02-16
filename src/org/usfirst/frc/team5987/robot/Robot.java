@@ -69,9 +69,9 @@ public class Robot extends TimedRobot {
 	public static final Watch_Doge inTakeCanine = new Watch_Doge(PDP, intakeSubsystem, RobotMap.intakePDPs, 27, 0.5);
 	public static final Watch_Doge climbingCatahoulaLeopard = new Watch_Doge(PDP, climbSubsystem, RobotMap.climbPDPs,
 			30, 2);
-
+	
 	NetworkTable LiftTable = liftSubsystem.LiftTable;
-	NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	public static NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	public static NetworkTable visionTable = NetworkTableInstance.getDefault().getTable("Vision");
 	NetworkTableEntry ntLeftSP = driveTable.getEntry("Left SP");
 	NetworkTableEntry ntRightSP = driveTable.getEntry("Right SP");
