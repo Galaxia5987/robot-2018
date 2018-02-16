@@ -16,6 +16,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand.liftStates;
 import org.usfirst.frc.team5987.robot.commands.PathCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
+import org.usfirst.frc.team5987.robot.commands.TestPneumaticCommand;
 
 import auxiliary.DPadButton;
 import edu.wpi.first.wpilibj.Joystick;
@@ -55,7 +56,7 @@ public class OI {
 		d_up.whenPressed(new LiftCommand(liftStates.SCALE_TOP));
 		b.whileHeld(new ShootCubeCommand(0.75, false));
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
-		y.whenPressed(new IntakeSolenoidCommand());
+		y.whenPressed(new TestPneumaticCommand());
 		a.whenPressed(new TakeCommand());
 		start.toggleWhenActive(new ClimbCommand());
 	}
