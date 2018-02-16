@@ -22,8 +22,6 @@ public class LiftCommand extends Command {
 		this.position = pos;
 		this.isShuffleboard = isShuffleboard;
 		ntSetpoint.setDouble(0);
-		Constants.LIFT_COMMAND_POSITIONS.put(Constants.LiftCommandStates.BOTTOM, 5d);
-		double x = Constants.LIFT_COMMAND_POSITIONS.get(Constants.LiftCommandStates.BOTTOM);
 		requires(Robot.liftSubsystem);
 	}
 	
