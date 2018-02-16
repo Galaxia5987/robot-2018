@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 import org.usfirst.frc.team5987.robot.commands.JoystickDriveCommand;
@@ -20,16 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *@author Dor Brekhman
  */
 public class DriveSubsystem extends Subsystem {
-	/***********************CONSTANTS************************/
-	// PIDF constants for controlling velocity for wheels
-	private static double kP = 0.15; 
-	private static double kI = 0.0001; 
-	private static double kD = 0.0;
-	private static double kF = 0.33;
-	private static double TurnKp = 0.15; 
-	private static double TurnKi = 0.01; 
-	private static double TurnKd = 0.0;
-	private static double TurnKf = 0.2;
 	public enum PIDTypes{
 		/**
 		 * Normal PID constants
@@ -41,36 +32,6 @@ public class DriveSubsystem extends Subsystem {
 		TURN
 	}
 	private PIDTypes pidType = PIDTypes.STRAIGHT;
-	// Gyro PID
-	private static double gyroKp = 0.015;
-	private static double gyroKi = 0; 
-	private static double gyroKd = 0;
-	private static final boolean GYRO_REVERSED = true;
-	/**
-	 * ABSOLUTE, METER/SEC
-	 */
-	public static final double MAX_VELOCITY = 1.2;
-	/**
-	 * ABSOLUTE, METER/SEC
-	 */
-	public static final double MIN_VELOCITY = 0.4;
-	/**
-	 * ABSOLUTE, METER/SEC^2
-	 */
-	public static final double ACCELERATION = 0.6;
-	/**
-	 * ABSOLUTE, METER/SEC^2
-	 */
-	public static final double DECCELERATION = 0.5;
-	public static final double ROTATION_RADIUS = 0.3325; // test chasiss
-	/**
-	 * Mapping between 0-5V to METER for the analog input
-	 */
-	public static final double ultransonicMeterFactor = 1.024;
-	private static final boolean rightInverted = true; // inverts the right motor
-	private static final boolean leftInverted = false; // inverts the left motors
-	private static final boolean rightEncoderInverted = false; // inverts the right encoder
-	private static final boolean leftEncoderInverted = false; // inverts the left encoder
 	/*******************************************************/
 	
 	
@@ -79,8 +40,8 @@ public class DriveSubsystem extends Subsystem {
 	private static final Victor driveLeftRearMotor = new Victor(RobotMap.driveLeftRearMotor);
 	private static final Victor driveLeftFrontMotor = new Victor(RobotMap.driveLeftFrontMotor);
 	
-	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, rightEncoderInverted);
-	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, leftEncoderInverted);
+	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, Constants.DRIVE_rightEncoderInverted);
+	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, Constants.DRIVE_leftEncoderInverted);
 	
 	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
 	private static final AnalogInput colorSensor = new AnalogInput(RobotMap.colorSensor);
@@ -119,45 +80,44 @@ public class DriveSubsystem extends Subsystem {
 	public NetworkTableEntry ntRightDistance = driveTable.getEntry("Right Distance");
 	
 	private NetworkTableEntry ntPIDType = driveTable.getEntry("PID Type");
+	public static MiniPID gyroPID;
 	
 	private static MiniPID rightPID;
 	private static MiniPID leftPID;
-	private static MiniPID gyroPID;
-	
 	/*TODO Set distance per pulse TODO*/
 	public DriveSubsystem(){
 		// invert the motors if needed
-		driveRightRearMotor.setInverted(rightInverted);
-		driveRightFrontMotor.setInverted(rightInverted);
-		driveLeftRearMotor.setInverted(leftInverted);
-		driveLeftFrontMotor.setInverted(leftInverted);
+		driveRightRearMotor.setInverted(Constants.DRIVE_rightInverted);
+		driveRightFrontMotor.setInverted(Constants.DRIVE_rightInverted);
+		driveLeftRearMotor.setInverted(Constants.DRIVE_leftInverted);
+		driveLeftFrontMotor.setInverted(Constants.DRIVE_leftInverted);
 
-		driveRightFrontMotor.setInverted(rightInverted);
-		driveLeftRearMotor.setInverted(leftInverted);
-		driveLeftFrontMotor.setInverted(leftInverted);
+		driveRightFrontMotor.setInverted(Constants.DRIVE_rightInverted);
+		driveLeftRearMotor.setInverted(Constants.DRIVE_leftInverted);
+		driveLeftFrontMotor.setInverted(Constants.DRIVE_leftInverted);
 		// set the distance per pulse for the encoders
 		driveRightEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
 		driveLeftEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
 		
 		// init the PIDF constants in the NetworkTable
 		ntGetPID();
-		ntKp.setDouble(kP);
-		ntKi.setDouble(kI);
-		ntKd.setDouble(kD);
-		ntKf.setDouble(kF);
-		ntTurnKp.setDouble(TurnKp);
-		ntTurnKi.setDouble(TurnKi);
-		ntTurnKd.setDouble(TurnKd);
-		ntTurnKf.setDouble(TurnKf);
+		ntKp.setDouble(Constants.DRIVE_kP);
+		ntKi.setDouble(Constants.DRIVE_kI);
+		ntKd.setDouble(Constants.DRIVE_kD);
+		ntKf.setDouble(Constants.DRIVE_kF);
+		ntTurnKp.setDouble(Constants.DRIVE_TurnKp);
+		ntTurnKi.setDouble(Constants.DRIVE_TurnKi);
+		ntTurnKd.setDouble(Constants.DRIVE_TurnKd);
+		ntTurnKf.setDouble(Constants.DRIVE_TurnKf);
 		ntGetGyroPID();
-		ntGyroKp.setDouble(gyroKp);
-		ntGyroKi.setDouble(gyroKi);
-		ntGyroKd.setDouble(gyroKd);
+		ntGyroKp.setDouble(Constants.DRIVE_gyroKp);
+		ntGyroKi.setDouble(Constants.DRIVE_gyroKi);
+		ntGyroKd.setDouble(Constants.DRIVE_gyroKd);
 		
 		// init the MiniPID for each side
-		rightPID = new MiniPID(kP, kI, kD, kF);
-		leftPID = new MiniPID(kP, kI, kD, kF);
-		gyroPID = new MiniPID(gyroKp, gyroKi, gyroKd);
+		rightPID = new MiniPID(Constants.DRIVE_kP, Constants.DRIVE_kI, Constants.DRIVE_kD, Constants.DRIVE_kF);
+		leftPID = new MiniPID(Constants.DRIVE_kP, Constants.DRIVE_kI, Constants.DRIVE_kD, Constants.DRIVE_kF);
+		DriveSubsystem.gyroPID = new MiniPID(Constants.DRIVE_gyroKp, Constants.DRIVE_gyroKi, Constants.DRIVE_gyroKd);
 	}
 	
 	/*TODO ADD DriveJoystickCommand TODO*/
@@ -171,23 +131,23 @@ public class DriveSubsystem extends Subsystem {
 	 * Gets the PIDF constants from the NetworkTable
 	 */
 	private void ntGetPID(){
-		kP = ntKp.getDouble(kP);
-		kI = ntKi.getDouble(kI);
-		kD = ntKd.getDouble(kD);
-		kF = ntKf.getDouble(kF);
-		TurnKp = ntTurnKp.getDouble(TurnKp);
-		TurnKi = ntTurnKi.getDouble(TurnKi);
-		TurnKd = ntTurnKd.getDouble(TurnKd);
-		TurnKf = ntTurnKf.getDouble(TurnKf);
+		Constants.DRIVE_kP = ntKp.getDouble(Constants.DRIVE_kP);
+		Constants.DRIVE_kI = ntKi.getDouble(Constants.DRIVE_kI);
+		Constants.DRIVE_kD = ntKd.getDouble(Constants.DRIVE_kD);
+		Constants.DRIVE_kF = ntKf.getDouble(Constants.DRIVE_kF);
+		Constants.DRIVE_TurnKp = ntTurnKp.getDouble(Constants.DRIVE_TurnKp);
+		Constants.DRIVE_TurnKi = ntTurnKi.getDouble(Constants.DRIVE_TurnKi);
+		Constants.DRIVE_TurnKd = ntTurnKd.getDouble(Constants.DRIVE_TurnKd);
+		Constants.DRIVE_TurnKf = ntTurnKf.getDouble(Constants.DRIVE_TurnKf);
 	}
 	
 	/**
 	 * Gets the gyro PID constants from the NetworkTable
 	 */
 	private void ntGetGyroPID(){
-		gyroKp = ntGyroKp.getDouble(gyroKp);
-		gyroKi = ntGyroKi.getDouble(gyroKi);
-		gyroKd = ntGyroKd.getDouble(gyroKd);
+		Constants.DRIVE_gyroKp = ntGyroKp.getDouble(Constants.DRIVE_gyroKp);
+		Constants.DRIVE_gyroKi = ntGyroKi.getDouble(Constants.DRIVE_gyroKi);
+		Constants.DRIVE_gyroKd = ntGyroKd.getDouble(Constants.DRIVE_gyroKd);
 	}
 	
 	public PIDTypes getPIDType(){
@@ -209,13 +169,13 @@ public class DriveSubsystem extends Subsystem {
 		default:
 		case STRAIGHT:
 			ntPIDType.setString("STRAIGHT");
-			rightPID.setPID(kP, kI, kD, kF);
-			leftPID.setPID(kP, kI, kD, kF);
+			rightPID.setPID(Constants.DRIVE_kP, Constants.DRIVE_kI, Constants.DRIVE_kD, Constants.DRIVE_kF);
+			leftPID.setPID(Constants.DRIVE_kP, Constants.DRIVE_kI, Constants.DRIVE_kD, Constants.DRIVE_kF);
 			break;
 		case TURN:
 			ntPIDType.setString("TURN");
-			rightPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
-			leftPID.setPID(TurnKp, TurnKi, TurnKd, TurnKf);
+			rightPID.setPID(Constants.DRIVE_TurnKp, Constants.DRIVE_TurnKi, Constants.DRIVE_TurnKd, Constants.DRIVE_TurnKf);
+			leftPID.setPID(Constants.DRIVE_TurnKp, Constants.DRIVE_TurnKi, Constants.DRIVE_TurnKd, Constants.DRIVE_TurnKf);
 			break;
 		}
 		
@@ -238,7 +198,7 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public double getGyroPID(double desiredAngle){
 		ntGetGyroPID();
-		double out = gyroPID.getOutput(getAngle(), desiredAngle);
+		double out = DriveSubsystem.gyroPID.getOutput(getAngle(), desiredAngle);
 		ntGyroPIDOut.setDouble(out);
 		return out;
 	}
@@ -250,7 +210,7 @@ public class DriveSubsystem extends Subsystem {
 	 * @param leftVelocity desired velocity for the left motors METERS/SEC
 	 */
 	public void setSetpoints(double leftVelocity, double rightVelocity){
-		double outs[] = Misc.normalize(leftVelocity, rightVelocity, MAX_VELOCITY);
+		double outs[] = Misc.normalize(leftVelocity, rightVelocity, Constants.DRIVE_MAX_VELOCITY);
 		double leftOut = outs[0];
 		double rightOut = outs[1];
 		double leftError = leftOut - getLeftSpeed();
@@ -331,7 +291,7 @@ public class DriveSubsystem extends Subsystem {
 	 */
     public double getAngle() {
 		double rawAngle = Robot.navx.getAngle();
-		return GYRO_REVERSED ? -rawAngle : rawAngle;
+		return Constants.GYRO_REVERSED ? -rawAngle : rawAngle;
 	}
     
     public double getPitch(){
@@ -368,6 +328,6 @@ public class DriveSubsystem extends Subsystem {
 	 * @return distance in METER
 	 */
 	public double getBackDistance(){
-		return backDistanceSensor.getVoltage() * ultransonicMeterFactor;
+		return backDistanceSensor.getVoltage() * Constants.ultransonicMeterFactor;
 	}
 }

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
-import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 
 import auxiliary.DistanceMotionProfile;
 import auxiliary.Misc;
@@ -15,10 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * TODO: fix absolute angle
  */
 public class DriveStraightCommand extends Command {
-	/**
-	 * Error to stop in METER
-	 */
-	public static final double MIN_DISTANCE_ERROR = 0.01;
 	private DistanceMotionProfile mp;
 	private double initRightDistance;
 	private double initLeftDistance;
@@ -130,8 +126,8 @@ public class DriveStraightCommand extends Command {
 	public void constructMotionProfile() {
 		mp = new DistanceMotionProfile(
 				finalDistance,
-				DriveSubsystem.MAX_VELOCITY, DriveSubsystem.MIN_VELOCITY,
-				DriveSubsystem.ACCELERATION, DriveSubsystem.DECCELERATION);
+				Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_MIN_VELOCITY,
+				Constants.DRIVE_ACCELERATION, Constants.DRIVE_DECCELERATION);
 	}
 
 	// Called just before this Command runs the first time
@@ -191,7 +187,7 @@ public class DriveStraightCommand extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
 		// finish when both sides have reached targets
-		return Math.abs(DistanceError) < MIN_DISTANCE_ERROR;
+		return Math.abs(DistanceError) < Constants.DRIVE_STRAIGHT_MIN_DISTANCE_ERROR;
 
 	}
 

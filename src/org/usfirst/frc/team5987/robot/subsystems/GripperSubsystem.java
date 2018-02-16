@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
@@ -57,7 +58,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 */
 	public boolean isCubeInside() {
 		ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
-		return voltage() >= 2.5;
+		return voltage() >= Constants.GRIPPER_MIN_PROXIMITY_VOLT;
 	}
 	
 	@Override

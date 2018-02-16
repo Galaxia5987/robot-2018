@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -8,7 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class TakeCommand extends Command {
-	private static final double WHEELSPEED = 0.5;
+	private double intakeSpeed = Constants.TAKE_INTAKE_SPEED * Constants.TAKE_INTAKE_DIRECTION;
+	private double gripperSpeed = Constants.TAKE_GRIPPER_SPEED * Constants.TAKE_GRIPPER_DIRECTION;
 	private boolean canceled = false;
     public TakeCommand() {
     	requires(Robot.gripperSubsystem);
@@ -23,8 +25,8 @@ public class TakeCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if (!isFinished()){
-			Robot.intakeSubsystem.setSpeed(-0.4, -0.4); // TODO: check the actual directions
-			Robot.gripperSubsystem.setSpeed(-WHEELSPEED , -WHEELSPEED);
+			Robot.intakeSubsystem.setSpeed(intakeSpeed, intakeSpeed); // TODO: check the actual directions
+			Robot.gripperSubsystem.setSpeed(gripperSpeed , gripperSpeed);
     	}
 	
 

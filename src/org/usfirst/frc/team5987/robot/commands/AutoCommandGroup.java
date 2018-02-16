@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -65,7 +66,7 @@ public class AutoCommandGroup extends CommandGroup {
 				addSequential(new TurnCommand(-AUTO_TURN, false));
 			}
 //			addSequential(new WaitCommasnd(1));
-			addSequential(new LiftCommand(LiftCommand.liftStates.SWITCH));
+			addSequential(new LiftCommand(Constants.LiftCommandStates.SWITCH));
 
 			addSequential(new PathSwitchCommand());
 

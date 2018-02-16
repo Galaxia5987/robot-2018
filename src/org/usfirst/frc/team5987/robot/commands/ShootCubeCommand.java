@@ -1,17 +1,17 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
+
 /**
  *
  */
 public class ShootCubeCommand extends Command {
-
 	double speed;
-	double shootTime = 1;
 	boolean byTime = false;
 	Timer timer = new Timer();
 
@@ -29,17 +29,17 @@ public class ShootCubeCommand extends Command {
 
 	protected void execute() {
 		if (speed < 0) {
-			if (Robot.liftSubsystem.getHeight() > 0.8)
+			if (Robot.liftSubsystem.getHeight() > Constants.SHOOT_BACKWARDS_MIN_HEIGHT)
 				Robot.gripperSubsystem.setSpeed(speed, speed);
 		} else {
 			Robot.gripperSubsystem.setSpeed(speed, speed);
-			if (Robot.liftSubsystem.getHeight() < 0.1)
+			if (Robot.liftSubsystem.getHeight() < Constants.SHOOT_FORWARD_INTAKE_MAX_HEIGHT)
 				Robot.intakeSubsystem.setSpeed(speed, speed);
 		}
 	}
 
 	protected boolean isFinished() {
-		return byTime && timer.get() > shootTime;
+		return byTime && timer.get() > Constants.SHOOT_TIME;
 	}
 
 	protected void end() {

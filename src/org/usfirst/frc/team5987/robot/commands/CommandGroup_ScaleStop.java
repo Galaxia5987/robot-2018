@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -28,7 +30,7 @@ public class CommandGroup_ScaleStop extends CommandGroup {
     	
     	addSequential(new  DriveStraightCommand(7.126224)); //drive until the platformzone line
     	if(gameData.charAt(1) == robotStartingLocation){ //if the scale is on the same side as the robot
-    		addParallel(new LiftCommand(LiftCommand.liftStates.SCALE_TOP)); //lift the arm while it drives to the bump TODO: maybe after the turn
+    		addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP)); //lift the arm while it drives to the bump TODO: maybe after the turn
     		
     		//addSequential(new DriveUntilTrigger());//drives until the bump is hit
     		addSequential(new DriveStraightCommand(1));
@@ -36,7 +38,7 @@ public class CommandGroup_ScaleStop extends CommandGroup {
     		addSequential(new TurnCommand(90 * angleMultiplier,true)); //turn towards the switch
     		addSequential(new ShootCubeCommand(1, true)); //release the box
     		addSequential(new TurnCommand(90 * angleMultiplier,true)); //turn again
-    		addParallel(new LiftCommand(LiftCommand.liftStates.BOTTOM)); //lower the arm while going back to the switch
+    		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM)); //lower the arm while going back to the switch
     		addSequential(new DriveStraightCommand(0.889)); //drive back towards the first box
     		addSequential(new TurnCommand(-45 * angleMultiplier , true)); //turn towards it
     	}

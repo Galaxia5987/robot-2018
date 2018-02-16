@@ -1,5 +1,8 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import java.util.HashMap;
+
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.subsystems.LiftSubsystem;
 
@@ -15,15 +18,12 @@ public class LiftCommand extends Command {
 	private boolean isShuffleboard;
 	NetworkTableEntry ntSetpoint = Robot.liftSubsystem.LiftTable.getEntry("Setpoint");
 
-	public enum liftStates {
-		BOTTOM, SWITCH, SCALE_DOWN, SCALE_MID, SCALE_TOP, CLIMB
-
-	}
-	
 	public LiftCommand(double pos, boolean isShuffleboard){
 		this.position = pos;
 		this.isShuffleboard = isShuffleboard;
 		ntSetpoint.setDouble(0);
+		Constants.LIFT_COMMAND_POSITIONS.put(Constants.LiftCommandStates.BOTTOM, 5d);
+		double x = Constants.LIFT_COMMAND_POSITIONS.get(Constants.LiftCommandStates.BOTTOM);
 		requires(Robot.liftSubsystem);
 	}
 	
@@ -31,29 +31,9 @@ public class LiftCommand extends Command {
 		this(pos, false);
 	}
 
-	public LiftCommand(liftStates state) {
+	public LiftCommand(Constants.LiftCommandStates state) {
 		this(0, false);
-		switch (state) {
-		default:
-		case BOTTOM:
-			this.position = 0.0;
-			break;
-		case SWITCH:
-			this.position = 1.4;
-			break;
-		case SCALE_DOWN:
-			this.position = 1.5;
-			break;
-		case SCALE_MID:
-			this.position = 1.75;
-			break;
-		case SCALE_TOP:
-			this.position = 2;
-			break;
-		case CLIMB:
-			this.position = 1.65;
-			break;
-		}
+		this.position = Constants.LIFT_COMMAND_POSITIONS.get(state);
 		SmartDashboard.putNumber("LiftCommand.position", this.position);
 	
 	}

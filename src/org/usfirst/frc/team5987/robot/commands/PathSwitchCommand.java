@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import auxiliary.Point;
@@ -8,9 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PathSwitchCommand extends PathCommand {
 
-	private final double MOVE_FORWARD_SWITCH_DISTANCE = 3;
-	private final double MOVE_SIDEWAYS_SWITCH_DISTANCE = 2;
-	
 	public PathSwitchCommand() {
 		super();
 	}
@@ -23,8 +21,8 @@ public class PathSwitchCommand extends PathCommand {
 			// Positions of the alliance Switch and Scale Plates.
 			double switchPosition = gameData.charAt(0) == 'L' ? 1 : -1;
 			Point p0 =  new Point(0, 0);
-			Point p1 = new Point(MOVE_FORWARD_SWITCH_DISTANCE - 1.5, switchPosition * MOVE_SIDEWAYS_SWITCH_DISTANCE);
-			Point p2 = new Point(MOVE_FORWARD_SWITCH_DISTANCE - 0.95, switchPosition * MOVE_SIDEWAYS_SWITCH_DISTANCE);
+			Point p1 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
+			Point p2 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_END_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
 
 //			return new Point[] {p0,p1,p2};
 			return new Point[] {p0}; // TODO: Change to above!
@@ -40,8 +38,8 @@ public class PathSwitchCommand extends PathCommand {
 //		SmartDashboard.putNumber("a", Robot.driveSubsystem.getAngleRadians() + switchAngle);
 		
 		Point A = new Point(0, 0);
-		Point B = new Point(dx - 1.5, dy);
-		Point C = new Point(dx-0.95, dy);
+		Point B = new Point(dx - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH, dy);
+		Point C = new Point(dx - Constants.PATH_END_DISTANCE_BEFORE_SWITCH, dy);
 		
 		return new Point[] {A,B,C};
 	}
