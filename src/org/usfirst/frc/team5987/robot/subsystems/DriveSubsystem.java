@@ -340,6 +340,7 @@ public class DriveSubsystem extends Subsystem {
     	return Robot.navx.getYaw();
     }
     
+    
 	/**
 	 * Get the angle of the navX
 	 * @return angle in RADIANS
@@ -347,7 +348,6 @@ public class DriveSubsystem extends Subsystem {
     public double getAngleRadians(){
     	return Math.toRadians(getAngle());
     }
-
 	
 	/**
 	 * Get the distance from the back of the robot <br>
@@ -356,5 +356,13 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public double getBackDistance(){
 		return backDistanceSensor.getVoltage() * ultransonicMeterFactor;
+	}
+	
+	/**
+	 * Make the encoders distance zero
+	 */
+	public void resetEncoders(){
+		driveRightEncoder.reset();
+		driveLeftEncoder.reset();
 	}
 }
