@@ -39,8 +39,8 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 * @param speedR - speed of the right wheels on the gripper.
 	 */
 	public void setSpeed(double speedL, double speedR) {
-		leftWheel.set(speedL);
-		rightWheel.set(-speedR);
+		leftWheel.set(-speedL);
+		rightWheel.set(speedR);
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 */
 	public boolean isCubeInside() {
 		ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
-		return voltage() >= 2.5;
+		return voltage() >= 2.25;
 	}
 	
 	@Override
