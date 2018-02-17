@@ -158,7 +158,10 @@ public class LiftSubsystem extends Subsystem {
      * @param height in METER
      */
     public void setSetpoint(double height) {
-    	setpointMeters =  Misc.limitAbsMax(height, Constants.LIFT_MAX_HEIGHT);
+//    	setpointMeters =  Misc.limitAbsMax(height, Constants.LIFT_MAX_HEIGHT);
+    	if(height > Constants.LIFT_MAX_HEIGHT)
+    		height = Constants.LIFT_MAX_HEIGHT;
+    	setpointMeters = height;
     	setpoint = height * Constants.LIFT_TICKS_PER_METER;
     	if(height > getHeight()){
     		liftMotor.selectProfileSlot(TALON_UP_PID_SLOT, 0);

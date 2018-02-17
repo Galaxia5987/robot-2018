@@ -6,6 +6,8 @@ import java.util.Map;
 public class Constants {
 	
 	/**********************  DRIVE  ************************/
+	public static final double DRIVE_RIGHT_DISTANCE_PER_PULSE = 1;
+	public static final double DRIVE_LEFT_DISTANCE_PER_PULSE = 1;
 	public static final boolean GYRO_REVERSED = true;
 	/**
 	 * ABSOLUTE, METER/SEC

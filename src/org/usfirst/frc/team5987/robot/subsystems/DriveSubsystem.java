@@ -90,6 +90,9 @@ public class DriveSubsystem extends Subsystem {
 		driveLeftRearMotor.setInverted(Constants.DRIVE_leftInverted);
 		driveLeftFrontMotor.setInverted(Constants.DRIVE_leftInverted);
 
+		driveLeftEncoder.setDistancePerPulse(1);
+		driveRightEncoder.setDistancePerPulse(1);
+		
 		driveRightFrontMotor.setInverted(Constants.DRIVE_rightInverted);
 		driveLeftRearMotor.setInverted(Constants.DRIVE_leftInverted);
 		driveLeftFrontMotor.setInverted(Constants.DRIVE_leftInverted);
@@ -257,6 +260,7 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public double getRightSpeed() {
 		return driveRightEncoder.getRate();
+		
 	}
 	
 	/**
