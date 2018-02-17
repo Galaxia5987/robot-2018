@@ -57,6 +57,6 @@ public class OI {
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());
-		start.toggleWhenActive(new ClimbCommand());
+//		start.toggleWhenActive(new ClimbCommand());
 	}
 }
