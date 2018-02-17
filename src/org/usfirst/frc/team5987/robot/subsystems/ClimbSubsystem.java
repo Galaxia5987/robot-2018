@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.RobotMap;
 import auxiliary.SafeVictorSPX;
 import auxiliary.Watch_Dogeable;
@@ -13,9 +14,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 
-	public final boolean motor1Reversed = false;
-	public final boolean motor2Reversed = false;
-
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
@@ -28,8 +26,8 @@ public class ClimbSubsystem extends Subsystem implements Watch_Dogeable {
 	Timer downTimer = new Timer();
 	
 	public ClimbSubsystem() {
-		motor1.setInverted(motor1Reversed);
-		motor2.setInverted(motor2Reversed);
+		motor1.setInverted(Constants.CLIMB_motor1Reversed);
+		motor2.setInverted(Constants.CLIMB_motor2Reversed);
 	}
 
 	/**

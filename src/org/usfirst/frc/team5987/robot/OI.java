@@ -7,12 +7,12 @@
 
 package org.usfirst.frc.team5987.robot;
 
+import org.usfirst.frc.team5987.robot.Constants.LiftCommandStates;
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
 import org.usfirst.frc.team5987.robot.commands.CommandGroup_CenterSwitch;
 import org.usfirst.frc.team5987.robot.commands.DriveToBumpCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
-import org.usfirst.frc.team5987.robot.commands.LiftCommand.liftStates;
 import org.usfirst.frc.team5987.robot.commands.PathCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
@@ -48,11 +48,11 @@ public class OI {
 	DPadButton d_lu = new DPadButton(xbox,7);
 
 	public OI() {
-		d_down.whenPressed(new LiftCommand(liftStates.BOTTOM));
-		d_dl.whenPressed(new LiftCommand(liftStates.SWITCH));
-		d_left.whenPressed(new LiftCommand(liftStates.SCALE_DOWN));
-		d_lu.whenPressed(new LiftCommand(liftStates.SCALE_MID));
-		d_up.whenPressed(new LiftCommand(liftStates.SCALE_TOP));
+		d_down.whenPressed(new LiftCommand(Constants.LiftCommandStates.BOTTOM));
+		d_dl.whenPressed(new LiftCommand(Constants.LiftCommandStates.SWITCH));
+		d_left.whenPressed(new LiftCommand(Constants.LiftCommandStates.SCALE_DOWN));
+		d_lu.whenPressed(new LiftCommand(Constants.LiftCommandStates.SCALE_MID));
+		d_up.whenPressed(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP));
 		b.whileHeld(new ShootCubeCommand(0.75, false));
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
 		y.whenPressed(new IntakeSolenoidCommand());

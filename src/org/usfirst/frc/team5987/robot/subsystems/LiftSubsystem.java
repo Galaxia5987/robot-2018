@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.RobotMap;
 import org.usfirst.frc.team5987.robot.commands.JoystickLiftCommand;
 
@@ -37,51 +38,9 @@ public class LiftSubsystem extends Subsystem {
 	}
 	
 
-	/*-------------- Talon Sensors Constants ------------*/
-	/**
-	 * How many TICKS in one METER of the elevator going up
-	 */
-	private static final double TICKS_PER_METER = 16814; // 9483.0 ticks per 0.564 meter
-	private static final boolean TOP_HALL_REVERSED = false;
-	private static final boolean BOTTOM_HALL_REVERSED = false;
-	
-	/*------------- Talon Motor Constants -------------------*/
-	private static final double upPIDF[] = {
-			0.5, // P
-			0, // I
-			0.001, // D
-			0  // F
-			};
-	private static final double downPIDF[] = {
-			0.1, // P
-			0,   // I
-			0.001,   // D
-			0    // F
-			}; 
-	private static final boolean TALON_REVERSE = true;
-	private static final boolean ENCODER_REVERSED = true;
 	private static final int TALON_TIMEOUT_MS = 10;
 	private static final int TALON_UP_PID_SLOT = 0;
 	private static final int TALON_DOWN_PID_SLOT = 1;
-	/**
-	 * Decreasing rate for the output (substructs this from the setpoint every iteration)
-	 */
-	private static final double ZERO_RATE = 0.005;
-	private static final double MAX_ZEROING_OUTPUT = 0.3333334; // ABSOLUTE
-	private static final double MAX_RUNNING_OUTPUT = 0.5;
-	/**
-	 * The supplied output in which the lift remains still (from 0 to 1)
-	 */
-	private static final double STILL_OUTPUT = 0.3;
-	private static final double MIN_DOWN_OUTPUT = -0.1;
-	
-	private static final double NOMINAL_OUT_FWD = 0.2;
-	private static final double PEAK_OUT_FWD = 1;
-	private static final double PEAK_OUT_REV = -0.2;
-	private static final double NOMINAL_OUT_REV = 0;
-	private static final double MAX_HEIGHT = 2.05;
-	
-	
 	public States state = States.MECHANISM_DISABLED;
 	
 	public NetworkTable LiftTable = NetworkTableInstance.getDefault().getTable("Lift");
@@ -106,22 +65,22 @@ public class LiftSubsystem extends Subsystem {
 	public LiftSubsystem(){
 		// The PID values are defined in the robo-rio webdash. Not NT!!!
 		/* top PID */
-	    liftMotor.config_kP(TALON_UP_PID_SLOT, upPIDF[0], TALON_TIMEOUT_MS);
-		liftMotor.config_kI(TALON_UP_PID_SLOT, upPIDF[1], TALON_TIMEOUT_MS);
-		liftMotor.config_kD(TALON_UP_PID_SLOT, upPIDF[2], TALON_TIMEOUT_MS);
-		liftMotor.config_kF(TALON_UP_PID_SLOT, upPIDF[3], TALON_TIMEOUT_MS);
+	    liftMotor.config_kP(TALON_UP_PID_SLOT, Constants.LIFT_upPIDF[0], TALON_TIMEOUT_MS);
+		liftMotor.config_kI(TALON_UP_PID_SLOT, Constants.LIFT_upPIDF[1], TALON_TIMEOUT_MS);
+		liftMotor.config_kD(TALON_UP_PID_SLOT, Constants.LIFT_upPIDF[2], TALON_TIMEOUT_MS);
+		liftMotor.config_kF(TALON_UP_PID_SLOT, Constants.LIFT_upPIDF[3], TALON_TIMEOUT_MS);
 		
 		/* bottom PID */
-	    liftMotor.config_kP(TALON_DOWN_PID_SLOT, downPIDF[0], TALON_TIMEOUT_MS);
-		liftMotor.config_kI(TALON_DOWN_PID_SLOT, downPIDF[1], TALON_TIMEOUT_MS);
-		liftMotor.config_kD(TALON_DOWN_PID_SLOT, downPIDF[2], TALON_TIMEOUT_MS);
-		liftMotor.config_kF(TALON_DOWN_PID_SLOT, downPIDF[3], TALON_TIMEOUT_MS);
+	    liftMotor.config_kP(TALON_DOWN_PID_SLOT, Constants.LIFT_downPIDF[0], TALON_TIMEOUT_MS);
+		liftMotor.config_kI(TALON_DOWN_PID_SLOT, Constants.LIFT_downPIDF[1], TALON_TIMEOUT_MS);
+		liftMotor.config_kD(TALON_DOWN_PID_SLOT, Constants.LIFT_downPIDF[2], TALON_TIMEOUT_MS);
+		liftMotor.config_kF(TALON_DOWN_PID_SLOT, Constants.LIFT_downPIDF[3], TALON_TIMEOUT_MS);
 		
 		
-		liftMotor.setInverted(TALON_REVERSE);
+		liftMotor.setInverted(Constants.LIFT_TALON_REVERSE);
 
 		configNominalAndPeakOutputs();
-		liftMotor.setSensorPhase(ENCODER_REVERSED);
+		liftMotor.setSensorPhase(Constants.LIFT_ENCODER_REVERSED);
 		/* Configure the encoder */
 		liftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT_MS);
 		
@@ -129,13 +88,13 @@ public class LiftSubsystem extends Subsystem {
 		// TOP hall effect
 		liftMotor.configForwardLimitSwitchSource( 
 				LimitSwitchSource.FeedbackConnector,
-				TOP_HALL_REVERSED ? LimitSwitchNormal.NormallyClosed : LimitSwitchNormal.NormallyOpen,
+				Constants.LIFT_TOP_HALL_REVERSED ? LimitSwitchNormal.NormallyClosed : LimitSwitchNormal.NormallyOpen,
 				TALON_TIMEOUT_MS
 				); 
 		// BOTTOM hall effect
 		liftMotor.configReverseLimitSwitchSource(
 				LimitSwitchSource.FeedbackConnector,
-				BOTTOM_HALL_REVERSED ? LimitSwitchNormal.NormallyClosed : LimitSwitchNormal.NormallyOpen,
+				Constants.LIFT_BOTTOM_HALL_REVERSED ? LimitSwitchNormal.NormallyClosed : LimitSwitchNormal.NormallyOpen,
 				TALON_TIMEOUT_MS
 				);
 		
@@ -179,10 +138,10 @@ public class LiftSubsystem extends Subsystem {
 //		liftMotor.configPeakOutputForward(ntPeakOutFwd.getDouble(1), TALON_TIMEOUT_MS);
 //		liftMotor.configNominalOutputReverse(ntNomOutRev.getDouble(0), TALON_TIMEOUT_MS);
 //		liftMotor.configPeakOutputReverse(ntPeakOutRev.getDouble(-1), TALON_TIMEOUT_MS);
-		liftMotor.configNominalOutputForward(NOMINAL_OUT_FWD, TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputForward(PEAK_OUT_FWD, TALON_TIMEOUT_MS);
-		liftMotor.configNominalOutputReverse(NOMINAL_OUT_REV, TALON_TIMEOUT_MS);
-		liftMotor.configPeakOutputReverse(PEAK_OUT_REV, TALON_TIMEOUT_MS);
+		liftMotor.configNominalOutputForward(Constants.LIFT_NOMINAL_OUT_FWD, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputForward(Constants.LIFT_PEAK_OUT_FWD, TALON_TIMEOUT_MS);
+		liftMotor.configNominalOutputReverse(Constants.LIFT_NOMINAL_OUT_REV, TALON_TIMEOUT_MS);
+		liftMotor.configPeakOutputReverse(Constants.LIFT_PEAK_OUT_REV, TALON_TIMEOUT_MS);
 	}
 
 	public void initDefaultCommand() {
@@ -199,8 +158,8 @@ public class LiftSubsystem extends Subsystem {
      * @param height in METER
      */
     public void setSetpoint(double height) {
-    	setpointMeters =  Misc.limitAbsMax(height, MAX_HEIGHT);
-    	setpoint = height * TICKS_PER_METER;
+    	setpointMeters =  Misc.limitAbsMax(height, Constants.LIFT_MAX_HEIGHT);
+    	setpoint = height * Constants.LIFT_TICKS_PER_METER;
     	if(height > getHeight()){
     		liftMotor.selectProfileSlot(TALON_UP_PID_SLOT, 0);
     	}
@@ -249,7 +208,7 @@ public class LiftSubsystem extends Subsystem {
 	    		// if mechanism is configured disabled, switch to MECHANISM_DISABLED
 	    		if(!ntIsEnabled.getBoolean(false))
 	    			state = States.MECHANISM_DISABLED;
-	    		limitAbsoluteOutput(MAX_RUNNING_OUTPUT);
+	    		limitAbsoluteOutput(Constants.LIFT_MAX_RUNNING_OUTPUT);
 	    		/*Unfreeze the lift when reaching hall effects if setpoint does not exceed limits*/
 	    		if(reachedTop()){
 	    			if(setpointMeters < getHeight()) // going down
@@ -277,7 +236,7 @@ public class LiftSubsystem extends Subsystem {
      * @return the height of the gripper from its bottommost position in METER
      */
 	public double getHeight(){
-		return liftMotor.getSelectedSensorPosition(0) / TICKS_PER_METER;
+		return liftMotor.getSelectedSensorPosition(0) / Constants.LIFT_TICKS_PER_METER;
 	}
     
 	/**
@@ -293,7 +252,7 @@ public class LiftSubsystem extends Subsystem {
 	 * @return speed in METER/SEC
 	 */
     public double getSpeed() {
-    	return liftMotor.getSelectedSensorVelocity(0) / TICKS_PER_METER;
+    	return liftMotor.getSelectedSensorVelocity(0) / Constants.LIFT_TICKS_PER_METER;
     }
     
     public double getOutputPrecent(){

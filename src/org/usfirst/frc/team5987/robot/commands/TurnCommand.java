@@ -1,7 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
-import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team5987.robot.subsystems.DriveSubsystem.PIDTypes;
 
 import auxiliary.DistanceMotionProfile;
@@ -26,11 +26,6 @@ public class TurnCommand extends Command {
 	 * The delta between the current angle to the desired in DEGREES
 	 */
 	private double degreesError;
-	/**
-	 * If the absolute angle error is less than that, the command will stop
-	 */
-	private static final double MIN_DEGREES_ERROR = 5; 
-	private static final double TURN_CONTROL_FACTOR = 1.5;
 	private DistanceMotionProfile mp;
 	private boolean isRelative;
 	private double angle;
@@ -97,11 +92,11 @@ public class TurnCommand extends Command {
 		
 		// motion profile that has input of circumference (distance)
     	mp = new DistanceMotionProfile(
-    			desiredAngle * DriveSubsystem.ROTATION_RADIUS,
-    			DriveSubsystem.MAX_VELOCITY,
-    			DriveSubsystem.MIN_VELOCITY,
-    			DriveSubsystem.ACCELERATION,
-    			DriveSubsystem.DECCELERATION
+    			desiredAngle * Constants.DRIVE_ROTATION_RADIUS,
+    			Constants.DRIVE_MAX_VELOCITY,
+    			Constants.DRIVE_MIN_VELOCITY,
+    			Constants.DRIVE_ACCELERATION,
+    			Constants.DRIVE_DECCELERATION
     			);
     }
     
@@ -116,12 +111,12 @@ public class TurnCommand extends Command {
      * @return the distance one of the wheels has passed on the perimeter of the rotation circle (circumference) since the begging of the command.
      */
     private double getDeltaDistance(){
-    	return getDeltaAngle() * DriveSubsystem.ROTATION_RADIUS;
+    	return getDeltaAngle() * Constants.DRIVE_ROTATION_RADIUS;
     }
     
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double out = mp.getV(getDeltaDistance()) * TURN_CONTROL_FACTOR;
+    	double out = mp.getV(getDeltaDistance()) * Constants.TURN_CONTROL_FACTOR;
 
     	ntMPoutput.setDouble(out);
     	Robot.driveSubsystem.setSetpoints(-out, out);
@@ -132,7 +127,7 @@ public class TurnCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Math.abs(degreesError) < MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < DriveSubsystem.MIN_VELOCITY / 2 ;
+        return (Math.abs(degreesError) < Constants.TURN_MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < Constants.DRIVE_MIN_VELOCITY / 2 ;
     }
 
     // Called once after isFinished returns true

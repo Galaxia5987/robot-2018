@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -21,7 +23,7 @@ public class CommandGroup_CenterSwitch extends CommandGroup {
 		addSequential(new TurnCommand(-45 * angleMultiplier,true)); //turn again
     	addSequential(new DriveStraightCommand(1.50)); //NOT EXACT
     	addSequential(new TurnCommand(45*angleMultiplier,true));
-    	addSequential(new LiftCommand(LiftCommand.liftStates.SWITCH));
+    	addSequential(new LiftCommand(Constants.LiftCommandStates.SWITCH));
     	//Drive to wall
     	//DRIVE TO WALL BY CAMERA
     	

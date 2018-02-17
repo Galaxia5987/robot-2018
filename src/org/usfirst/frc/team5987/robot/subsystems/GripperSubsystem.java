@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
@@ -22,6 +23,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 
 	SafeVictor leftWheel = new SafeVictor(RobotMap.gripperWheelLeft);
 	SafeVictor rightWheel = new SafeVictor(RobotMap.gripperWheelRight);
+	
 	AnalogInput proximitySensor = new AnalogInput(RobotMap.proximityChannel);
 	NetworkTable GripperTable = NetworkTableInstance.getDefault().getTable("GripperTable");
 	public NetworkTableEntry ntProximityVoltage = GripperTable.getEntry("Proximity Voltage");
@@ -29,6 +31,11 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	public NetworkTableEntry ntCurrent = GripperTable.getEntry("Current");
 	Timer downTimer = new Timer();
 
+	public GripperSubsystem(){
+		leftWheel.setInverted(!Constants.GRIPPER_REVERSED);
+		rightWheel.setInverted(Constants.GRIPPER_REVERSED);
+	}
+	
 	public void initDefaultCommand() {
 
 	}
@@ -39,7 +46,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 * @param speedR - speed of the right wheels on the gripper.
 	 */
 	public void setSpeed(double speedL, double speedR) {
-		leftWheel.set(-speedL);
+		leftWheel.set(speedL);
 		rightWheel.set(speedR);
 	}
 	
@@ -57,7 +64,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 */
 	public boolean isCubeInside() {
 		ntProximityVoltage.setDouble(Robot.gripperSubsystem.voltage());
-		return voltage() >= 2.25;
+		return voltage() >= Constants.GRIPPER_MIN_PROXIMITY_VOLT;
 	}
 	
 	@Override

@@ -1,12 +1,13 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
 public class CommandGroup_SideSwitch extends CommandGroup {
-    
     public  CommandGroup_SideSwitch(String gameData, char robotStartingLocation) {
         // Add Commands here:
     	int angleMultiplier;
@@ -18,10 +19,10 @@ public class CommandGroup_SideSwitch extends CommandGroup {
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
 
-    	addParallel(new LiftCommand(LiftCommand.liftStates.SWITCH));
-    	addSequential(new  DriveStraightCommand(3.755)); //TODO: tweak numbers
+    	addParallel(new LiftCommand(Constants.LiftCommandStates.SWITCH));
+    	addSequential(new  DriveStraightCommand(Constants.SIDE_SWITCH_FORAWARD_DISTANCE)); //TODO: tweak numbers
     	addSequential(new TurnCommand(90 * angleMultiplier,true));
-    	addSequential(new  DriveStraightCommand(1)); //TODO: tweak numbers
+    	addSequential(new  DriveStraightCommand(Constants.SIDE_SWITCH_SIDE_DISTANCE)); //TODO: tweak numbers
     	addSequential(new ShootCubeCommand(1, true));
     	
     	

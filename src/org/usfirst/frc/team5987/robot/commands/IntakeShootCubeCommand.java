@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -9,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class IntakeShootCubeCommand extends Command {
-	private double wheelSpeed = 0.5;
+	private double speed = Constants.INTAKE_SHOOT_SPEED * Constants.INTAKE_SHOOT_DIRECTION;
 	private double time;
 	private Timer Timer = new Timer();
 
@@ -22,7 +23,7 @@ public class IntakeShootCubeCommand extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		Timer.start();
-		Robot.intakeSubsystem.setSpeed(-wheelSpeed, wheelSpeed); // TODO: check the actual directions
+		Robot.intakeSubsystem.setSpeed(-speed, speed); // TODO: check the actual directions
 
 	}
 
