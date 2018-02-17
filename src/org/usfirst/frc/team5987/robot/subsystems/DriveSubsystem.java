@@ -43,8 +43,6 @@ public class DriveSubsystem extends Subsystem {
 	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, Constants.DRIVE_rightEncoderInverted);
 	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, Constants.DRIVE_leftEncoderInverted);
 	
-	private static final DigitalInput bumpSensor = new DigitalInput(RobotMap.bumpSensor);
-	private static final AnalogInput colorSensor = new AnalogInput(RobotMap.colorSensor);
 	/**
 	 * HRLV-MaxSonar -EZ ultrasonic sensor
 	 */
@@ -310,17 +308,7 @@ public class DriveSubsystem extends Subsystem {
     public double getAngleRadians(){
     	return Math.toRadians(getAngle());
     }
-	/**
-	 * 
-	 * @return true if the robot's on the cable bump on the center of the arena (in the null territory)
-	 */
-	public boolean isBump(){
-		return bumpSensor.get();
-	}
-	
-	public boolean seesWhite() {
-		return colorSensor.getVoltage() >= 4.5;
-	}
+
 	
 	/**
 	 * Get the distance from the back of the robot <br>
