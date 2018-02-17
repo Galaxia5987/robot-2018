@@ -6,8 +6,8 @@ import java.util.Map;
 public class Constants {
 	
 	/**********************  DRIVE  ************************/
-	public static final double DRIVE_RIGHT_DISTANCE_PER_PULSE = 1;
-	public static final double DRIVE_LEFT_DISTANCE_PER_PULSE = 1;
+	public static final double DRIVE_RIGHT_DISTANCE_PER_PULSE = 0.003451;
+	public static final double DRIVE_LEFT_DISTANCE_PER_PULSE = 0.003451;
 	public static final boolean GYRO_REVERSED = true;
 	/**
 	 * ABSOLUTE, METER/SEC
@@ -32,8 +32,8 @@ public class Constants {
 	public static final double ultransonicMeterFactor = 1.024;
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
 	public static final boolean DRIVE_leftInverted = false; // inverts the left motors
-	public static final boolean DRIVE_rightEncoderInverted = false; // inverts the right encoder
-	public static final boolean DRIVE_leftEncoderInverted = false; // inverts the left encoder
+	public static final boolean DRIVE_rightEncoderInverted = true; // inverts the right encoder
+	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
 	public static double DRIVE_kP = 0.15;
