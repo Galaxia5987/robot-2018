@@ -49,7 +49,8 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  GRIPPER  ******************************/
-	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.5;
+	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.25;
+	public static final boolean GRIPPER_REVERSED = false;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/*****************************  LIFT  *******************************/
@@ -125,14 +126,14 @@ public class Constants {
 	
 	/***********************  SHOOT CUBE COMMAND  *************************/
 	public static final double SHOOT_TIME = 1;
-	public static final double SHOOT_BACKWARDS_MIN_HEIGHT = 0.8;
+	public static final double SHOOT_BACKWARDS_MIN_HEIGHT = 1.44;
 	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 
-	/***********************  SHOOT CUBE COMMAND  *************************/
+	/***********************  TAKE COMMAND  *************************/
 	public static final double TAKE_GRIPPER_SPEED = 0.5;
-	public static final double TAKE_GRIPPER_DIRECTION = 0.5;
+	public static final int TAKE_GRIPPER_DIRECTION = -1;
 	public static final double TAKE_INTAKE_SPEED = 0.4;
 	public static final double TAKE_INTAKE_DIRECTION = -1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
@@ -162,9 +163,13 @@ public class Constants {
 	 * Error to stop in METER
 	 */
 	public static final double DRIVE_STRAIGHT_MIN_DISTANCE_ERROR = 0.01;
+	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
+	
+	/***********************  SIDE SWITCH COMMAND  *************************/
 	public static final double SIDE_SWITCH_FORAWARD_DISTANCE = 3.755;
 	public static final double SIDE_SWITCH_SIDE_DISTANCE = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
+	
 	
 
 }

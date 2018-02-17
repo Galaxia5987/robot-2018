@@ -23,6 +23,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 
 	SafeVictor leftWheel = new SafeVictor(RobotMap.gripperWheelLeft);
 	SafeVictor rightWheel = new SafeVictor(RobotMap.gripperWheelRight);
+	
 	AnalogInput proximitySensor = new AnalogInput(RobotMap.proximityChannel);
 	NetworkTable GripperTable = NetworkTableInstance.getDefault().getTable("GripperTable");
 	public NetworkTableEntry ntProximityVoltage = GripperTable.getEntry("Proximity Voltage");
@@ -30,6 +31,11 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	public NetworkTableEntry ntCurrent = GripperTable.getEntry("Current");
 	Timer downTimer = new Timer();
 
+	public GripperSubsystem(){
+		leftWheel.setInverted(!Constants.GRIPPER_REVERSED);
+		rightWheel.setInverted(Constants.GRIPPER_REVERSED);
+	}
+	
 	public void initDefaultCommand() {
 
 	}
@@ -41,7 +47,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	 */
 	public void setSpeed(double speedL, double speedR) {
 		leftWheel.set(speedL);
-		rightWheel.set(-speedR);
+		rightWheel.set(speedR);
 	}
 	
 	/**
