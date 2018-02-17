@@ -110,13 +110,13 @@ public class Robot extends TimedRobot {
 		navx.reset();
 		m_oi = new OI();
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
-		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
+		m_chooser.addObject("Line", new DriveStraightCommand(1));
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
-		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
+		SmartDashboard.putData(new DriveStraightCommand(0.5));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new LiftCommand());
 		SmartDashboard.putData(new PathSwitchCommand());
@@ -144,7 +144,7 @@ public class Robot extends TimedRobot {
 		driveSubsystem.setSetpoints(0, 0);
 		driveSubsystem.setLeftSpeed(0);
 		driveSubsystem.setRightSpeed(0);
-
+		liftSubsystem.setSetpoint(0);
 	}
 
 	@Override

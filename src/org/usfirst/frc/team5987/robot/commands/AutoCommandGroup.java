@@ -58,15 +58,15 @@ public class AutoCommandGroup extends CommandGroup {
 			addSequential(new DriveStraightCommand(AUTO_STRAIGHT));
 			// Switch plate is on the left.
 			if (switchPosition == 'L') {
-				addSequential(new TurnCommand(AUTO_TURN, false));
+				addSequential(new TurnCommand(AUTO_TURN, true));
 			}
 			// Switch plate in on the right.
 			if (switchPosition == 'R') {
-				addSequential(new TurnCommand(-AUTO_TURN, false));
+				addSequential(new TurnCommand(-AUTO_TURN, true));
 			}
-//			addSequential(new WaitCommasnd(1));
+			addSequential(new WaitCommand(1));
 			addSequential(new LiftCommand(LiftCommand.liftStates.SWITCH));
-
+			addParallel(new IntakeSolenoidCommand(false));
 			addSequential(new PathSwitchCommand());
 
 			addSequential(new ShootCubeCommand(1, true));	

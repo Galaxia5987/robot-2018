@@ -59,7 +59,7 @@ public abstract class PathCommand extends Command {
     protected void execute() {
     	double dl = Robot.driveSubsystem.getLeftDistance() - preLeftDistance;
     	double dr = Robot.driveSubsystem.getRightDistance() - preRightDistance;
-    	double avg = (dl + dr) / 2;
+    	double avg = (dl + dl) / 2; // (dl + dr) / 2
     	preLeftDistance = Robot.driveSubsystem.getLeftDistance();
     	preRightDistance = Robot.driveSubsystem.getRightDistance();
     	x += avg * Math.cos(Robot.driveSubsystem.getAngleRadians());

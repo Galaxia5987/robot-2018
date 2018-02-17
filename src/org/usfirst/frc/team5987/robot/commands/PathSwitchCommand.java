@@ -27,7 +27,7 @@ public class PathSwitchCommand extends PathCommand {
 			Point p2 = new Point(MOVE_FORWARD_SWITCH_DISTANCE - 0.95, switchPosition * MOVE_SIDEWAYS_SWITCH_DISTANCE);
 
 //			return new Point[] {p0,p1,p2};
-			return new Point[] {p0}; // TODO: Change to above!
+			return new Point[] {p0};
     	}
 		double switchDistance = Robot.ntSwitchDistance.getDouble(0);
     	double switchAngle = Math.toRadians(Robot.ntSwitchAngle.getDouble(0));
@@ -41,7 +41,7 @@ public class PathSwitchCommand extends PathCommand {
 		
 		Point A = new Point(0, 0);
 		Point B = new Point(dx - 1.5, dy);
-		Point C = new Point(dx-0.95, dy);
+		Point C = new Point(dx -0.95, dy);
 		
 		return new Point[] {A,B,C};
 	}

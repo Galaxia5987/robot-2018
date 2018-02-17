@@ -52,8 +52,7 @@ public class IntakeSolenoidCommand extends Command {
 			Robot.intakeSubsystem.setSolenoid(true);
 			break;
 		case CLOSE:
-			if (Robot.liftSubsystem.getHeight() >= 0.35 || Robot.liftSubsystem.state == States.MECHANISM_DISABLED)
-				Robot.intakeSubsystem.setSolenoid(false);
+			Robot.intakeSubsystem.setSolenoid(false);
 			break;
 			
 		}
