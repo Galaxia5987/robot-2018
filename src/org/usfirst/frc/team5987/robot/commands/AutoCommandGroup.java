@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
  *
  */
 public class AutoCommandGroup extends CommandGroup {
-	private static final double AUTO_TURN = 30;
-	private static final double AUTO_STRAIGHT = 0.2;
 	private char startPosition;
 	
 	public AutoCommandGroup(char startPosition) {
@@ -56,14 +54,14 @@ public class AutoCommandGroup extends CommandGroup {
 		// Robot is in center, ready to go to one of two Platforms of the
 		// Switch.
 		if (startPosition == 'C') {
-			addSequential(new DriveStraightCommand(AUTO_STRAIGHT));
+			addSequential(new DriveStraightCommand(Constants.AUTO_SWITCH_STRAIGHT));
 			// Switch plate is on the left.
 			if (switchPosition == 'L') {
-				addSequential(new TurnCommand(AUTO_TURN, false));
+				addSequential(new TurnCommand(Constants.AUTO_SWITCH_TURN, false));
 			}
 			// Switch plate in on the right.
 			if (switchPosition == 'R') {
-				addSequential(new TurnCommand(-AUTO_TURN, false));
+				addSequential(new TurnCommand(-Constants.AUTO_SWITCH_TURN, false));
 			}
 //			addSequential(new WaitCommasnd(1));
 			addSequential(new LiftCommand(Constants.LiftCommandStates.SWITCH));

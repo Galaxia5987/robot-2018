@@ -5,6 +5,27 @@ import java.util.Map;
 
 public class Constants {
 	
+	/**
+	 * Returns a length
+	 * @param inch
+	 * @return
+	 */
+	public static double toMeter(double inch)
+	{
+		return inch * 0.0254;
+	}
+	
+	/********************* AUTONOMOUS *********************/
+	// Switch
+	public static final double AUTO_SWITCH_TURN = 30;
+	public static final double AUTO_SWITCH_STRAIGHT = 0.2;
+	// Scale
+	public static final double SED = toMeter(10);
+	public static final double STD = 1.3;
+	public static final double SS = toMeter(10); 
+	public static final double CENTER_TO_BACK_BUMPER = toMeter(13.25);
+	public static final double Y = toMeter(19.75);
+	
 	/**********************  DRIVE  ************************/
 	public static final double DRIVE_RIGHT_DISTANCE_PER_PULSE = 0.003451;
 	public static final double DRIVE_LEFT_DISTANCE_PER_PULSE = 0.003451;
@@ -171,7 +192,4 @@ public class Constants {
 	public static final double SIDE_SWITCH_FORAWARD_DISTANCE = 3.755;
 	public static final double SIDE_SWITCH_SIDE_DISTANCE = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
-	
-	
-
 }

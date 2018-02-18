@@ -327,4 +327,9 @@ public class DriveSubsystem extends Subsystem {
 		driveLeftEncoder.reset();
 		driveRightEncoder.reset();
 	}
+
+	public boolean isBump() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
