@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(2)
 cam.set(cv2.CAP_PROP_SETTINGS,1)
 minH=255
 minS=255
