@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
-		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
+		SmartDashboard.putData(new DriveStraightCommand(1.5));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new LiftCommand());
 		SmartDashboard.putData(new PathSwitchCommand());
