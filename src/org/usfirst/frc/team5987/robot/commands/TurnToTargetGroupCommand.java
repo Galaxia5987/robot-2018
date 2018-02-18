@@ -29,6 +29,6 @@ public class TurnToTargetGroupCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	for(int i=0; i < MAX_ROTATIONS; i++)
-    		addSequential(new TurnCommand(Robot.ntSwitchAngle, true));
+    		addSequential(new TurnCommand(Robot.ntVisionAngle, true));
     }
 }

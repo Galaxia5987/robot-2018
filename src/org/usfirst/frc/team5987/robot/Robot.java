@@ -95,9 +95,9 @@ public class Robot extends TimedRobot {
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Angle");
-	public static NetworkTableEntry ntSwitchTarget = visionTable.getEntry("Sees Target");
-	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Distance");
+	public static NetworkTableEntry ntVisionAngle = visionTable.getEntry("Angle");
+	public static NetworkTableEntry ntVisionTarget = visionTable.getEntry("Sees Target");
+	public static NetworkTableEntry ntVisionDistance = visionTable.getEntry("Distance");
 
 	Compressor compressor = new Compressor(1);
 
@@ -112,11 +112,11 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
 		SmartDashboard.putData("Auto mode", m_chooser);
-		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
-		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
+		ntVisionAngle.setDouble(ntVisionAngle.getDouble(0));
+		ntVisionDistance.setDouble(ntVisionDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
-		SmartDashboard.putData(new DriveStraightCommand(ntSwitchDistance));
+		SmartDashboard.putData(new DriveStraightCommand(ntVisionDistance));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new LiftCommand());
 		SmartDashboard.putData(new PathSwitchCommand());
@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
 				);
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
-		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));
+		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntVisionTarget));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		ntSetpoint.setDouble(0);
 		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
