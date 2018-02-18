@@ -19,11 +19,14 @@ public class Constants {
 	// Switch
 	public static final double AUTO_SWITCH_TURN = 30;
 	public static final double AUTO_SWITCH_STRAIGHT = 0.2;
-	public static final double AUTO_SCALE_LIFT_DELAY = 5;
+	public static final double AUTO_SWITCH_Y_SIDE_SHIFT = 0.2;
+	public static final double AUTO_SWITCH_X_SHIFT = 0;
 	// Scale
+	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 4.5;
+	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 8;
 	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
 	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
-	public static final double AUTO_SCALE_SHIFT_T0_FIELD_CENTER = toMeter(-8); 
+	public static final double AUTO_SCALE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5); 
 	public static final double CENTER_TO_BACK_BUMPER = toMeter(13.25);
 	public static final double CENTER_TO_SIDE_BUMPER = toMeter(19.75);
 	
@@ -42,11 +45,11 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DRIVE_ACCELERATION = 0.6;
+	public static final double DRIVE_ACCELERATION = 0.8;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DRIVE_DECCELERATION = 0.5;
+	public static final double DRIVE_DECCELERATION = 0.45;
 	public static final double DRIVE_ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
 	 * Mapping between 0-5V to METER for the analog input
@@ -144,14 +147,14 @@ public class Constants {
 	public static final double PATH_h = 0.2;
 	public static final double PATH_MOVE_FORWARD_SWITCH_DISTANCE = 3;
 	public static final double PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE = 2;
-	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.95;
+	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.5;
 	public static final double PATH_TURN_DISTANCE_BEFORE_SWITCH = 1.5;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/***********************  SHOOT CUBE COMMAND  *************************/
 	public static final double SHOOT_TIME = 1;
 	public static final double SHOOT_BACKWARDS_MIN_HEIGHT = 1.44;
-	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.1;
+	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.5;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 
@@ -193,5 +196,6 @@ public class Constants {
 	public static final double SIDE_SWITCH_FORAWARD_DISTANCE = 3.755;
 	public static final double SIDE_SWITCH_SIDE_DISTANCE = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
+	
 	
 }

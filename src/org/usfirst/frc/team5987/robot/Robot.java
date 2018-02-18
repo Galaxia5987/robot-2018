@@ -146,6 +146,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		driveSubsystem.setSetpoints(0, 0);
+		SmartDashboard.putBoolean("Robot Enabled", false);
+		liftSubsystem.setSetpoint(0);
 		driveSubsystem.setLeftSpeed(0);
 		driveSubsystem.setRightSpeed(0);
 		driveSubsystem.resetEncoders();
@@ -173,6 +175,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
@@ -210,7 +213,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-
+		SmartDashboard.putBoolean("Robot Enabled", true);
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove

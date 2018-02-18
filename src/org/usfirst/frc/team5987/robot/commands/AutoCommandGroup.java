@@ -63,9 +63,9 @@ public class AutoCommandGroup extends CommandGroup {
 			if (switchPosition == 'R') {
 				addSequential(new TurnCommand(-Constants.AUTO_SWITCH_TURN, false));
 			}
-//			addSequential(new WaitCommasnd(1));
+			addSequential(new WaitCommand(1));
 			addSequential(new LiftCommand(Constants.LiftCommandStates.SWITCH));
-
+			addParallel(new IntakeSolenoidCommand(false));
 			addSequential(new PathSwitchCommand());
 
 			addSequential(new ShootCubeCommand(1, true));	
