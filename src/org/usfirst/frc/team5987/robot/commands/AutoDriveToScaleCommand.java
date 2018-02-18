@@ -23,19 +23,32 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 	public AutoDriveToScaleCommand(char robotPosition) {
 		addSequential(new IntakeSolenoidCommand(true));
 		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
+		final int Y_DIRECTION = (robotPosition == 'R') ? 1 : -1;
 		if(robotPosition == scalePosition){
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
 					new Point(0, 0),
-					new Point(Constants.toMeter(196) - Constants.CENTER_TO_BACK_BUMPER, -0.15 * ((robotPosition == 'R') ? 1 : -1)),
+					new Point(Constants.toMeter(196) - Constants.CENTER_TO_BACK_BUMPER, -0.15 * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_TURN_DISTANCE_BEFORE_SCALE,
-							END_Y * ((robotPosition == 'R') ? 1 : -1)),
+							END_Y * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE,
-							END_Y * ((robotPosition == 'R') ? 1 : -1))
+							END_Y * Y_DIRECTION)
 					})
 			);
-		}else{
+		}else {
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
+			addSequential(new PathPointsCommand(new Point[] { 
+					new Point(0, 0),
+					new Point(Constants.toMeter((261.47 - 196) / 2 + 196) - Constants.CENTER_TO_BACK_BUMPER, -0.15 * Y_DIRECTION),
+					new Point(Constants.toMeter((261.47 - 196) / 2 + 196) - Constants.CENTER_TO_BACK_BUMPER, Constants.toMeter(324 - 35.25 - 29.69 - Constants.CENTER_TO_SIDE_BUMPER)),
+					new Point(Constants.toMeter(324 - 85.25) + Constants.CENTER_TO_BACK_BUMPER,
+							Constants.toMeter(324 - 95.25 - 29.69 + 20) - Constants.CENTER_TO_SIDE_BUMPER),
+					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_TURN_DISTANCE_BEFORE_SCALE,
+							(Constants.toMeter(324 - 95.25 - 29.69) + Constants.CENTER_TO_SIDE_BUMPER) * Y_DIRECTION),
+					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE,
+							(Constants.toMeter(324 - 95.25 - 29.69 + 20) + Constants.CENTER_TO_SIDE_BUMPER) * Y_DIRECTION)
+					})
+			);
 		}
 		addSequential(new ShootCubeCommand(0.4, true));
 		
