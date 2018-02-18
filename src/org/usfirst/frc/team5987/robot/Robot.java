@@ -112,6 +112,7 @@ public class Robot extends TimedRobot {
 		m_oi = new OI();
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
+		m_chooser.addObject("Scale", new AutoDriveToScaleCommand('R'));
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
@@ -119,7 +120,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData(new DriveStraightCommand(1.5));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
-		SmartDashboard.putData(new LiftCommand());
+		SmartDashboard.putData("0.5M lift 3s", new LiftCommand(0.5, 3));
+		SmartDashboard.putData("0M lift", new LiftCommand(0));
 		SmartDashboard.putData(new PathSwitchCommand());
 		SmartDashboard.putData(new PathPointsCommand(new Point[]{
 				new Point(0,0),
@@ -174,6 +176,7 @@ public class Robot extends TimedRobot {
 		navx.reset();
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
+		m_chooser.addObject("Scale", new AutoDriveToScaleCommand('R'));
 		m_autonomousCommand = m_chooser.getSelected();
 
 //		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");

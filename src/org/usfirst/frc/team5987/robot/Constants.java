@@ -19,12 +19,13 @@ public class Constants {
 	// Switch
 	public static final double AUTO_SWITCH_TURN = 30;
 	public static final double AUTO_SWITCH_STRAIGHT = 0.2;
+	public static final double AUTO_SCALE_LIFT_DELAY = 5;
 	// Scale
-	public static final double SED = toMeter(10);
-	public static final double STD = 1.3;
-	public static final double SS = toMeter(10); 
+	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
+	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
+	public static final double AUTO_SCALE_SHIFT_T0_FIELD_CENTER = toMeter(-8); 
 	public static final double CENTER_TO_BACK_BUMPER = toMeter(13.25);
-	public static final double Y = toMeter(19.75);
+	public static final double CENTER_TO_SIDE_BUMPER = toMeter(19.75);
 	
 	/**********************  DRIVE  ************************/
 	public static final double DRIVE_RIGHT_DISTANCE_PER_PULSE = 0.003451;
@@ -33,7 +34,7 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double DRIVE_MAX_VELOCITY = 1.2;
+	public static final double DRIVE_MAX_VELOCITY = 1.7;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
@@ -192,4 +193,5 @@ public class Constants {
 	public static final double SIDE_SWITCH_FORAWARD_DISTANCE = 3.755;
 	public static final double SIDE_SWITCH_SIDE_DISTANCE = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
+	
 }
