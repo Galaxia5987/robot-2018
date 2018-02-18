@@ -9,6 +9,7 @@ package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.AutoCommandGroup;
+import org.usfirst.frc.team5987.robot.commands.AutoDriveToScaleCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
@@ -126,6 +127,7 @@ public class Robot extends TimedRobot {
 				new Point (2, 2)
 				})
 				);
+		SmartDashboard.putData(new AutoDriveToScaleCommand('R'));
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));

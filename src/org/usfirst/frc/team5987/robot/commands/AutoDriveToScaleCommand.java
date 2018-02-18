@@ -17,15 +17,11 @@ public class AutoDriveToScaleCommand extends PathPointsCommand {
 		super(new Point[] { new Point(0, 0), new Point(Constants.toMeter(196) - Constants.CENTER_TO_BACK_BUMPER, 0),
 				// If the scale is on the right
 				new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.STD,
-						END_Y * scalePosition == 'R' ? 1 : -1),
+						END_Y * ((scalePosition == 'R') ? 1 : -1)),
+//						END_Y * 1),
 				new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.SED,
-						END_Y * scalePosition == 'R' ? 1 : -1) });
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
+						END_Y * ((scalePosition == 'R') ? 1 : -1)) });
+//						END_Y * 1) });
 	}
 
-	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
-		return super.isFinished() || Robot.driveSubsystem.isBump();
-	}
 }
