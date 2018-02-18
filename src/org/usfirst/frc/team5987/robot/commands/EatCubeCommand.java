@@ -3,7 +3,6 @@ package org.usfirst.frc.team5987.robot.commands;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import auxiliary.Point;
-import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
@@ -23,7 +22,7 @@ public class EatCubeCommand extends PathCommand {
 			double x = distance * Math.sin(angle + navx);
 			double y = distance * Math.cos(angle + navx);
 			
-			Point[] cube = new Point[] {new Point(x, y)};
+			Point[] cube = new Point[] {new Point(0,0), new Point(x, y)};
 			return cube;
 		}
 		this.cancel();
