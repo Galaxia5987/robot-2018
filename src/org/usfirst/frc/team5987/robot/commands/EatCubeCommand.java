@@ -12,9 +12,12 @@ public class EatCubeCommand extends PathCommand {
     public EatCubeCommand() {
     	super();
     }
-
+    
+    
+    
 	@Override
 	public Point[] getPoints() {
+		Robot.ntVisionFilterMode.setString("2");
 		if (Robot.ntVisionTarget.getBoolean(false)) {
 			double angle = Math.toRadians(Robot.ntVisionAngle.getDouble(0));
 			double distance = Robot.ntVisionDistance.getDouble(0) / Math.cos(angle);

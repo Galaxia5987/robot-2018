@@ -15,6 +15,7 @@ public class PathSwitchCommand extends PathCommand {
 	
 	@Override
 	public Point[] getPoints() {
+		Robot.ntVisionFilterMode.setString("0");
 		if (!Robot.ntVisionTarget.getBoolean(false))
     	{
 			String gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -23,7 +24,7 @@ public class PathSwitchCommand extends PathCommand {
 			Point p0 =  new Point(0, 0);
 			Point p1 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
 			Point p2 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_END_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
-
+			
 //			return new Point[] {p0,p1,p2};
 			return new Point[] {p0}; // TODO: Change to above!
     	}
