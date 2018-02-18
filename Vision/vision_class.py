@@ -355,6 +355,14 @@ class Vision:
         triangle_area=height*width/2
         return triangle_area/hull_area
 
+
+    def largest(self,c):
+        contours=self.contours.copy()
+        contours.sort(key=cv2.contourArea)
+        if np.array_equal(c,contours[0]):
+            return 1
+        return 0
+
     def convexhull_rectangle(self,c):
         hull_area=cv2.contourArea(cv2.convexHull(c))
         tl,tr,bl,br=self.rotated_cornecrs(c)
