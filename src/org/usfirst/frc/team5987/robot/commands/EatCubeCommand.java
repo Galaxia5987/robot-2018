@@ -17,10 +17,11 @@ public class EatCubeCommand extends PathCommand {
 	@Override
 	public Point[] getPoints() {
 		if (Robot.ntVisionTarget.getBoolean(false)) {
-			double angle = Math.toRadians(Robot.navx.getAngle() + Robot.ntVisionAngle.getDouble(0));
-			double distance = Robot.ntVisionDistance.getDouble(0);
-			double x = distance * Math.sin(angle);
-			double y = distance * Math.cos(angle);
+			double angle = Math.toRadians(Robot.ntVisionAngle.getDouble(0));
+			double distance = Robot.ntVisionDistance.getDouble(0) / Math.cos(angle);
+			double navx = Math.toRadians(Robot.navx.getAngle());
+			double x = distance * Math.sin(angle + navx);
+			double y = distance * Math.cos(angle + navx);
 			
 			Point[] cube = new Point[] {new Point(x, y)};
 			return cube;
