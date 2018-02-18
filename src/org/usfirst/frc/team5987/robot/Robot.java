@@ -216,6 +216,7 @@ public class Robot extends TimedRobot {
 		}
 		// driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
+		SmartDashboard.putNumber("Drive Setpoint", 0);
 	}
 
 	/**
@@ -224,6 +225,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+//		driveSubsystem.setSetpoints(SmartDashboard.getNumber("Drive Setpoint", 0), SmartDashboard.getNumber("Drive Setpoint", 0));
+//		driveSubsystem.updatePID();
+//		SmartDashboard.putNumber("right V", driveSubsystem.getRightSpeed());
+//		SmartDashboard.putNumber("left V", driveSubsystem.getLeftSpeed());
 		// liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
 		// double joyY = m_oi.rightStick.getY();

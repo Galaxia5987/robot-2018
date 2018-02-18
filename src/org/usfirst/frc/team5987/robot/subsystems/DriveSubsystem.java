@@ -49,7 +49,7 @@ public class DriveSubsystem extends Subsystem {
 	private static final AnalogInput backDistanceSensor = new AnalogInput(RobotMap.backUltrasonic);
 	
 	// Creates a new NetworkTable
-	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
+	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("SmartDashboard");
 	// NT PIDF constants
 	NetworkTableEntry ntKp = driveTable.getEntry("kP");
 	NetworkTableEntry ntKi = driveTable.getEntry("kI");
@@ -89,16 +89,15 @@ public class DriveSubsystem extends Subsystem {
 		driveRightFrontMotor.setInverted(Constants.DRIVE_rightInverted);
 		driveLeftRearMotor.setInverted(Constants.DRIVE_leftInverted);
 		driveLeftFrontMotor.setInverted(Constants.DRIVE_leftInverted);
-
-		driveLeftEncoder.setDistancePerPulse(1);
-		driveRightEncoder.setDistancePerPulse(1);
+		
+		// set the distance per pulse for the encoders
+		driveLeftEncoder.setDistancePerPulse(Constants.DRIVE_LEFT_DISTANCE_PER_PULSE);
+		driveRightEncoder.setDistancePerPulse(Constants.DRIVE_RIGHT_DISTANCE_PER_PULSE);
 		
 		driveRightFrontMotor.setInverted(Constants.DRIVE_rightInverted);
 		driveLeftRearMotor.setInverted(Constants.DRIVE_leftInverted);
 		driveLeftFrontMotor.setInverted(Constants.DRIVE_leftInverted);
-		// set the distance per pulse for the encoders
-		driveRightEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
-		driveLeftEncoder.setDistancePerPulse(RobotMap.driveEncoderDistancePerPulse);
+		
 		
 		// init the PIDF constants in the NetworkTable
 		ntGetPID();
