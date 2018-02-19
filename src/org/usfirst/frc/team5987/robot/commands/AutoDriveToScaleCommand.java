@@ -18,7 +18,7 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 
 	// Positions of the alliance Switch and Scale Plates.
 	char scalePosition = gameData.charAt(1);
-	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
+	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
 	public AutoDriveToScaleCommand(char robotPosition) {
 		addSequential(new IntakeSolenoidCommand(true));
@@ -39,14 +39,13 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
 					new Point(0, 0),
-					new Point(Constants.toMeter((261.47 - 196) / 2 + 196) - Constants.CENTER_TO_BACK_BUMPER, -0.15 * Y_DIRECTION),
-					new Point(Constants.toMeter((261.47 - 196) / 2 + 196) - Constants.CENTER_TO_BACK_BUMPER, Constants.toMeter(324 - 35.25 - 29.69 - Constants.CENTER_TO_SIDE_BUMPER)),
-					new Point(Constants.toMeter(324 - 85.25) + Constants.CENTER_TO_BACK_BUMPER,
-							Constants.toMeter(324 - 95.25 - 29.69 + 20) - Constants.CENTER_TO_SIDE_BUMPER),
+					new Point(4.5, -0.15 * Y_DIRECTION),
+					new Point(5.3, 0.4 * Y_DIRECTION),
+					new Point(5.30001, 4.0 * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_TURN_DISTANCE_BEFORE_SCALE,
-							(Constants.toMeter(324 - 95.25 - 29.69) + Constants.CENTER_TO_SIDE_BUMPER) * Y_DIRECTION),
+							(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER) * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE,
-							(Constants.toMeter(324 - 95.25 - 29.69 + 20) + Constants.CENTER_TO_SIDE_BUMPER) * Y_DIRECTION)
+							(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER) * Y_DIRECTION)
 					})
 			);
 		}

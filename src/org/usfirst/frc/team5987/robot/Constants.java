@@ -23,10 +23,11 @@ public class Constants {
 	public static final double AUTO_SWITCH_X_SHIFT = 0;
 	// Scale
 	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 4.5;
-	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 8;
+	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 7.2;
 	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
 	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
-	public static final double AUTO_SCALE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5); 
+	public static final double AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5);
+	public static final double AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER = -0.1;
 	public static final double CENTER_TO_BACK_BUMPER = toMeter(13.25);
 	public static final double CENTER_TO_SIDE_BUMPER = toMeter(19.75);
 	
