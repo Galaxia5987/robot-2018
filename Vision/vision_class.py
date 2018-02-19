@@ -281,7 +281,7 @@ class Vision:
                               iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
 
     def edge_detection(self):
-        laplacian = cv2.Laplacian(self.mask, cv2.CV_64F, ksize=15)
+        laplacian = cv2.Laplacian(self.mask, cv2.CV_64F, ksize=7)
         _, thresh = cv2.threshold(laplacian, 127, 255, cv2.THRESH_BINARY)
         self.mask = cv2.bitwise_and(thresh, 255)
         self.mask = np.array(self.mask, dtype=np.uint8)
@@ -475,7 +475,7 @@ class Vision:
             j = i-1
             x = points[j][0] - points[i][0]
             y = points[j][1] - points[i][1]
-            if abs(x) < 20 and abs(y) < 20:
+            if abs(x) < cv2.contourArea(c)/1000 and abs(y) < cv2.contourArea(c)/1000:
                 i+=1
                 continue
             try:
@@ -489,10 +489,10 @@ class Vision:
             i+=1
             # print("i "+str(i)+" j "+str(j)+" x "+str(x)+" y "+str(y)+" alpha "+str(alpha))
         # print(alphas)
-        if len(alphas) is 6:
+        if len(alphas) is 6 or 4:
             counter = 0
             for i in range(0, int(len(alphas)/2)):
-                if abs(alphas[i] - alphas[i+3]) <= 25:
+                if abs(alphas[i] - alphas[i+int(len(alphas)/2)]) <= 25:
                     counter+=1
             if counter >= 2:
                 cube = 1
@@ -567,11 +567,15 @@ class Vision:
     def get_frame(self, once=False):
         if once:
             _, self.frame = self.cam.read()
+            self.frame = cv2.resize(self.frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+            self.frame = cv2.blur(self.frame, (5,5))
             self.show_frame = self.frame.copy()
         else:
             global stop
-            while not self.get_item("Raspberry Stop",stop):
+            while not self.get_item("Raspberry Stop", stop):
                 _, self.frame = self.cam.read()
+                self.frame = cv2.resize(self.frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+                self.frame = cv2.blur(self.frame, (5,5))
                 self.show_frame = self.frame.copy()
 
     def show(self, once=False):
