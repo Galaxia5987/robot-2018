@@ -38,6 +38,7 @@ def get_arguments():
                     help='Show a preview of the image after applying the mask',
                     action='store_true')
     args = vars(ap.parse_args())
+    args = vars(ap.parse_args())
 
     if not xor(bool(args['image']), bool(args['webcam'])):
         ap.error("Please specify only one image source")
@@ -60,7 +61,7 @@ def get_trackbar_values(range_filter):
 
 
 def main():
-    camera = cv2.VideoCapture(1)
+    camera = cv2.VideoCapture(0)
     camera.set(cv2.CAP_PROP_SETTINGS,1)
 
     setup_trackbars('HSV')
@@ -81,7 +82,13 @@ def main():
 
         cv2.imshow("Original", image)
         cv2.imshow("Thresh", thresh)
-        if cv2.waitKey(1) & 0xFF is ord('q'):
+        key=cv2.waitKey(1)
+        if key is ord("q"):
             break
+        if key is not -1:
+            v1_min, v2_min, v3_min, v1_max, v2_max, v3_max
+            file=open("../files/Colors_"+str(key-48)+".val","w+")
+            file.write("self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(v1_min, v2_min, v3_min, v1_max, v2_max, v3_max))
+            file.close()
 if __name__ == '__main__':
     main()

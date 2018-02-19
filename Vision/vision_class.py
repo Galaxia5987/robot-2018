@@ -1,3 +1,4 @@
+import os
 # ------------launch options------------------------------------------------------
 from clint.textui import colored
 import sys
@@ -236,7 +237,8 @@ class Vision:
                 'self.find_center_b = False\n'+
                 'self._iterations_i=3\n'+
                 'self.focal = 638.6086956521739\n'+
-                'self.target_height = 0'
+                'self.target_height = 0\n'
+                'os.system("v4l2-ctl -d /dev/video"+str(camera)" --set-ctrl exposure_absolute=156")'
             )
             file.close()
 
@@ -648,7 +650,8 @@ class Vision:
                 self.init_values()
             self.filter_hsv()
             if self.surfix is '2':
-                self.eilate()
+                pass
+                #self.eilate()
             self.dirode()
             _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             self.contours = list(contours)
