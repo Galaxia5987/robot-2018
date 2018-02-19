@@ -20,9 +20,10 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 	char scalePosition = gameData.charAt(1);
 	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
-	public AutoDriveToScaleCommand(char robotPosition) {
+	public AutoDriveToScaleCommand(char robotPosition, boolean isBackwards) {
 		addSequential(new IntakeSolenoidCommand(true));
-		final int Y_DIRECTION = (robotPosition == 'R') ? 1 : -1;
+//		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
+		final int Y_DIRECTION = robotPosition == 'R' ? 1 : -1;
 		if(robotPosition == scalePosition){
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
@@ -32,7 +33,7 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 							END_Y * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE,
 							END_Y * Y_DIRECTION)
-					})
+					}, isBackwards)
 			);
 		}else {
 //			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
@@ -49,7 +50,9 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 			);
 		}
 		addSequential(new ShootCubeCommand(0.4, true));
-		
 	}
-
+	
+	public AutoDriveToScaleCommand(char robotPosition) {
+		this(robotPosition, false);
+	}
 }
