@@ -36,6 +36,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
@@ -108,6 +109,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		SmartDashboard.putNumber("Match number", DriverStation.getInstance().getMatchNumber());
 		navx.reset();
 		m_oi = new OI();
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
