@@ -54,6 +54,7 @@ public class AutoCommandGroup extends CommandGroup {
 		// Robot is in center, ready to go to one of two Platforms of the
 		// Switch.
 		if (startPosition == 'C') {
+			addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.SWITCH));
 			addSequential(new DriveStraightCommand(Constants.AUTO_SWITCH_STRAIGHT));
 			// Switch plate is on the left.
 			if (switchPosition == 'L') {
@@ -68,7 +69,8 @@ public class AutoCommandGroup extends CommandGroup {
 			addParallel(new IntakeSolenoidCommand(false));
 			addSequential(new PathSwitchCommand());
 
-			addSequential(new ShootCubeCommand(1, true));	
+			addSequential(new ShootCubeCommand(1, true));
+			addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
 		}
 
 		if (startPosition != scalePosition) {
