@@ -5,6 +5,32 @@ import java.util.Map;
 
 public class Constants {
 	
+	/**
+	 * Returns a length
+	 * @param inch
+	 * @return
+	 */
+	public static double toMeter(double inch)
+	{
+		return inch * 0.0254;
+	}
+	
+	/********************* AUTONOMOUS *********************/
+	// Switch
+	public static final double AUTO_SWITCH_TURN = 30;
+	public static final double AUTO_SWITCH_STRAIGHT = 0.2;
+	public static final double AUTO_SWITCH_Y_SIDE_SHIFT = 0.2;
+	public static final double AUTO_SWITCH_X_SHIFT = 0.45;
+	// Scale
+	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 4.5;
+	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 7.2;
+	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
+	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
+	public static final double AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5);
+	public static final double AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER = -0.1;
+	public static final double CENTER_TO_BACK_BUMPER = toMeter(13.25);
+	public static final double CENTER_TO_SIDE_BUMPER = toMeter(19.75);
+	
 	/**********************  DRIVE  ************************/
 	public static final double DRIVE_RIGHT_DISTANCE_PER_PULSE = 0.003451;
 	public static final double DRIVE_LEFT_DISTANCE_PER_PULSE = 0.003451;
@@ -12,7 +38,7 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double DRIVE_MAX_VELOCITY = 1.2;
+	public static final double DRIVE_MAX_VELOCITY = 1.7;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
@@ -20,11 +46,11 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DRIVE_ACCELERATION = 0.6;
+	public static final double DRIVE_ACCELERATION = 0.8;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DRIVE_DECCELERATION = 0.5;
+	public static final double DRIVE_DECCELERATION = 0.45;
 	public static final double DRIVE_ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
 	 * Mapping between 0-5V to METER for the analog input
@@ -36,8 +62,8 @@ public class Constants {
 	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
-	public static double DRIVE_kP = 0.15;
-	public static double DRIVE_kI = 0.0001;
+	public static double DRIVE_kP = 0.675;
+	public static double DRIVE_kI = 0.0;
 	public static double DRIVE_kD = 0.0;
 	public static double DRIVE_kF = 0.33;
 	public static double DRIVE_TurnKp = 0.15;
@@ -122,14 +148,14 @@ public class Constants {
 	public static final double PATH_h = 0.2;
 	public static final double PATH_MOVE_FORWARD_SWITCH_DISTANCE = 3;
 	public static final double PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE = 2;
-	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.95;
+	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.5;
 	public static final double PATH_TURN_DISTANCE_BEFORE_SWITCH = 1.5;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/***********************  SHOOT CUBE COMMAND  *************************/
 	public static final double SHOOT_TIME = 1;
 	public static final double SHOOT_BACKWARDS_MIN_HEIGHT = 1.44;
-	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.1;
+	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.5;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 
@@ -173,5 +199,4 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	
-
 }

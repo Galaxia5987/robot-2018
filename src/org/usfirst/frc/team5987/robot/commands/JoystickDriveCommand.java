@@ -23,14 +23,24 @@ public class JoystickDriveCommand extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		// TODO: uncomment
 		Robot.driveSubsystem.setLeftSpeed(-Robot.m_oi.left.getY());
 		Robot.driveSubsystem.setRightSpeed(-Robot.m_oi.right.getY());
+		double rightOut = -Robot.m_oi.right.getY();
+		double leftOut = -Robot.m_oi.left.getY();
+		double rightV = Robot.driveSubsystem.getRightSpeed();
+		double leftV = Robot.driveSubsystem.getLeftSpeed();
 
-//	if(Robot.driveSubsystem.getLeftDistance() != 0)
-//		SmartDashboard.putNumber("Encoders Ratio R/L", Robot.driveSubsystem.getRightDistance() / Robot.driveSubsystem.getLeftDistance());
-//	else
-//		SmartDashboard.putNumber("Encoders Ratio R/L", 0);
+		if(leftOut != 0)
+			SmartDashboard.putNumber("kF Left", leftV / leftOut);
+		else
+			SmartDashboard.putNumber("kF Left", 0);
+		if(rightOut != 0)
+			SmartDashboard.putNumber("kF Right", rightV / rightOut);
+		else
+			SmartDashboard.putNumber("kF Right", 0);
 	}
+			
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {

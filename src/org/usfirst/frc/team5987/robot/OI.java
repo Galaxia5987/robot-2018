@@ -10,7 +10,7 @@ package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.Constants.LiftCommandStates;
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
 import org.usfirst.frc.team5987.robot.commands.CommandGroup_CenterSwitch;
-import org.usfirst.frc.team5987.robot.commands.DriveToBumpCommand;
+import org.usfirst.frc.team5987.robot.commands.DriveToLineCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathCommand;

@@ -22,8 +22,8 @@ public class DriveStraightCommand extends Command {
 	private double finalDistance;
 	private boolean keepStartingAngle = false;
 	private static NetworkTable driveTable = Robot.driveSubsystem.driveTable;
-	NetworkTableEntry ntAngleToKeep;
-	NetworkTableEntry ntFinalDistance;
+	private NetworkTableEntry ntAngleToKeep = null;
+	private NetworkTableEntry ntFinalDistance = null;
 	NetworkTableEntry ntDistanceError = driveTable.getEntry("Distance Error");
 	NetworkTableEntry ntMPoutput = driveTable.getEntry("MP Output");
 	private double DistanceError;

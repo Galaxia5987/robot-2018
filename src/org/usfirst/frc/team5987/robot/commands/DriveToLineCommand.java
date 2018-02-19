@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DriveToBumpCommand extends Command {
+public class DriveToLineCommand extends Command {
 
 	double startingAngle;
 	double speed;
@@ -21,7 +21,7 @@ public class DriveToBumpCommand extends Command {
 	NetworkTableEntry ntSeesTarget = IRTable.getEntry("Sees Target");
 	NetworkTableEntry ntIRError = IRTable.getEntry("IR Error");
 	
-    public DriveToBumpCommand(double speed) {
+    public DriveToLineCommand(double speed) {
     	requires(Robot.driveSubsystem);
     	this.speed = speed;
     }

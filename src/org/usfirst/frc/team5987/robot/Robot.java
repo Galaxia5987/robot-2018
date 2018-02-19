@@ -9,6 +9,7 @@ package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.AutoCommandGroup;
+import org.usfirst.frc.team5987.robot.commands.AutoDriveToScaleCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.EatCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
@@ -110,15 +111,18 @@ public class Robot extends TimedRobot {
 		m_oi = new OI();
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
+		m_chooser.addObject("Scale (Robot Right)", new AutoDriveToScaleCommand('R'));
+		m_chooser.addObject("Scale (Robot Left)", new AutoDriveToScaleCommand('L'));
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ntVisionAngle.setDouble(ntVisionAngle.getDouble(0));
 		ntVisionDistance.setDouble(ntVisionDistance.getDouble(0));
 		ntVisionFilterMode.setString("0");
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
-		SmartDashboard.putData(new DriveStraightCommand(ntVisionDistance));
+		SmartDashboard.putData(new DriveStraightCommand(1.5));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
-		SmartDashboard.putData(new LiftCommand());
+		SmartDashboard.putData("0.5M lift 3s", new LiftCommand(0.5, 3));
+		SmartDashboard.putData("0M lift", new LiftCommand(0));
 		SmartDashboard.putData(new PathSwitchCommand());
 		SmartDashboard.putData(new PathPointsCommand(new Point[]{
 				new Point(0,0),
@@ -126,6 +130,7 @@ public class Robot extends TimedRobot {
 				new Point (2, 2)
 				})
 				);
+		SmartDashboard.putData(new AutoDriveToScaleCommand('R'));
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntVisionTarget));
@@ -143,6 +148,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		driveSubsystem.setSetpoints(0, 0);
+		SmartDashboard.putBoolean("Robot Enabled", false);
+		liftSubsystem.setSetpoint(0);
 		driveSubsystem.setLeftSpeed(0);
 		driveSubsystem.setRightSpeed(0);
 		driveSubsystem.resetEncoders();
@@ -170,9 +177,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
+		m_chooser.addObject("Scale (Robot Right)", new AutoDriveToScaleCommand('R'));
+		m_chooser.addObject("Scale (Robot Left)", new AutoDriveToScaleCommand('L'));
 		m_autonomousCommand = m_chooser.getSelected();
 
 //		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
@@ -206,7 +216,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-
+		SmartDashboard.putBoolean("Robot Enabled", true);
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -217,6 +227,7 @@ public class Robot extends TimedRobot {
 		}
 		// driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
+		SmartDashboard.putNumber("Drive Setpoint", 0);
 	}
 
 	/**
@@ -225,6 +236,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+//		driveSubsystem.setSetpoints(SmartDashboard.getNumber("Drive Setpoint", 0), SmartDashboard.getNumber("Drive Setpoint", 0));
+//		driveSubsystem.updatePID();
+//		SmartDashboard.putNumber("right V", driveSubsystem.getRightSpeed());
+//		SmartDashboard.putNumber("left V", driveSubsystem.getLeftSpeed());
 		// liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
 		// double joyY = m_oi.rightStick.getY();
