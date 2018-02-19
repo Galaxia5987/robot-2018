@@ -167,54 +167,8 @@ class Vision:
                 res = self.table.getBoolean(key, default_value)
         return res
 
-    # def range_finder(self):
-    #     minH = 255
-    #     minS = 255
-    #     minV = 255
-    #     maxH = 0
-    #     maxS = 0
-    #     maxV = 0
-    #     height, width, _ = self.frame.shape
-    #     target = np.zeros((height, width, 1), dtype=np.uint8)
-    #     target[int(height / 3):int(2 * height / 3), int(2 * width / 6):int(4 * width / 6)] = 255
-    #     target1 = target # crop the frame
-    #     target = np.zeros((height, width, 1), dtype=np.uint8)
-    #     target[int(2 * height / 5):int(3 * height / 5), int(2 * width / 5):int(3 * width / 5)] = 255
-    #     target2 = target
-    #     while True:
-    #         self.get_frame(once=True)
-    #         hsv=cv2.cvtColor(self.frame,cv2.COLOR_BGR2HSV)
-    #         hsv = cv2.bitwise_and(hsv, hsv, mask=target1)
-    #         self.show_frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
-    #         if cv2.waitKey(1) is 13:    # if key is enter
-    #             for row in hsv:
-    #                 for pixel in row:
-    #                     # Goes through every pixel in the frame and finds the lowest and highest values
-    #                     if not pixel.all() == 0:
-    #                         if pixel[0] < minH:
-    #                             minH = pixel[0]
-    #                         if pixel[1] < minS:
-    #                             minS = pixel[1]
-    #                         if pixel[2] < minV:
-    #                             minV = pixel[2]
-    #                         if pixel[0] > maxH:
-    #                             maxH = pixel[0]
-    #                         if pixel[1] > maxS:
-    #                             maxS = pixel[1]
-    #                         if pixel[2] > maxV:
-    #                             maxV = pixel[2]
-    #             break
-    #         self.show(once=True)
-    #     # write the newfound values onto a file with the correct surfix
-    #     file = open("files/Colors_" + self.surfix + ".val", 'w')
-    #     file.write(
-    #         "self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH, minS, minV, maxH, maxS, maxV))
-    #     file.close()
-
-
     def range_finder(self):
         pass
-
 
     def check_files(self):
         try:
@@ -357,7 +311,6 @@ class Vision:
 
         triangle_area=height*width/2
         return triangle_area/hull_area
-
 
     def largest(self,c):
         contours=self.contours.copy()
