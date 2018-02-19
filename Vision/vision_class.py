@@ -1,10 +1,11 @@
+import netifaces as ni
 import os
 os.system("v4l2-ctl -d /dev/video0 --set-ctrl exposure_auto=1")
 # ------------launch options------------------------------------------------------
 from clint.textui import colored
 import sys
 from flask import Flask, render_template, Response
-
+sys.stdout=open("Logs.txt","w+")
 camera = 0
 if '-h' in sys.argv or '--help' in sys.argv:
     print(
@@ -59,20 +60,18 @@ else:
 print('NetworkTables Server: ' + colored.green(nt_server))
 
 # ------------getting the ip------------------------------------------------------
-import netifaces as ni
+ip=None
 try:
     ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 except:
-    for interface in ni.interfaces():
-        try:
-            if not ni.ifaddresses(interface)[ni.AF_INET][0]['addr'] == '127.0.0.1':
-                ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
-                break
-        except:
-            pass
-    if ip is None:
-        ip='127.0.0.1'
-
+    while ip is None:
+        for interface in ni.interfaces():
+            try:
+                if not ni.ifaddresses(interface)[ni.AF_INET][0]['addr'] == '127.0.0.1':
+                    ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+                    break
+            except:
+                pass
 print('IP: ' + colored.green(ip))
 # -----------------------------Starting The Vision Class--------------------------------------------------------------
 import os
@@ -81,7 +80,6 @@ import numpy as np
 import math
 from networktables import NetworkTables
 from time import sleep
-cam = cv2.VideoCapture(camera)
 
 stop = False
 
@@ -89,8 +87,13 @@ class Vision:
     global stop
     def __init__(self,surfix=''): # the surfix is for all the value files this class will use
         self.surfix=surfix
-        self.cam = cam
-
+        self.on = False
+        while not self.on:
+            self.cam = cv2.VideoCapture(camera)
+            try:
+                self.get_frame(True)
+            except:
+                pass
         self.distance = 0
         self.angle = 0
         self.sees_target = False
@@ -566,14 +569,14 @@ class Vision:
 
     def get_frame(self, once=False):
         if once:
-            _, self.frame = self.cam.read()
+            self.on, self.frame = self.cam.read()
             self.frame = cv2.resize(self.frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
             self.frame = cv2.blur(self.frame, (5,5))
             self.show_frame = self.frame.copy()
         else:
             global stop
             while not self.get_item("Raspberry Stop", stop):
-                _, self.frame = self.cam.read()
+                self.on, self.frame = self.cam.read()
                 self.frame = cv2.resize(self.frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
                 self.frame = cv2.blur(self.frame, (5,5))
                 self.show_frame = self.frame.copy()
