@@ -7,11 +7,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class TurnToTargetGroupCommand extends CommandGroup {
-
-    private static final int MAX_ROTATIONS = 4;
-
-	public TurnToTargetGroupCommand() {
+public class EatCubeGroupCommand extends CommandGroup {
+	
+    public EatCubeGroupCommand() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -28,7 +26,10 @@ public class TurnToTargetGroupCommand extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	for(int i=0; i < MAX_ROTATIONS; i++)
-    		addSequential(new TurnCommand(Robot.ntVisionAngle, true));
+    	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
+    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 2));
+    	addParallel(new TakeCommand());
+    	addSequential(new EatCubeCommand());
+    	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
     }
 }

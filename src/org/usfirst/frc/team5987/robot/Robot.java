@@ -11,6 +11,9 @@ import org.usfirst.frc.team5987.robot.commands.autos.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.AutoCommandGroup;
 import org.usfirst.frc.team5987.robot.commands.autos.AutoScale;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
+import org.usfirst.frc.team5987.robot.commands.EatCubeCommand;
+import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
+import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
@@ -33,7 +36,9 @@ import auxiliary.Watch_Doge;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
@@ -96,9 +101,10 @@ public class Robot extends TimedRobot {
     SendableChooser <String> scaleChooser = new SendableChooser <>();
     SendableChooser <String> switchChooser = new SendableChooser <>();
 
-	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Angle");
-	public static NetworkTableEntry ntSwitchTarget = visionTable.getEntry("Sees Target");
-	public static NetworkTableEntry ntSwitchDistance = visionTable.getEntry("Distance");
+	public static NetworkTableEntry ntVisionAngle = visionTable.getEntry("Angle");
+	public static NetworkTableEntry ntVisionTarget = visionTable.getEntry("Sees Target");
+	public static NetworkTableEntry ntVisionDistance = visionTable.getEntry("Distance");
+	public static NetworkTableEntry ntVisionFilterMode = visionTable.getEntry("Filter Mode");
 
 	Compressor compressor = new Compressor(1);
 
@@ -108,6 +114,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		SmartDashboard.putNumber("Match number", DriverStation.getInstance().getMatchNumber());
 		navx.reset();
 		m_oi = new OI();
         initPositionChooser.addObject("Left", "Left");
@@ -118,7 +125,7 @@ public class Robot extends TimedRobot {
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
-		SmartDashboard.putData(new DriveStraightCommand(1.5));
+		SmartDashboard.putData(new DriveStraightCommand(0.5));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData("0.5M lift 3s", new LiftCommand(0.5, 3));
 		SmartDashboard.putData("0M lift", new LiftCommand(0));
@@ -132,8 +139,10 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(new AutoScale('R'));
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
-		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));
+		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntVisionTarget));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
+		SmartDashboard.putData(new EatCubeGroupCommand());
+		SmartDashboard.putData(new IntakeSolenoidCommand());
 		ntSetpoint.setDouble(0);
 		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 	}

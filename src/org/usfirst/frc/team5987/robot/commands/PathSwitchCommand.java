@@ -15,7 +15,7 @@ public class PathSwitchCommand extends PathCommand {
 	
 	@Override
 	public Point[] getPoints() {
-		if (!Robot.ntSwitchTarget.getBoolean(false))
+		if (!Robot.ntVisionTarget.getBoolean(false))
     	{
 			String gameData = DriverStation.getInstance().getGameSpecificMessage();
 			// Positions of the alliance Switch and Scale Plates.
@@ -23,12 +23,12 @@ public class PathSwitchCommand extends PathCommand {
 			Point p0 =  new Point(0, 0);
 			Point p1 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
 			Point p2 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_END_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
-
+			
 //			return new Point[] {p0,p1,p2};
 			return new Point[] {p0}; // TODO: Change to above!
     	}
-		double switchDistance = Robot.ntSwitchDistance.getDouble(0);
-    	double switchAngle = Math.toRadians(Robot.ntSwitchAngle.getDouble(0));
+		double switchDistance = Robot.ntVisionDistance.getDouble(0);
+    	double switchAngle = Math.toRadians(Robot.ntVisionAngle.getDouble(0));
     	switchDistance = switchDistance / Math.cos(switchAngle);
     	double dx = switchDistance * Math.cos(Robot.driveSubsystem.getAngleRadians() + switchAngle);
     	double dy = switchDistance * Math.sin(Robot.driveSubsystem.getAngleRadians() + switchAngle);

@@ -46,8 +46,7 @@ public class IntakeSolenoidCommand extends Command {
 	protected void initialize() {
 		switch(chosen){
 		case TOGGLE:
-			if (Robot.liftSubsystem.getHeight() >= Constants.INTAKE_SOLENOID_MIN_HEIGHT || Robot.liftSubsystem.state == States.MECHANISM_DISABLED || !Robot.intakeSubsystem.getSolenoid())
-				Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
+			Robot.intakeSubsystem.setSolenoid(!Robot.intakeSubsystem.getSolenoid());
 			break;
 		case OPEN:
 			Robot.intakeSubsystem.setSolenoid(true);
