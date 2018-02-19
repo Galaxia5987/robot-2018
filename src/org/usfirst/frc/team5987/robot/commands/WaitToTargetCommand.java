@@ -1,43 +1,23 @@
 package org.usfirst.frc.team5987.robot.commands;
 
-import org.usfirst.frc.team5987.robot.Robot;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class ChangeFilterModeCommand extends Command {
-	public enum Modes {
-		SWITCH, CUBE, STREAM
-	}
-	private Modes mode;
-	private NetworkTableEntry ntFilterMode = Robot.visionTable.getEntry("Filter Mode");
-	/**
-	 * Change filter mode for the Raspberry Pi
-	 * @param newMode
-	 */
-    public ChangeFilterModeCommand(Modes newMode) {
+public class WaitToTargetCommand extends Command {
+	private NetworkTableEntry ntTarget;
+    public WaitToTargetCommand(NetworkTableEntry ntTarget, double timeout) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	mode = newMode;
+    	this.ntTarget= ntTarget;
+    	setTimeout(timeout);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	switch(mode){
-    	case SWITCH:
-    		ntFilterMode.setString("0");
-    		break;
-    	case CUBE:
-    		ntFilterMode.setString("2");
-    		break;
-		default:
-    	case STREAM:
-    		ntFilterMode.setString("1");
-    		break;
-    	}
+    	ntTarget.setBoolean(false);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -46,7 +26,7 @@ public class ChangeFilterModeCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return ntTarget.getBoolean(false) || isTimedOut();
     }
 
     // Called once after isFinished returns true
