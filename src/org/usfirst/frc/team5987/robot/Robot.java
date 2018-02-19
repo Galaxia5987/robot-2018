@@ -7,14 +7,12 @@
 
 package org.usfirst.frc.team5987.robot;
 
-import org.usfirst.frc.team5987.robot.commands.ArriveToSwitchGroupCommand;
+import org.usfirst.frc.team5987.robot.commands.autos.ArriveToSwitchGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.AutoCommandGroup;
-import org.usfirst.frc.team5987.robot.commands.AutoDriveToScaleCommand;
+import org.usfirst.frc.team5987.robot.commands.autos.AutoScale;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
-import org.usfirst.frc.team5987.robot.commands.ExampleCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 
-import org.usfirst.frc.team5987.robot.commands.PathCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.PathSwitchCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
@@ -94,7 +92,9 @@ public class Robot extends TimedRobot {
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 
 	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
+    SendableChooser <String> initPositionChooser = new SendableChooser <>();
+    SendableChooser <String> scaleChooser = new SendableChooser <>();
+    SendableChooser <String> switchChooser = new SendableChooser <>();
 
 	public static NetworkTableEntry ntSwitchAngle = visionTable.getEntry("Angle");
 	public static NetworkTableEntry ntSwitchTarget = visionTable.getEntry("Sees Target");
@@ -110,11 +110,10 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		navx.reset();
 		m_oi = new OI();
-		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
-		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
-		m_chooser.addObject("Scale (Robot Right)", new AutoDriveToScaleCommand('R'));
-		m_chooser.addObject("Scale (Robot Left)", new AutoDriveToScaleCommand('L'));
-		SmartDashboard.putData("Auto mode", m_chooser);
+        initPositionChooser.addObject("Left", "Left");
+        String initPosition = initPositionChooser.getSelected(), scale = scaleChooser.getSelected(),
+                svvitch = switchChooser.getSelected();
+        SmartDashboard.putData("Auto mode", initPositionChooser);
 		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
 		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(30, true));
@@ -130,7 +129,7 @@ public class Robot extends TimedRobot {
 				new Point (2, 2)
 				})
 				);
-		SmartDashboard.putData(new AutoDriveToScaleCommand('R'));
+        SmartDashboard.putData(new AutoScale('R'));
 		SmartDashboard.putData(new AutoCommandGroup('C'));
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntSwitchTarget));
@@ -178,11 +177,8 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
-		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
-		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
-		m_chooser.addObject("Scale (Robot Right)", new AutoDriveToScaleCommand('R'));
-		m_chooser.addObject("Scale (Robot Left)", new AutoDriveToScaleCommand('L'));
-		m_autonomousCommand = m_chooser.getSelected();
+        initPositionChooser.addDefault("Default Auto", new AutoCommandGroup('C'));
+        m_autonomousCommand = initPositionChooser.getSelected();
 
 //		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
 //		switch (autoSelected) {
