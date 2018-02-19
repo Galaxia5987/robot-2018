@@ -22,7 +22,6 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 
 	public AutoDriveToScaleCommand(char robotPosition) {
 		addSequential(new IntakeSolenoidCommand(true));
-		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
 		final int Y_DIRECTION = (robotPosition == 'R') ? 1 : -1;
 		if(robotPosition == scalePosition){
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
@@ -36,7 +35,7 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 					})
 			);
 		}else {
-			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
+//			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
 					new Point(0, 0),
 					new Point(4.5, -0.15 * Y_DIRECTION),
