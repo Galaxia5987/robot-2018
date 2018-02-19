@@ -1,5 +1,5 @@
 import os
-# os.system("v4l2-ctl -d /dev/video0 --set-ctrl exposure_auto=1")
+os.system("v4l2-ctl -d /dev/video0 --set-ctrl exposure_auto=1")
 # ------------launch options------------------------------------------------------
 from clint.textui import colored
 import sys
@@ -95,6 +95,13 @@ class Vision:
         self.angle = 0
         self.sees_target = False
 
+        self.kernel = (
+            (0,1,0),
+            (1,1,1),
+            (0,1,0)
+        )
+        self.kernel=np.array(self.kernel,dtype=np.uint8)
+
         try: # makes sure the camera works, if not, throws an error
             self.get_frame(once=True)
         except AttributeError:
@@ -108,12 +115,6 @@ class Vision:
         self.set_range() # set the hsv range
         self.init_values() # set all the values
         self.filter_hsv() # convert image from bgr to hsv
-        self.kernel = (
-            (0,1,0),
-            (1,1,1),
-            (0,1,0)
-        )
-        self.kernel=np.array(self.kernel,dtype=np.uint8)
         self.dirode() # dialate and erode
         _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE) # get the contours
         self.contours = list(contours)
@@ -199,7 +200,6 @@ class Vision:
                 'self._iterations_i=3\n'+
                 'self.focal = 638.6086956521739\n'+
                 'self.target_height = 0\n'
-                'self.edgy = False\n'
                 'os.system("v4l2-ctl -d /dev/video"+str(camera)" --set-ctrl exposure_absolute=156")'
             )
             file.close()
@@ -609,10 +609,8 @@ class Vision:
             self.filter_hsv()
             if self.surfix is '2':
                 pass
-                # self.eilate()
+                #self.eilate()
             self.dirode()
-            if self.edgy:
-                self.edge_detection()
             _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             self.contours = list(contours)
             self.get_contours()
