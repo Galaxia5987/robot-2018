@@ -1,7 +1,8 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
@@ -26,8 +27,9 @@ public class EatCubeGroupCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
-    	addSequential(new WaitCommand(0.6));
+    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 2));
     	addSequential(new EatCubeCommand());
+//    	addParallel(new TakeCommand());
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
     }
 }

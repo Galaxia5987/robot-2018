@@ -29,10 +29,14 @@ public class ChangeFilterModeCommand extends Command {
     	switch(mode){
     	case SWITCH:
     		ntFilterMode.setString("0");
+    		break;
     	case CUBE:
     		ntFilterMode.setString("2");
+    		break;
+		default:
     	case STREAM:
     		ntFilterMode.setString("1");
+    		break;
     	}
     }
 
