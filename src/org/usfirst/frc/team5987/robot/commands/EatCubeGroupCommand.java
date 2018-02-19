@@ -28,8 +28,8 @@ public class EatCubeGroupCommand extends CommandGroup {
         // arm.
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
     	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 2));
+    	addParallel(new TakeCommand());
     	addSequential(new EatCubeCommand());
-//    	addParallel(new TakeCommand());
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
     }
 }

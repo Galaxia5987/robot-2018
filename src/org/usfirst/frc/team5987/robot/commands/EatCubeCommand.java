@@ -23,7 +23,9 @@ public class EatCubeCommand extends PathCommand {
 			double navx = Math.toRadians(Robot.navx.getAngle());
 			double y = distance * Math.sin(angle + navx);
 			double x = distance * Math.cos(angle + navx);
-			
+//			double y = distance * Math.sin(angle);
+//			double x = distance * Math.cos(angle);
+					
 			Point[] cube = new Point[] {new Point(0,0), new Point(x, y)};
 			return cube;
 		}
