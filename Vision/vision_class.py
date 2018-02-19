@@ -1,5 +1,5 @@
 import os
-os.system("v4l2-ctl -d /dev/video0 --set-ctrl exposure_auto=1")
+# os.system("v4l2-ctl -d /dev/video0 --set-ctrl exposure_auto=1")
 # ------------launch options------------------------------------------------------
 from clint.textui import colored
 import sys
@@ -108,6 +108,12 @@ class Vision:
         self.set_range() # set the hsv range
         self.init_values() # set all the values
         self.filter_hsv() # convert image from bgr to hsv
+        self.kernel = (
+            (0,1,0),
+            (1,1,1),
+            (0,1,0)
+        )
+        self.kernel=np.array(self.kernel,dtype=np.uint8)
         self.dirode() # dialate and erode
         _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE) # get the contours
         self.contours = list(contours)
@@ -167,54 +173,8 @@ class Vision:
                 res = self.table.getBoolean(key, default_value)
         return res
 
-    # def range_finder(self):
-    #     minH = 255
-    #     minS = 255
-    #     minV = 255
-    #     maxH = 0
-    #     maxS = 0
-    #     maxV = 0
-    #     height, width, _ = self.frame.shape
-    #     target = np.zeros((height, width, 1), dtype=np.uint8)
-    #     target[int(height / 3):int(2 * height / 3), int(2 * width / 6):int(4 * width / 6)] = 255
-    #     target1 = target # crop the frame
-    #     target = np.zeros((height, width, 1), dtype=np.uint8)
-    #     target[int(2 * height / 5):int(3 * height / 5), int(2 * width / 5):int(3 * width / 5)] = 255
-    #     target2 = target
-    #     while True:
-    #         self.get_frame(once=True)
-    #         hsv=cv2.cvtColor(self.frame,cv2.COLOR_BGR2HSV)
-    #         hsv = cv2.bitwise_and(hsv, hsv, mask=target1)
-    #         self.show_frame = cv2.bitwise_and(self.frame, self.frame, mask=target1)
-    #         if cv2.waitKey(1) is 13:    # if key is enter
-    #             for row in hsv:
-    #                 for pixel in row:
-    #                     # Goes through every pixel in the frame and finds the lowest and highest values
-    #                     if not pixel.all() == 0:
-    #                         if pixel[0] < minH:
-    #                             minH = pixel[0]
-    #                         if pixel[1] < minS:
-    #                             minS = pixel[1]
-    #                         if pixel[2] < minV:
-    #                             minV = pixel[2]
-    #                         if pixel[0] > maxH:
-    #                             maxH = pixel[0]
-    #                         if pixel[1] > maxS:
-    #                             maxS = pixel[1]
-    #                         if pixel[2] > maxV:
-    #                             maxV = pixel[2]
-    #             break
-    #         self.show(once=True)
-    #     # write the newfound values onto a file with the correct surfix
-    #     file = open("files/Colors_" + self.surfix + ".val", 'w')
-    #     file.write(
-    #         "self.lower_range,self.upper_range = ({},{},{}),({},{},{})".format(minH, minS, minV, maxH, maxS, maxV))
-    #     file.close()
-
-
     def range_finder(self):
         pass
-
 
     def check_files(self):
         try:
@@ -239,6 +199,7 @@ class Vision:
                 'self._iterations_i=3\n'+
                 'self.focal = 638.6086956521739\n'+
                 'self.target_height = 0\n'
+                'self.edgy = False\n'
                 'os.system("v4l2-ctl -d /dev/video"+str(camera)" --set-ctrl exposure_absolute=156")'
             )
             file.close()
@@ -309,28 +270,21 @@ class Vision:
 
     def dirode(self):
         # Dialates and erodes the mask to reduce static and make the image clearer
-        # The kernel both functions will use
-        kernel = (
-            (0,1,0),
-            (1,1,1),
-            (0,1,0)
-        )
-        kernel=np.array(kernel,dtype=np.uint8)
-        self.mask = cv2.erode(self.mask, kernel,
+        self.mask = cv2.erode(self.mask, self.kernel,
                               iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
-        self.mask = cv2.dilate(self.mask, kernel,
+        self.mask = cv2.dilate(self.mask, self.kernel,
                                iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
     def eilate(self):
-        kernel = (
-            (0,1,0),
-            (1,1,1),
-            (0,1,0)
-        )
-        kernel=np.array(kernel,dtype=np.uint8)
-        self.mask = cv2.dilate(self.mask, kernel,
+        self.mask = cv2.dilate(self.mask, self.kernel,
                                iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
-        self.mask = cv2.erode(self.mask, kernel,
+        self.mask = cv2.erode(self.mask, self.kernel,
                               iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
+
+    def edge_detection(self):
+        laplacian = cv2.Laplacian(self.mask, cv2.CV_64F, ksize=15)
+        _, thresh = cv2.threshold(laplacian, 127, 255, cv2.THRESH_BINARY)
+        self.mask = cv2.bitwise_and(thresh, 255)
+        self.mask = np.array(self.mask, dtype=np.uint8)
 
     def find_center(self):
         # Finds the average of all centers of all contours
@@ -357,7 +311,6 @@ class Vision:
 
         triangle_area=height*width/2
         return triangle_area/hull_area
-
 
     def largest(self,c):
         contours=self.contours.copy()
@@ -662,8 +615,10 @@ class Vision:
             self.filter_hsv()
             if self.surfix is '2':
                 pass
-                #self.eilate()
+                # self.eilate()
             self.dirode()
+            if self.edgy:
+                self.edge_detection()
             _, contours, _ = cv2.findContours(self.mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             self.contours = list(contours)
             self.get_contours()
