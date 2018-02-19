@@ -15,7 +15,6 @@ public class PathSwitchCommand extends PathCommand {
 	
 	@Override
 	public Point[] getPoints() {
-		Robot.ntVisionFilterMode.setString("0");
 		if (!Robot.ntVisionTarget.getBoolean(false))
     	{
 			String gameData = DriverStation.getInstance().getGameSpecificMessage();

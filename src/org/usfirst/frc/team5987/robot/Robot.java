@@ -13,6 +13,7 @@ import org.usfirst.frc.team5987.robot.commands.AutoDriveToScaleCommand;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.EatCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
+import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.PathSwitchCommand;
@@ -112,6 +113,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Match number", DriverStation.getInstance().getMatchNumber());
 		navx.reset();
 		m_oi = new OI();
+		
 		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
 		m_chooser.addObject("Scale (Robot Right)", new AutoDriveToScaleCommand('R'));
@@ -122,7 +124,7 @@ public class Robot extends TimedRobot {
 		ntVisionFilterMode.setString("0");
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
-		SmartDashboard.putData(new DriveStraightCommand(1.5));
+		SmartDashboard.putData(new DriveStraightCommand(0.5));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData("0.5M lift 3s", new LiftCommand(0.5, 3));
 		SmartDashboard.putData("0M lift", new LiftCommand(0));
@@ -139,6 +141,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntVisionTarget));
 		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
 		SmartDashboard.putData(new EatCubeGroupCommand());
+		SmartDashboard.putData(new IntakeSolenoidCommand());
 		ntSetpoint.setDouble(0);
 		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 	}

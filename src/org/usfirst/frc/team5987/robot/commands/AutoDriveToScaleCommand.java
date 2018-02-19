@@ -35,7 +35,7 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 					})
 			);
 		}else {
-//			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
+			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
 					new Point(0, 0),
 					new Point(4.5, -0.15 * Y_DIRECTION),

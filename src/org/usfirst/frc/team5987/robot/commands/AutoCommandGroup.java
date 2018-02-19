@@ -49,12 +49,11 @@ public class AutoCommandGroup extends CommandGroup {
 		 * {@link #switchDist1} and {@link #distFromSwitch}).
 		 */
 		NetworkTableEntry switchAngle = autoTable.getEntry("switch angle");
-
+		addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.SWITCH));
 		addSequential(new IntakeSolenoidCommand(true));
 		// Robot is in center, ready to go to one of two Platforms of the
 		// Switch.
 		if (startPosition == 'C') {
-			addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.SWITCH));
 			addSequential(new DriveStraightCommand(Constants.AUTO_SWITCH_STRAIGHT));
 			// Switch plate is on the left.
 			if (switchPosition == 'L') {
@@ -64,7 +63,7 @@ public class AutoCommandGroup extends CommandGroup {
 			if (switchPosition == 'R') {
 				addSequential(new TurnCommand(-Constants.AUTO_SWITCH_TURN, false));
 			}
-			addSequential(new WaitCommand(1));
+			addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 1));
 			addSequential(new LiftCommand(Constants.LiftCommandStates.SWITCH));
 			addParallel(new IntakeSolenoidCommand(false));
 			addSequential(new PathSwitchCommand());
