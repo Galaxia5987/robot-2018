@@ -406,16 +406,6 @@ class Vision:
 
         return height / width
 
-    def bounding_aspectratio(self,c):
-        _,_,w,h=cv2.boundingRect(c)
-        return h/w
-
-    def solidity(self,c):
-        hull_area=cv2.contourArea(cv2.convexHull(c))
-        area=cv2.contourArea(c)
-        return area/hull_area
-
-
     def diameterratio(self, c):
         return (np.sqrt(4 * cv2.contourArea(c) / np.pi)) / (cv2.minEnclosingCircle(c)[1] * 2)
 

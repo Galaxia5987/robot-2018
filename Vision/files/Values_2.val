@@ -1,6 +1,7 @@
 self.command_s = "area,1000,1000000;edge_points,6,6;is_cube,1,1;largest,1,1;solidity,0.75,1;bounding_aspectratio,0.8,1.2"
 =======
 self.command_s = "area,1000,1000000;edge_points,6,6;is_cube,1,1"
+self.command_s = "area,1000,1000000;edge_points,6,6;is_cube,1,1;largest,1,1"
 self.draw_contours_b = True
 self.draw_hulls_b = True
 self.dirode_iterations_i = 1
