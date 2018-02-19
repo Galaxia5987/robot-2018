@@ -20,6 +20,7 @@ public abstract class PathCommand extends Command {
 	surfceMP train;
 	private double pointX;
 	private double pointY;
+	private boolean isRelative;
 	
 	/**
 	 * 
@@ -27,21 +28,37 @@ public abstract class PathCommand extends Command {
 	 */
 	public abstract Point[] getPoints(); 
 	
-    public PathCommand() {
+	/**
+	 * 
+	 * @param isRelative true if the points are relative to the start of the command, <br>
+	 * false if relative to the starting position of the robot in the autonomous
+	 */
+    public PathCommand(boolean isRelative) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveSubsystem);
+    	this.isRelative = isRelative;
+    }
+    
+    public PathCommand(){
+    	this(true);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	x = 0; y = 0;
     	preLeftDistance = Robot.driveSubsystem.getLeftDistance();
     	preRightDistance = Robot.driveSubsystem.getRightDistance();
     	
-		double startX = Constants.PATH_h * Math.cos(Robot.driveSubsystem.getAngleRadians());
-    	double startY = Constants.PATH_h * Math.sin(Robot.driveSubsystem.getAngleRadians());
-
+		double startX = 0;
+    	double startY = 0;
+		if(!isRelative){
+			startX += Robot.robotAbsolutePosition[0];
+			startY += Robot.robotAbsolutePosition[1];
+		}
+		x = startX;
+		y = startY;
+		startX += Constants.PATH_h * Math.cos(Robot.driveSubsystem.getAngleRadians());
+    	startY += Constants.PATH_h * Math.sin(Robot.driveSubsystem.getAngleRadians());
 		Point[] p = getPoints();
 		
 		for (int i = 0; i < p.length; i++) {
@@ -96,6 +113,13 @@ public abstract class PathCommand extends Command {
     	Robot.driveSubsystem.setRightSpeed(0);
     	
 		Robot.driveSubsystem.setSetpoints(0, 0);
+		if(isRelative){
+			Robot.robotAbsolutePosition[0] += pointX;
+			Robot.robotAbsolutePosition[1] += pointY;
+		}else{
+			Robot.robotAbsolutePosition[0] = pointX;
+			Robot.robotAbsolutePosition[1] = pointY;
+		}
 
 }
 

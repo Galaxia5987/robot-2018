@@ -54,7 +54,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-
+	public static double[] robotAbsolutePosition = new double[]{0, 0};
 	public static final PowerDistributionPanel PDP = new PowerDistributionPanel();
 
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();

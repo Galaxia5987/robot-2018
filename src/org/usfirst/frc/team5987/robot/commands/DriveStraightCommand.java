@@ -197,6 +197,9 @@ public class DriveStraightCommand extends Command {
 		Robot.driveSubsystem.setLeftSpeed(0);
 		Robot.driveSubsystem.setRightSpeed(0);
 		Robot.driveSubsystem.setSetpoints(0, 0);
+		double passedDistance = finalDistance - DistanceError;
+		Robot.robotAbsolutePosition[0] += passedDistance * Math.cos(Robot.driveSubsystem.getAngleRadians());
+		Robot.robotAbsolutePosition[1] += passedDistance * Math.sin(Robot.driveSubsystem.getAngleRadians());
 	}
 
 	// Called when another command which requires one or more of the same
