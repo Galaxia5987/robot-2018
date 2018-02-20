@@ -3,6 +3,8 @@ package org.usfirst.frc.team5987.robot;
 import java.util.EnumMap;
 import java.util.Map;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+
 public class Constants {
 	
 	/**
@@ -16,6 +18,7 @@ public class Constants {
 	}
 	
 	/********************* AUTONOMOUS *********************/
+	public static final double AUTO_LINE = 3.1;
 	// Switch
 	public static final double AUTO_SWITCH_TURN = 30;
 	public static final double AUTO_SWITCH_STRAIGHT = 0.2;
@@ -196,7 +199,6 @@ public class Constants {
 	/***********************  SIDE SWITCH COMMAND  *************************/
 	public static final double SIDE_SWITCH_FORAWARD_DISTANCE = 3.755;
 	public static final double SIDE_SWITCH_SIDE_DISTANCE = 1;
-	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
-	
+	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/	
 	
 }

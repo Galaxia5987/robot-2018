@@ -7,9 +7,8 @@
 
 package org.usfirst.frc.team5987.robot;
 
-import org.usfirst.frc.team5987.robot.commands.autos.ArriveToSwitchGroupCommand;
-import org.usfirst.frc.team5987.robot.commands.AutoCommandGroup;
-import org.usfirst.frc.team5987.robot.commands.autos.AutoScale;
+import org.usfirst.frc.team5987.robot.commands.autos.*;
+import org.usfirst.frc.team5987.robot.commands.AutoSwitchCommandGroup;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 
 import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
@@ -19,6 +18,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.PathSwitchCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
+import org.usfirst.frc.team5987.robot.commands.TestAbsPath;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnTillSeesTargetCommand;
 import org.usfirst.frc.team5987.robot.commands.TurnToTargetGroupCommand;
@@ -56,7 +56,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-
+	public static double[] robotAbsolutePosition = new double[]{0, 0};
 	public static final PowerDistributionPanel PDP = new PowerDistributionPanel();
 
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
@@ -97,11 +97,12 @@ public class Robot extends TimedRobot {
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 
 	Command m_autonomousCommand;
-    SendableChooser <String> initPositionChooser = new SendableChooser <>();
+    SendableChooser <Character> initPositionChooser = new SendableChooser <>();
     SendableChooser <String> scaleChooser = new SendableChooser <>();
     SendableChooser <String> switchChooser = new SendableChooser <>();
     SendableChooser <Command> m_chooser = new SendableChooser <>();
-
+    char initPosition;
+    String scaleChoice, switchChoice;
 	public static NetworkTableEntry ntVisionAngle = visionTable.getEntry("Angle");
 	public static NetworkTableEntry ntVisionTarget = visionTable.getEntry("Sees Target");
 	public static NetworkTableEntry ntVisionDistance = visionTable.getEntry("Distance");
@@ -118,20 +119,35 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Match number", DriverStation.getInstance().getMatchNumber());
 		navx.reset();
 		m_oi = new OI();
-        initPositionChooser.addObject("Left", "Left");
-        String initPosition = initPositionChooser.getSelected(), scalePosition = scaleChooser.getSelected(),
-                switchPosition = switchChooser.getSelected();
+        
+		// Autonomous options
+		initPositionChooser.addObject("Right", 'R');
+		initPositionChooser.addDefault("Center", 'C');
+		initPositionChooser.addObject("Left", 'L');
+
+		scaleChooser.addDefault("Nothing", "nothing");
+		scaleChooser.addObject("Close", "close");
+		scaleChooser.addObject("Close and far", "both");
+		
+		switchChooser.addDefault("Nothing", "nothing");
+		switchChooser.addObject("Close", "close");
+		switchChooser.addObject("Close and far", "both");
+		switchChooser.addObject("Side", "side");
+        
         SmartDashboard.putData("Auto mode", initPositionChooser);
-		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
+		m_chooser.addDefault("Default Auto", new Switch());
 		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
-		m_chooser.addObject("Scale (Robot Right) backwards", new AutoScale('R', true));
-		m_chooser.addObject("Scale (Robot Left) forward", new AutoScale('L', false));
+		m_chooser.addObject("Scale (Robot Right) backwards", new CloseScale('R', true));
+		m_chooser.addObject("Scale (Robot Left) forward", new CloseScale('L', false));
 		SmartDashboard.putData("Auto mode", m_chooser);
+		SmartDashboard.putData("Robot Position", initPositionChooser);
+		SmartDashboard.putData("Scale Options", scaleChooser);
+		SmartDashboard.putData("Switch Options", switchChooser);
 
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData(new DriveStraightCommand(0.5));
-		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
+		SmartDashboard.putData(new Switch());
 		SmartDashboard.putData("0.5M lift 3s", new LiftCommand(0.5, 3));
 		SmartDashboard.putData("0M lift", new LiftCommand(0));
 		SmartDashboard.putData(new PathSwitchCommand());
@@ -142,14 +158,13 @@ public class Robot extends TimedRobot {
 				})
 				);
 
-        SmartDashboard.putData(new AutoScale('R'));
-		SmartDashboard.putData(new AutoCommandGroup('C'));
+        SmartDashboard.putData(new CloseScale('R'));
 
 		SmartDashboard.putData(new ShootCubeCommand(1, true));
 		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntVisionTarget));
-		SmartDashboard.putData(new ArriveToSwitchGroupCommand());
+		SmartDashboard.putData(new Switch());
 		SmartDashboard.putData(new EatCubeGroupCommand());
-
+		SmartDashboard.putData(new TestAbsPath());
 		SmartDashboard.putData(new IntakeSolenoidCommand());
 		ntSetpoint.setDouble(0);
 		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
@@ -194,28 +209,23 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
-        initPositionChooser.addDefault("Default Auto", "Far");
-		m_chooser.addDefault("Default Auto", new AutoCommandGroup('C'));
-		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
-		m_chooser.addObject("Scale (Robot Right)", new AutoScale('R', true));
-		m_chooser.addObject("Scale (Robot Left)", new AutoScale('L', false));
-		m_autonomousCommand = m_chooser.getSelected();
+//		m_chooser.addDefault("Default Auto", new AutoSwitchCommandGroup('C'));
+//		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
+//		m_chooser.addObject("Scale (Robot Right)", new CloseScale('R', true));
+//		m_chooser.addObject("Scale (Robot Left)", new CloseScale('L', false));
+//		m_autonomousCommand = m_chooser.getSelected();
+		while(DriverStation.getInstance().getGameSpecificMessage().length() != 3){} // wait for game data
+		char switchPosition = DriverStation.getInstance().getGameSpecificMessage().charAt(0), 
+			 scalePosition = DriverStation.getInstance().getGameSpecificMessage().charAt(1);
 
-//		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-//		switch (autoSelected) {
-//		case "Default Auto":
-//			m_autonomousCommand = new MyAutoCommand();
-//			break;
-//		case "Default Auto":
-//		default:
-//			m_autonomousCommand = null;
-//			break;
+//		if (m_autonomousCommand != null) {
+//			m_autonomousCommand.start();
 //		}
-
-		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
-		}
+		boolean isBack = true;
+        initPosition = initPositionChooser.getSelected();
+        scaleChoice = scaleChooser.getSelected();
+        switchChoice = switchChooser.getSelected();
+		(new MainAuto(initPosition, scaleChoice, switchChoice, isBack)).start();
 	}
 
 	/**

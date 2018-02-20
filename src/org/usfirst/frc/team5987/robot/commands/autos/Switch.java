@@ -7,9 +7,9 @@ import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 /**
  *
  */
-public class ArriveToSwitchGroupCommand extends CommandGroup {
+public class Switch extends CommandGroup {
 	private static final double SWITCH_DISTANCE_ADDITION = -0.1;
-    public ArriveToSwitchGroupCommand() {
+    public Switch() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());

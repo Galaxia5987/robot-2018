@@ -14,7 +14,7 @@ import org.usfirst.frc.team5987.robot.commands.TakeCommand;
 /**
  *
  */
-public class AutoScale extends CommandGroup {
+public class CloseScale extends CommandGroup {
 	/**
 	 * The game specific message which includes data about the Scale and
 	 * Switches Plates randomanization.
@@ -25,7 +25,7 @@ public class AutoScale extends CommandGroup {
 	char scalePosition = gameData.charAt(1);
 	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
-	public AutoScale(char robotPosition, boolean isBackwards) {
+	public CloseScale(char robotPosition, boolean isBackwards) {
 		double intakeDelay = isBackwards ? 2 : 0; // delay for opening intake so it won't touch the allience wall
 		double forwardAddition = isBackwards ? 0.29 : 0; // forward addition to backwards
 		double sideAddition = isBackwards ? 0.17 : 0; // side addition to backwards
@@ -67,7 +67,7 @@ public class AutoScale extends CommandGroup {
 		}
 	}
 	
-	public AutoScale(char robotPosition) {
+	public CloseScale(char robotPosition) {
 		this(robotPosition, false);
 	}
 }
