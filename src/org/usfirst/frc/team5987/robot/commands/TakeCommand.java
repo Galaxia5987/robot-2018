@@ -16,6 +16,7 @@ public class TakeCommand extends Command {
 	private double delay = 0;
 	private double operationTime = 100000000;
 	private Timer timer = new Timer();
+	private boolean overrideProximitySensor = false;
     public TakeCommand() {
     	requires(Robot.gripperSubsystem);
     	requires(Robot.intakeSubsystem);
@@ -25,6 +26,7 @@ public class TakeCommand extends Command {
     	this();
     	this.delay = delay;
     	this.operationTime = operationTime;
+    	overrideProximitySensor = true;
     }
 
     // Called just before this Command runs the first time
@@ -46,8 +48,8 @@ public class TakeCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	
-        return (isTimedOut() || Robot.gripperSubsystem.isCubeInside() ||!Robot.liftSubsystem.reachedBottom()) && !Robot.m_oi.xbox.getRawButton(OI.TakeCommandButton);
+    	boolean isCubeInside = overrideProximitySensor ? false : Robot.gripperSubsystem.isCubeInside();
+        return (isTimedOut() || isCubeInside ||!Robot.liftSubsystem.reachedBottom()) && !Robot.m_oi.xbox.getRawButton(OI.TakeCommandButton);
     	
     }
 

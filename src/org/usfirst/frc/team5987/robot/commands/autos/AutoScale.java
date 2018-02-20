@@ -26,15 +26,16 @@ public class AutoScale extends CommandGroup {
 	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
 	public AutoScale(char robotPosition, boolean isBackwards) {
-		double intakeDelay = isBackwards ? 2 : 0;
-		double forwardAddition = isBackwards ? 0.32 : 0;
-		double sideAddition = isBackwards ? 0.17 : 0;
+		double intakeDelay = isBackwards ? 2 : 0; // delay for opening intake so it won't touch the allience wall
+		double forwardAddition = isBackwards ? 0.29 : 0; // forward addition to backwards
+		double sideAddition = isBackwards ? 0.17 : 0; // side addition to backwards
 		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
-		if(isBackwards)
-			addParallel(new TakeCommand(2.5, 0.5));
+//		if(isBackwards)
+			addParallel(new TakeCommand(3.5, 0.7));
 		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
 		final int Y_DIRECTION = robotPosition == 'R' ? 1 : -1;
 		if(robotPosition == scalePosition){
+			/**Close Scale**/
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[]{
 					new Point(Constants.toMeter(196) - Constants.CENTER_TO_BACK_BUMPER, -0.15 * Y_DIRECTION),
@@ -45,16 +46,17 @@ public class AutoScale extends CommandGroup {
 					}, isBackwards, true)
 			);
 		}else {
+			/**Far Scale**/
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
 					new Point(4.5, -0.15 * Y_DIRECTION),
 					new Point(5.3, 0.4 * Y_DIRECTION),
 					new Point(5.30001, 4.0 * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_TURN_DISTANCE_BEFORE_SCALE,
-							(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER) * Y_DIRECTION),
-					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE,
-							(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER) * Y_DIRECTION)
-					})
+							(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER + sideAddition) * Y_DIRECTION),
+					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE + forwardAddition,
+							(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER + sideAddition) * Y_DIRECTION)
+					}, isBackwards, true)
 			);
 		}
 		if (isBackwards) {

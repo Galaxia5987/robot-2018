@@ -26,12 +26,10 @@ public class TestAbsPath extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	addSequential(new PathPointsCommand(new Point[]{
-    			new Point(0, 0),
     			new Point(1, 0.0001)
     	}, false, false));
     	addSequential(new PathPointsCommand(new Point[]{
-    			new Point(1, 0.0001),
-    			new Point(1, 1)
+    			new Point(2, 0)
     	}, false, false));
     }
 }
