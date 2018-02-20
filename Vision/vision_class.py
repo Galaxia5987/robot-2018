@@ -281,8 +281,7 @@ class Vision:
                               iterations=self.get_item("DiRode iterations", self.dirode_iterations_i))
 
     def edge_detection(self):
-        img = cv2.bitwise_or(self.mask, self.frame)
-        laplacian = cv2.Laplacian(img, cv2.CV_64F, ksize=7)
+        laplacian = cv2.Laplacian(self.mask, cv2.CV_64F, ksize=7)
         _, thresh = cv2.threshold(laplacian, 127, 255, cv2.THRESH_BINARY)
         self.mask = cv2.bitwise_and(thresh, 255)
         self.mask = np.array(self.mask, dtype=np.uint8)
@@ -567,13 +566,15 @@ class Vision:
 
     def get_frame(self, once=False):
         if once:
-            self.frame = cv2.resize(self.cam.read()[1], None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+            _, self.frame = self.cam.read()
+            self.frame = cv2.resize(self.frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
             self.frame = cv2.blur(self.frame, (5,5))
             self.show_frame = self.frame.copy()
         else:
             global stop
             while not self.get_item("Raspberry Stop", stop):
-                self.frame = cv2.resize(self.cam.read()[1], None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+                _, self.frame = self.cam.read()
+                self.frame = cv2.resize(self.frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
                 self.frame = cv2.blur(self.frame, (5,5))
                 self.show_frame = self.frame.copy()
 
