@@ -1,6 +1,6 @@
 package auxiliary;
 
-public class surfceMP {
+public class surfaceMP {
 	
 	private Path track;
 	private double d;
@@ -12,9 +12,10 @@ public class surfceMP {
 	private double endSpeed;
 	private double r = 1;
 	private double h = 1;
+	private double errorAcceleration;
 
 
-	public surfceMP(Point[] p,double maxVelocity, double a, double d, double startSpeed, double endSpeed) {
+	public surfaceMP(Point[] p,double maxVelocity, double a, double d, double startSpeed, double endSpeed, double errorAcceleration) {
 		track = new Path(p);
 		this.d = d;
 		this.a = a;
@@ -23,6 +24,7 @@ public class surfceMP {
 		this.totLength = track.getLength(p.length-2, p[p.length-1]);
 		this.startSpeed = startSpeed;
 		this.endSpeed = endSpeed;
+		this.errorAcceleration = errorAcceleration;
 	}
 	
 	public double[] getV(Point p) {
@@ -30,7 +32,7 @@ public class surfceMP {
 		double[] length = {tmp[0],tmp[1]};
 		double[] error = {tmp[2],tmp[3]};
 		
-		double Verror = velocityByDistance(0,d/4,0,error[0]);
+		double Verror = velocityByDistance(0,errorAcceleration,0,error[0]);
 		Verror = Verror > topVelocity ? topVelocity : Verror;
 		
 		double Vforward = 0;

@@ -53,6 +53,10 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
+	public static final double ERROR_ACCELERATION = 0.1125;
+	/**
+	 * ABSOLUTE, METER/SEC^2
+	 */
 	public static final double DRIVE_DECCELERATION = 0.45;
 	public static final double DRIVE_ROTATION_RADIUS = 0.3325; // test chasiss
 	/**
@@ -67,7 +71,7 @@ public class Constants {
 	// PIDF constants for controlling velocity for wheels
 	public static double DRIVE_kP = 0.675;
 	public static double DRIVE_kI = 0.0;
-	public static double DRIVE_kD = 0.0;
+	public static double DRIVE_kD = 0.008;
 	public static double DRIVE_kF = 0.33;
 	public static double DRIVE_TurnKp = 0.15;
 	public static double DRIVE_TurnKi = 0.01;

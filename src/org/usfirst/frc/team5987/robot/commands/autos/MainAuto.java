@@ -23,7 +23,7 @@ public class MainAuto extends CommandGroup {
         // Going to the Switch side if the robot starts on the Switch position.
         if (switchChoice == "side" && robotPosition == switchSide) {
         	ntAppendCommand("SwitchSide");
-//			addSequential(new SwitchSide());
+			addSequential(new SwitchSide(robotPosition, isBackwards));
 			return;
         }
         
@@ -57,14 +57,14 @@ public class MainAuto extends CommandGroup {
 		// If the robot starts on the Scale side.
         if (currentPosition == scaleSide) {
         	ntAppendCommand("CloseScale(" + robotPosition + ", " + isBackwards + ")");
-//    		addSequential(new CloseScale(robotPosition, isBackwards));
+    		addSequential(new CloseScale(robotPosition, isBackwards));
     	} 
         // If the robot starts on the opposite side of the Scale.
         else {	
         	// 
         	if (scaleChoice == "both") {
         		ntAppendCommand("FarScale(" + robotPosition + ", " + isBackwards + ")");
-//    			addSequential(new FarScale(robotPosition, isBackwards));
+    			addSequential(new FarScale(robotPosition, isBackwards));
     			currentPosition = scaleSide;
     		}
     		else {

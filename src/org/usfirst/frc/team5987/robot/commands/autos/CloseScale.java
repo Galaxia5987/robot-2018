@@ -5,6 +5,8 @@ import org.usfirst.frc.team5987.robot.Constants;
 import auxiliary.Point;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+
+import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
@@ -27,8 +29,8 @@ public class CloseScale extends CommandGroup {
 
 	public CloseScale(char robotPosition, boolean isBackwards) {
 		double intakeDelay = isBackwards ? 2 : 0; // delay for opening intake so it won't touch the allience wall
-		double forwardAddition = isBackwards ? 0.29 : 0; // forward addition to backwards
-		double sideAddition = isBackwards ? 0.17 : 0; // side addition to backwards
+		double forwardAddition = isBackwards ? 0.2 : 0; // forward addition to backwards
+		double sideAddition = isBackwards ? 0.15 : 0; // side addition to backwards
 		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
 //		if(isBackwards)
 			addParallel(new TakeCommand(3.5, 0.7));
@@ -46,11 +48,13 @@ public class CloseScale extends CommandGroup {
 		);
 
 		if (isBackwards) {
-			addSequential(new ShootCubeCommand(-0.4, true));
+			addSequential(new ShootCubeCommand(-1, true));
 		}
 		else {
-			addSequential(new ShootCubeCommand(0.4, true));
+			addSequential(new ShootCubeCommand(1, true));
 		}
+		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM));
+		addSequential(new DriveStraightCommand(0.2));
 	}
 	
 	public CloseScale(char robotPosition) {

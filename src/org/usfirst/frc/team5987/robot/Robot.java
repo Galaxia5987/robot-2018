@@ -145,7 +145,10 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
-		SmartDashboard.putData(new DriveStraightCommand(0.5));
+		SmartDashboard.putData("Drive forward", new DriveStraightCommand(3));
+		SmartDashboard.putData("Drive 0.2", new DriveStraightCommand(0.2));
+		SmartDashboard.putData("Drive 4", new DriveStraightCommand(4));
+		SmartDashboard.putData("Drive backward", new DriveStraightCommand(-3));
 		SmartDashboard.putData(new Switch());
 		SmartDashboard.putData("0.5M lift 3s", new LiftCommand(0.5, 3));
 		SmartDashboard.putData("0M lift", new LiftCommand(0));

@@ -4,7 +4,7 @@ import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 
 import auxiliary.Point;
-import auxiliary.surfceMP;
+import auxiliary.surfaceMP;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,7 +17,7 @@ public abstract class PathCommand extends Command {
 	private double preLeftDistance = 0;
 	private double preRightDistance = 0;
 	private Point endPoint;
-	surfceMP train;
+	surfaceMP train;
 	private double pointX;
 	private double pointY;
 	private boolean isRelative;
@@ -68,7 +68,7 @@ public abstract class PathCommand extends Command {
 			p[i].setPoint(cords[0]+ startX, cords[1] + startY);
 		}
 				
-		train = new surfceMP(p, Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_ACCELERATION, Constants.DRIVE_DECCELERATION, Constants.DRIVE_MIN_VELOCITY, 0);
+		train = new surfaceMP(p, Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_ACCELERATION, Constants.DRIVE_DECCELERATION, Constants.DRIVE_MIN_VELOCITY, 0, Constants.ERROR_ACCELERATION);
 		train.setRatio(Constants.PATH_h, 0.375);
 		endPoint = p[p.length-1];
     }
