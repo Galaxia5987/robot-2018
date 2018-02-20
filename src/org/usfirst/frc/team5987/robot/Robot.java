@@ -118,11 +118,11 @@ public class Robot extends TimedRobot {
 		navx.reset();
 		m_oi = new OI();
         initPositionChooser.addObject("Left", "Left");
-        String initPosition = initPositionChooser.getSelected(), scale = scaleChooser.getSelected(),
-                svvitch = switchChooser.getSelected();
+        String initPosition = initPositionChooser.getSelected(), scalePosition = scaleChooser.getSelected(),
+                switchPosition = switchChooser.getSelected();
         SmartDashboard.putData("Auto mode", initPositionChooser);
-		ntSwitchAngle.setDouble(ntSwitchAngle.getDouble(0));
-		ntSwitchDistance.setDouble(ntSwitchDistance.getDouble(0));
+		ntVisionAngle.setDouble(ntVisionAngle.getDouble(0));
+		ntVisionDistance.setDouble(ntVisionDistance.getDouble(0));
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData(new DriveStraightCommand(0.5));
@@ -186,8 +186,7 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
-        initPositionChooser.addDefault("Default Auto", new AutoCommandGroup('C'));
-        m_autonomousCommand = initPositionChooser.getSelected();
+        initPositionChooser.addDefault("Default Auto", "Far");
 
 //		String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
 //		switch (autoSelected) {
