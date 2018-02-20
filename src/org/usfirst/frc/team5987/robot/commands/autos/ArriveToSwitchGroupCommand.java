@@ -1,8 +1,8 @@
-package org.usfirst.frc.team5987.robot.commands;
-
-import org.usfirst.frc.team5987.robot.Robot;
+package org.usfirst.frc.team5987.robot.commands.autos;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 
 /**
  *
