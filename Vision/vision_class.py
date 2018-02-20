@@ -570,17 +570,15 @@ class Vision:
 
     def get_frame(self, once=False):
         if once:
-            self.frame = cv2.resize(self.cam.read()[1], None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
-            self.frame = cv2.blur(self.frame, (5,5))
+            self.on, self.frame = self.cam.read()
             self.show_frame = self.frame.copy()
         else:
             global stop
             while not self.get_item("Raspberry Stop", stop):
-                self.frame = cv2.resize(self.cam.read()[1], None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
-                self.frame = cv2.blur(self.frame, (5,5))
+                self.on, self.frame = self.cam.read()
                 self.show_frame = self.frame.copy()
 
-    def show(self, once=False):
+    def show(self):
         global stop
         if is_stream:
             self.app.run(host=ip,port=80, debug=False)
@@ -596,8 +594,6 @@ class Vision:
                 if self.key is ord('q'):
                     cv2.destroyAllWindows()
                     stop = True
-                if once:
-                    break
 
     def analyse(self):
         global stop
