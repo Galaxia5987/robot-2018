@@ -1,7 +1,5 @@
 package org.usfirst.frc.team5987.robot.commands.autos;
 
-import org.usfirst.frc.team5987.robot.commands.CloseSwitchAfterScale;
-import org.usfirst.frc.team5987.robot.commands.FarSwitchAfterScale;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -51,9 +49,7 @@ public class MainAuto extends CommandGroup {
 		// on the Switch side and on the opposite of the Scale side.
 		if (scaleChoice == "both" && switchChoice != "nothing" && robotPosition == switchSide && robotPosition != scaleSide)
 		{
-			ntAppendCommand("SwitchSide");
 			ntAppendCommand("CloseSwitchFarScale(" + robotPosition + ")");
-//			addSequential(new SwitchSide());
 //			addSequential(new CloseSwitchFarScale(robotPosition));
 			return;
 		}

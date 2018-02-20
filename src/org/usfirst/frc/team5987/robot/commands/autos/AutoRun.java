@@ -1,5 +1,8 @@
 package org.usfirst.frc.team5987.robot.commands.autos;
 
+import org.usfirst.frc.team5987.robot.Constants;
+import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -24,5 +27,6 @@ public class AutoRun extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
+    	addSequential(new DriveStraightCommand(Constants.AUTO_LINE));
     }
 }

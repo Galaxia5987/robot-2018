@@ -5,9 +5,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class CloseScaleCloseSwitch extends CommandGroup {
+public class FarSwitchAfterScale extends CommandGroup {
 
-    public CloseScaleCloseSwitch() {
-    	
+    public FarSwitchAfterScale(char currentPosition) {
+        
     }
+
 }

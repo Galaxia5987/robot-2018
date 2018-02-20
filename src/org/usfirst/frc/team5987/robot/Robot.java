@@ -8,7 +8,6 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.autos.*;
-import org.usfirst.frc.team5987.robot.commands.AutoSwitchCommandGroup;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 
 import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
