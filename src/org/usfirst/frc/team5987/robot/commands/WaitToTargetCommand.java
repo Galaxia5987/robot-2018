@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands;
 
+import org.usfirst.frc.team5987.robot.Robot;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -26,7 +28,7 @@ public class WaitToTargetCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return ntTarget.getBoolean(false) || isTimedOut();
+        return (ntTarget.getBoolean(false) && Robot.ntVisionDistance.getDouble(99) < 4) || isTimedOut();
     }
 
     // Called once after isFinished returns true
