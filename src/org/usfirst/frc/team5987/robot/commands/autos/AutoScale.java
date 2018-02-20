@@ -37,18 +37,16 @@ public class AutoScale extends CommandGroup {
 		if(robotPosition == scalePosition){
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[]{
-					new Point(0, 0),
 					new Point(Constants.toMeter(196) - Constants.CENTER_TO_BACK_BUMPER, -0.15 * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_TURN_DISTANCE_BEFORE_SCALE,
 							(END_Y + sideAddition) * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE + forwardAddition,
 							(END_Y + sideAddition) * Y_DIRECTION)
-					}, isBackwards)
+					}, isBackwards, true)
 			);
 		}else {
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
-					new Point(0, 0),
 					new Point(4.5, -0.15 * Y_DIRECTION),
 					new Point(5.3, 0.4 * Y_DIRECTION),
 					new Point(5.30001, 4.0 * Y_DIRECTION),

@@ -24,7 +24,7 @@ public class PathSwitchCommand extends PathCommand {
 			Point p1 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
 			Point p2 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_END_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
 			
-//			return new Point[] {p0,p1,p2};
+//			return new Point[] {p1,p2};
 			return new Point[] {p0}; // TODO: Change to above!
     	}
 		double switchDistance = Robot.ntVisionDistance.getDouble(0);
@@ -37,11 +37,10 @@ public class PathSwitchCommand extends PathCommand {
 //		SmartDashboard.putNumber("c", switchDistance);
 //		SmartDashboard.putNumber("a", Robot.driveSubsystem.getAngleRadians() + switchAngle);
 		double yShift = dy >= 0 ? Constants.AUTO_SWITCH_Y_SIDE_SHIFT : - Constants.AUTO_SWITCH_Y_SIDE_SHIFT;
-		Point A = new Point(0, 0);
 		Point B = new Point(dx - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH + Constants.AUTO_SWITCH_X_SHIFT, dy + yShift);
 		Point C = new Point(dx - Constants.PATH_END_DISTANCE_BEFORE_SWITCH + Constants.AUTO_SWITCH_X_SHIFT, dy + yShift);
 		
-		return new Point[] {A,B,C};
+		return new Point[] {B,C};
 	}
 
 }

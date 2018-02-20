@@ -55,7 +55,13 @@ public abstract class PathCommand extends Command {
     	startX += Constants.PATH_h * Math.cos(Robot.driveSubsystem.getAngleRadians());
     	startY += Constants.PATH_h * Math.sin(Robot.driveSubsystem.getAngleRadians());
     	
-		Point[] p = getPoints();
+    	//	Add first point
+		Point[] pWithoutFirst = getPoints();
+		Point[] p = new Point[pWithoutFirst.length + 1];
+		for(int i=1; i<p.length; i++)
+			p[i] = pWithoutFirst[i - 1];
+		p[0] = new Point(0, 0);
+			
 		
 		for (int i = 0; i < p.length; i++) {
 			double[] cords = p[i].get();
