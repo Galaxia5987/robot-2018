@@ -8,9 +8,11 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.Constants.LiftCommandStates;
+
 import org.usfirst.frc.team5987.robot.commands.ClimbCommand;
 import org.usfirst.frc.team5987.robot.commands.CommandGroup_CenterSwitch;
 import org.usfirst.frc.team5987.robot.commands.DriveToLineCommand;
+import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathCommand;
@@ -38,9 +40,10 @@ public class OI {
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
+	Button rb = new JoystickButton(xbox, 6);
 	Button select = new JoystickButton(xbox, 7);
 	Button start = new JoystickButton(xbox, 8);
-
+	
 	DPadButton d_up = new DPadButton(xbox,0);
 	DPadButton d_down = new DPadButton(xbox,4);
 	DPadButton d_dl = new DPadButton(xbox,5);
@@ -57,6 +60,7 @@ public class OI {
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());
+		rb.whenPressed(new EatCubeGroupCommand());
 //		start.toggleWhenActive(new ClimbCommand());
 	}
 }
