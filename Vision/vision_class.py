@@ -1,11 +1,10 @@
-import netifaces as ni
 import os
 os.system("v4l2-ctl -d /dev/video0 --set-ctrl exposure_auto=1")
 # ------------launch options------------------------------------------------------
 from clint.textui import colored
 import sys
 from flask import Flask, render_template, Response
-sys.stdout=open("Logs.txt","w+")
+
 camera = 0
 if '-h' in sys.argv or '--help' in sys.argv:
     print(
@@ -60,18 +59,20 @@ else:
 print('NetworkTables Server: ' + colored.green(nt_server))
 
 # ------------getting the ip------------------------------------------------------
-ip=None
+import netifaces as ni
 try:
     ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 except:
-    while ip is None:
-        for interface in ni.interfaces():
-            try:
-                if not ni.ifaddresses(interface)[ni.AF_INET][0]['addr'] == '127.0.0.1':
-                    ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
-                    break
-            except:
-                pass
+    for interface in ni.interfaces():
+        try:
+            if not ni.ifaddresses(interface)[ni.AF_INET][0]['addr'] == '127.0.0.1':
+                ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+                break
+        except:
+            pass
+    if ip is None:
+        ip='127.0.0.1'
+
 print('IP: ' + colored.green(ip))
 # -----------------------------Starting The Vision Class--------------------------------------------------------------
 import os
@@ -80,6 +81,7 @@ import numpy as np
 import math
 from networktables import NetworkTables
 from time import sleep
+cam = cv2.VideoCapture(camera)
 
 stop = False
 
@@ -87,13 +89,8 @@ class Vision:
     global stop
     def __init__(self,surfix=''): # the surfix is for all the value files this class will use
         self.surfix=surfix
-        self.on = False
-        while not self.on:
-            self.cam = cv2.VideoCapture(camera)
-            try:
-                self.get_frame(True)
-            except:
-                pass
+        self.cam = cam
+
         self.distance = 0
         self.angle = 0
         self.sees_target = False
