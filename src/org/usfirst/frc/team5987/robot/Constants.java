@@ -145,7 +145,7 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/***********************  PATH COMMAND  *************************/
-	public static final double PATH_h = 0.2;
+	public static double PATH_h = 0.2;
 	public static final double PATH_MOVE_FORWARD_SWITCH_DISTANCE = 3;
 	public static final double PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE = 2;
 	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.5;
