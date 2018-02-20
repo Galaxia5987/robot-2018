@@ -38,6 +38,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
@@ -303,7 +304,13 @@ public class Robot extends TimedRobot {
 		// driveSubsystem.setSetpoints(-0.3, -1);
 
 		SmartDashboard.putBoolean("inTake", intakeSubsystem.getSolenoid());
-
+		
+		// Make the Xbox controller rumble if a Power Cube is recognized by the camera.
+		if (ntVisionTarget.getBoolean(false))
+		{
+			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 1);		
+			m_oi.xbox.setRumble(RumbleType.kRightRumble, 1);
+		}
 	}
 
 	/**
