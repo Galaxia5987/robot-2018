@@ -21,8 +21,13 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
 	public AutoDriveToScaleCommand(char robotPosition, boolean isBackwards) {
-		addSequential(new IntakeSolenoidCommand(true));
-//		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
+		double intakeDelay = isBackwards ? 2 : 0;
+		double forwardAddition = isBackwards ? 0.32 : 0;
+		double sideAddition = isBackwards ? 0.17 : 0;
+		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
+		if(isBackwards)
+			addParallel(new TakeCommand(2.5, 0.5));
+		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
 		final int Y_DIRECTION = robotPosition == 'R' ? 1 : -1;
 		if(robotPosition == scalePosition){
 			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
@@ -30,13 +35,13 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 					new Point(0, 0),
 					new Point(Constants.toMeter(196) - Constants.CENTER_TO_BACK_BUMPER, -0.15 * Y_DIRECTION),
 					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_TURN_DISTANCE_BEFORE_SCALE,
-							END_Y * Y_DIRECTION),
-					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE,
-							END_Y * Y_DIRECTION)
+							(END_Y + sideAddition) * Y_DIRECTION),
+					new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE + forwardAddition,
+							(END_Y + sideAddition) * Y_DIRECTION)
 					}, isBackwards)
 			);
 		}else {
-//			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
+			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[] { 
 					new Point(0, 0),
 					new Point(4.5, -0.15 * Y_DIRECTION),
@@ -49,7 +54,12 @@ public class AutoDriveToScaleCommand extends CommandGroup {
 					})
 			);
 		}
-		addSequential(new ShootCubeCommand(0.4, true));
+		if (isBackwards) {
+			addSequential(new ShootCubeCommand(-0.4, true));
+		}
+		else {
+			addSequential(new ShootCubeCommand(0.4, true));
+		}
 	}
 	
 	public AutoDriveToScaleCommand(char robotPosition) {
