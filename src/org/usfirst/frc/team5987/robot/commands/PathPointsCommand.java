@@ -10,11 +10,11 @@ public class PathPointsCommand extends PathCommand {
 	private boolean isBackwards;
 
 	public PathPointsCommand(Point[] points) {
-		this(points, false);
+		this(points, false, true);
 	}
 
-	public PathPointsCommand(Point[] points, boolean isBackwards) {
-		super();
+	public PathPointsCommand(Point[] points, boolean isBackwards, boolean isRelative) {
+		super(isRelative);
 		this.isBackwards = isBackwards;
 		if(isBackwards) {
 			// Invert axes

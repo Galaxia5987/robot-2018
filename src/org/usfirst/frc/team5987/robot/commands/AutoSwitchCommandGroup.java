@@ -15,10 +15,10 @@ import org.usfirst.frc.team5987.robot.commands.*;
 /**
  *
  */
-public class AutoCommandGroup extends CommandGroup {
+public class AutoSwitchCommandGroup extends CommandGroup {
 	private char startPosition;
 	
-	public AutoCommandGroup(char startPosition) {
+	public AutoSwitchCommandGroup(char startPosition) {
 		this.startPosition = startPosition;
 	
 		/**
