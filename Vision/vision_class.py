@@ -453,8 +453,8 @@ class Vision:
     def distance_cube(self):
         _,top,middle,bottom=self.sort_edge_points(self.contours[0])
 
-        th1=middle[0]-bottom[0]
-        th2=middle[1]-bottom[1]
+        th1=top[0]-bottom[0]
+        th2=top[1]-bottom[1]
 
         height1=math.sqrt(th1[0]**2+th1[1]**2)
         height2=math.sqrt(th2[0]**2+th2[1]**2)
