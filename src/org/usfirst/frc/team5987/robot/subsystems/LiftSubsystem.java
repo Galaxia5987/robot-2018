@@ -142,6 +142,7 @@ public class LiftSubsystem extends Subsystem {
 		liftMotor.configPeakOutputForward(Constants.LIFT_PEAK_OUT_FWD, TALON_TIMEOUT_MS);
 		liftMotor.configNominalOutputReverse(Constants.LIFT_NOMINAL_OUT_REV, TALON_TIMEOUT_MS);
 		liftMotor.configPeakOutputReverse(Constants.LIFT_PEAK_OUT_REV, TALON_TIMEOUT_MS);
+		limitAbsoluteOutput(Constants.LIFT_MAX_RUNNING_OUTPUT);
 	}
 
 	public void initDefaultCommand() {
@@ -211,7 +212,6 @@ public class LiftSubsystem extends Subsystem {
 	    		// if mechanism is configured disabled, switch to MECHANISM_DISABLED
 	    		if(!ntIsEnabled.getBoolean(false))
 	    			state = States.MECHANISM_DISABLED;
-	    		limitAbsoluteOutput(Constants.LIFT_MAX_RUNNING_OUTPUT);
 	    		/*Unfreeze the lift when reaching hall effects if setpoint does not exceed limits*/
 	    		if(reachedTop()){
 	    			if(setpointMeters < getHeight()) // going down
