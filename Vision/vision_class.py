@@ -620,7 +620,7 @@ class Vision:
                         self.sees_target = True
                         self.get_distance()
                         self.get_angle()
-                elif self.surfix is '2':
+                elif self.surfix is '2' or self.surfix is '3':
                     self.sees_target = True
                     self.distance_cube()
                     self.get_angle()
