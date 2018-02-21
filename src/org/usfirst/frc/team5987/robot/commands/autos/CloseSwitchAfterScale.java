@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class CloseSwitchAfterScale extends CommandGroup {
 
-    public CloseSwitchAfterScale(char currentPosition) {
-        
-    }
-
+	public CloseSwitchAfterScale(char currentPosition) {
+		addSequential(new GetAndEatSwitchCube(currentPosition));
+	}
 }

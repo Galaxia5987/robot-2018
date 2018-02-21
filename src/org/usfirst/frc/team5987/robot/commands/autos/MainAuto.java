@@ -29,18 +29,19 @@ public class MainAuto extends CommandGroup {
         
         // Going to the Switch from the center.
 		if (currentPosition == 'C') {
-			if(switchChoice != "nothing"){
+			if (switchChoice != "nothing") {
 				ntAppendCommand("Switch");
-//				addSequential(new Switch());
-			}else{
+				addSequential(new Switch());
+			}
+			else {
 				ntAppendCommand("AutoRun");
-//				addSequential(new AutoRun());
+				addSequential(new AutoRun());
 			}
         	return;
-		}else{
+		} else {
 			if(scaleChoice == "nothing"){
 				ntAppendCommand("AutoRun");
-//				addSequential(new AutoRun());
+				addSequential(new AutoRun());
 				return;
 			}
 		}
@@ -50,7 +51,7 @@ public class MainAuto extends CommandGroup {
 		if (scaleChoice == "both" && switchChoice != "nothing" && robotPosition == switchSide && robotPosition != scaleSide)
 		{
 			ntAppendCommand("CloseSwitchFarScale(" + robotPosition + ")");
-//			addSequential(new CloseSwitchFarScale(robotPosition));
+			addSequential(new CloseSwitchFarScale(robotPosition));
 			return;
 		}
 		
@@ -59,9 +60,8 @@ public class MainAuto extends CommandGroup {
         	ntAppendCommand("CloseScale(" + robotPosition + ", " + isBackwards + ")");
     		addSequential(new CloseScale(robotPosition, isBackwards));
     	} 
-        // If the robot starts on the opposite side of the Scale.
+//         If the robot starts on the opposite side of the Scale.
         else {	
-        	// 
         	if (scaleChoice == "both") {
         		ntAppendCommand("FarScale(" + robotPosition + ", " + isBackwards + ")");
     			addSequential(new FarScale(robotPosition, isBackwards));
@@ -69,7 +69,7 @@ public class MainAuto extends CommandGroup {
     		}
     		else {
     			ntAppendCommand("AutoRun");
-//    			addSequential(new AutoRun());
+    			addSequential(new AutoRun());
     			return;
     		}
     	}
@@ -78,17 +78,17 @@ public class MainAuto extends CommandGroup {
     	case "both":
     		if(currentPosition == switchSide){
     			ntAppendCommand("CloseSwitchAfterScale(" + currentPosition + ")");
-//    			addSequential(new CloseSwitchAfterScale(currentPosition));
+    			addSequential(new CloseSwitchAfterScale(currentPosition));
     		}
     		else {
     			ntAppendCommand("FarSwitchAfterScale(" + currentPosition + ")");
-//    			addSequential(new FarSwitchAfterScale(currentPosition));
+    			addSequential(new FarSwitchAfterScale(currentPosition));
     		}
     		break;
     	case "close":	
     		if (currentPosition == switchSide){
     			ntAppendCommand("CloseSwitchAfterScale(" + currentPosition + ")");
-//    			addSequential(new CloseSwitchAfterScale(currentPosition));
+    			addSequential(new CloseSwitchAfterScale(currentPosition));
     		}
     		break;
     	}

@@ -2,6 +2,7 @@ package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -26,10 +27,12 @@ public class EatCubeGroupCommand extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
+    	char scalePosition = DriverStation.getInstance().getGameSpecificMessage().charAt(0);    	
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
     	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 2));
     	addParallel(new TakeCommand());
     	addSequential(new EatCubeCommand());
+    	addSequential(new TurnCommand(scalePosition == 'L' ? 15 : -15, true));
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
     }
 }

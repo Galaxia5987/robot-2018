@@ -16,7 +16,7 @@ public class Constants {
 	{
 		return inch * 0.0254;
 	}
-	
+	public static final boolean isCubeVision = true;
 	/********************* AUTONOMOUS *********************/
 	public static final double AUTO_LINE = 3.1;
 	// Switch
@@ -26,7 +26,7 @@ public class Constants {
 	public static final double AUTO_SWITCH_X_SHIFT = 0.45;
 	// Scale
 	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 4.5;
-	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 7.2;
+	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 5.6;
 	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
 	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
 	public static final double AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5);
@@ -41,7 +41,7 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
-	public static final double DRIVE_MAX_VELOCITY = 1.7;
+	public static final double DRIVE_MAX_VELOCITY = 2.4;
 	/**
 	 * ABSOLUTE, METER/SEC
 	 */
@@ -49,11 +49,11 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DRIVE_ACCELERATION = 0.8;
+	public static final double DRIVE_ACCELERATION = 1.3;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double ERROR_ACCELERATION = 0.1125;
+	public static final double ERROR_ACCELERATION = 0.075;
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
@@ -71,7 +71,7 @@ public class Constants {
 	// PIDF constants for controlling velocity for wheels
 	public static double DRIVE_kP = 0.675;
 	public static double DRIVE_kI = 0.0;
-	public static double DRIVE_kD = 0.008;
+	public static double DRIVE_kD = 0.011;
 	public static double DRIVE_kF = 0.33;
 	public static double DRIVE_TurnKp = 0.15;
 	public static double DRIVE_TurnKi = 0.01;
@@ -126,7 +126,7 @@ public class Constants {
 	public static final double LIFT_PEAK_OUT_FWD = 1;
 	public static final double LIFT_PEAK_OUT_REV = -0.1;
 	public static final double LIFT_NOMINAL_OUT_REV = 0;
-	public static final double LIFT_MAX_HEIGHT = 2.05;
+	public static final double LIFT_MAX_HEIGHT = 2.06;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/***********************  LIFT_POSITIONS  *************************/
