@@ -39,19 +39,19 @@ public class JoystickDriveCommand extends Command {
 		if(easyDriving){
 			left = -Robot.m_oi.left.getY() * Math.abs(Robot.m_oi.left.getY());
 			right = -Robot.m_oi.right.getY() * Math.abs(Robot.m_oi.right.getY());
-			rightLastN.add(right);
-			leftLastN.add(left);
-			rightLastN.remove(0);
-			leftLastN.remove(0);
-			double sumR = 0, sumL = 0;
-			for(double inputs : rightLastN){
-				sumR += inputs;
-			}
-			for(double inputs : leftLastN){
-				sumL += inputs;
-			}
-			left = sumL / leftLastN.size();
-			right = sumR / rightLastN.size();
+//			rightLastN.add(right);
+//			leftLastN.add(left);
+//			rightLastN.remove(0);
+//			leftLastN.remove(0);
+//			double sumR = 0, sumL = 0;
+//			for(double inputs : rightLastN){
+//				sumR += inputs;
+//			}
+//			for(double inputs : leftLastN){
+//				sumL += inputs;
+//			}
+//			left = sumL / leftLastN.size();
+//			right = sumR / rightLastN.size();
 		}
 		Robot.driveSubsystem.setLeftSpeed(left);
 		Robot.driveSubsystem.setRightSpeed(right);
