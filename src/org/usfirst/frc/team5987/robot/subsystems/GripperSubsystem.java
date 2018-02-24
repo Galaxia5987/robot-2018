@@ -32,8 +32,8 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	Timer downTimer = new Timer();
 
 	public GripperSubsystem(){
-		leftWheel.setInverted(!Constants.GRIPPER_REVERSED);
-		rightWheel.setInverted(Constants.GRIPPER_REVERSED);
+		leftWheel.setInverted(Constants.GRIPPER_LEFT_REVERSED);
+		rightWheel.setInverted(Constants.GRIPPER_RIGHT_REVERSED);
 	}
 	
 	public void initDefaultCommand() {

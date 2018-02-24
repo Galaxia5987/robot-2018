@@ -59,19 +59,16 @@ public class Constants {
 	 */
 	public static final double DRIVE_DECCELERATION = 0.45;
 	public static final double DRIVE_ROTATION_RADIUS = 0.3325; // test chasiss
-	/**
-	 * Mapping between 0-5V to METER for the analog input
-	 */
-	public static final double ultransonicMeterFactor = 1.024;
+	
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
 	public static final boolean DRIVE_leftInverted = false; // inverts the left motors
 	public static final boolean DRIVE_rightEncoderInverted = true; // inverts the right encoder
 	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
-	public static double DRIVE_kP = 0.675;
-	public static double DRIVE_kI = 0.0;
-	public static double DRIVE_kD = 0.011;
+	public static double DRIVE_kP = 0.15;
+	public static double DRIVE_kI = 0.0001;
+	public static double DRIVE_kD = 0;
 	public static double DRIVE_kF = 0.33;
 	public static double DRIVE_TurnKp = 0.15;
 	public static double DRIVE_TurnKi = 0.01;
@@ -84,9 +81,14 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  GRIPPER  ******************************/
-	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.25;
-	public static final boolean GRIPPER_REVERSED = false;
+	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.5;
+	public static final boolean GRIPPER_LEFT_REVERSED = false;
+	public static final boolean GRIPPER_RIGHT_REVERSED = true;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
+	
+	/****************************  INTAKE  ******************************/
+	public static final boolean INTAKE_RIGHT_REVERSED = true;
+	public static final boolean INTAKE_LEFT_REVERSED = false;
 	
 	/*****************************  LIFT  *******************************/
 	/*-------------- Talon Sensors Constants ------------*/
@@ -124,9 +126,9 @@ public class Constants {
 	private static final double LIFT_MIN_DOWN_OUTPUT = -0.1;
 	public static final double LIFT_NOMINAL_OUT_FWD = 0.2;
 	public static final double LIFT_PEAK_OUT_FWD = 1;
-	public static final double LIFT_PEAK_OUT_REV = -0.1;
+	public static final double LIFT_PEAK_OUT_REV = -0.2;
 	public static final double LIFT_NOMINAL_OUT_REV = 0;
-	public static final double LIFT_MAX_HEIGHT = 2.06;
+	public static final double LIFT_MAX_HEIGHT = 2.05;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/***********************  LIFT_POSITIONS  *************************/
@@ -137,7 +139,7 @@ public class Constants {
 	public static Map<LiftCommandStates, Double> LIFT_COMMAND_POSITIONS = new EnumMap<LiftCommandStates, Double>(LiftCommandStates.class);
 	static {
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.BOTTOM,    0.0d  );
-		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SWITCH,    1.4d  );
+		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SWITCH,    0.85d  );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_DOWN,1.5d  );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_MID, 1.75d );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_TOP, 2d    );
@@ -162,7 +164,7 @@ public class Constants {
 	/***********************  SHOOT CUBE COMMAND  *************************/
 	public static final double SHOOT_TIME = 1;
 	public static final double SHOOT_BACKWARDS_MIN_HEIGHT = 1.44;
-	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.5;
+	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.65;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 

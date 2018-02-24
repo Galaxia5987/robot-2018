@@ -43,13 +43,8 @@ public class DriveSubsystem extends Subsystem {
 	private static final Encoder driveRightEncoder = new Encoder(RobotMap.driveRightEncoderChannelA, RobotMap.driveRightEncoderChannelB, Constants.DRIVE_rightEncoderInverted);
 	private static final Encoder driveLeftEncoder = new Encoder(RobotMap.driveLeftEncoderChannelA, RobotMap.driveLeftEncoderChannelB, Constants.DRIVE_leftEncoderInverted);
 	
-	/**
-	 * HRLV-MaxSonar -EZ ultrasonic sensor
-	 */
-	private static final AnalogInput backDistanceSensor = new AnalogInput(RobotMap.backUltrasonic);
-	
 	// Creates a new NetworkTable
-	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("SmartDashboard");
+	public NetworkTable driveTable = NetworkTableInstance.getDefault().getTable("Drive");
 	// NT PIDF constants
 	NetworkTableEntry ntKp = driveTable.getEntry("kP");
 	NetworkTableEntry ntKi = driveTable.getEntry("kI");
@@ -93,11 +88,6 @@ public class DriveSubsystem extends Subsystem {
 		// set the distance per pulse for the encoders
 		driveLeftEncoder.setDistancePerPulse(Constants.DRIVE_LEFT_DISTANCE_PER_PULSE);
 		driveRightEncoder.setDistancePerPulse(Constants.DRIVE_RIGHT_DISTANCE_PER_PULSE);
-		
-		driveRightFrontMotor.setInverted(Constants.DRIVE_rightInverted);
-		driveLeftRearMotor.setInverted(Constants.DRIVE_leftInverted);
-		driveLeftFrontMotor.setInverted(Constants.DRIVE_leftInverted);
-		
 		
 		// init the PIDF constants in the NetworkTable
 		ntGetPID();
@@ -198,7 +188,7 @@ public class DriveSubsystem extends Subsystem {
 	 */
 	public double getGyroPID(double desiredAngle){
 		ntGetGyroPID();
-		double out = DriveSubsystem.gyroPID.getOutput(getAngle(), desiredAngle);
+		double out = gyroPID.getOutput(getAngle(), desiredAngle);
 		ntGyroPIDOut.setDouble(out);
 		return out;
 	}
@@ -312,24 +302,9 @@ public class DriveSubsystem extends Subsystem {
     	return Math.toRadians(getAngle());
     }
 
-	
-	/**
-	 * Get the distance from the back of the robot <br>
-	 * <i>Note: Shows ~0.3 M under 0.3 M</i>
-	 * @return distance in METER
-	 */
-	public double getBackDistance(){
-		return backDistanceSensor.getVoltage() * Constants.ultransonicMeterFactor;
-	}
-
 	public void resetEncoders() {
 		// TODO Auto-generated method stub
 		driveLeftEncoder.reset();
 		driveRightEncoder.reset();
-	}
-
-	public boolean isBump() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
