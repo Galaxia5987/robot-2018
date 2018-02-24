@@ -282,7 +282,7 @@ public class Robot extends TimedRobot {
 		ntAcs1.setDouble(navx.getRawAccelX());
 		ntAcs2.setDouble(navx.getRawAccelY());
 		ntAcs3.setDouble(navx.getRawAccelZ());
-
+		SmartDashboard.putNumber("angle", navx.getAngle());
 		ntGyroX.setDouble(navx.getRawGyroX());
 		ntGyroY.setDouble(navx.getRawGyroY());
 		ntGyroZ.setDouble(navx.getRawGyroZ());

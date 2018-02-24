@@ -18,7 +18,7 @@ public class Constants {
 	}
 	public static final boolean isCubeVision = true;
 	/********************* AUTONOMOUS *********************/
-	public static final double AUTO_LINE = 3.1;
+	public static final double AUTO_LINE = 2.75;
 	// Switch
 	public static final double AUTO_SWITCH_TURN = 30;
 	public static final double AUTO_SWITCH_STRAIGHT = 0.2;
@@ -62,8 +62,8 @@ public class Constants {
 	
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
 	public static final boolean DRIVE_leftInverted = false; // inverts the left motors
-	public static final boolean DRIVE_rightEncoderInverted = true; // inverts the right encoder
-	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
+	public static final boolean DRIVE_rightEncoderInverted = false; // inverts the right encoder
+	public static final boolean DRIVE_leftEncoderInverted = false; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
 	public static double DRIVE_kP = 0.675;

@@ -1,8 +1,9 @@
 package org.usfirst.frc.team5987.robot.commands.autos;
 
 import org.usfirst.frc.team5987.robot.Constants;
-import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
+import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 
+import auxiliary.Point;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -10,7 +11,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutoRun extends CommandGroup {
 
-    public AutoRun() {
+    public AutoRun(boolean isBackwards) {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -27,6 +28,6 @@ public class AutoRun extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new DriveStraightCommand(Constants.AUTO_LINE));
+    	addSequential(new PathPointsCommand(new Point[] {new Point(Constants.AUTO_LINE, 0)}, isBackwards, true));
     }
 }
