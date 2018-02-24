@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5987.robot.subsystems;
 
+import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.RobotMap;
 
 import auxiliary.SafeVictor;
@@ -20,6 +21,11 @@ public class IntakeSubsystem extends Subsystem implements Watch_Dogeable {
 	private DoubleSolenoid solenoid = new DoubleSolenoid(1,RobotMap.intakeSolenoid1, RobotMap.intakeSolenoid2);
 	Timer downTimer = new Timer();
 
+	public IntakeSubsystem() {
+		intakeMotorLeft.setInverted(Constants.INTAKE_LEFT_REVERSED);
+		intakeMotorRight.setInverted(Constants.INTAKE_RIGHT_REVERSED);
+	}
+	
 	/**
 	 * Set the speed for the intake wheels
 	 * 

@@ -46,15 +46,13 @@ public class OI {
 	
 	DPadButton d_up = new DPadButton(xbox,0);
 	DPadButton d_down = new DPadButton(xbox,4);
-	DPadButton d_dl = new DPadButton(xbox,5);
 	DPadButton d_left = new DPadButton(xbox,6);
-	DPadButton d_lu = new DPadButton(xbox,7);
+	DPadButton d_right = new DPadButton(xbox,2);
 
 	public OI() {
 		d_down.whenPressed(new LiftCommand(Constants.LiftCommandStates.BOTTOM));
-		d_dl.whenPressed(new LiftCommand(Constants.LiftCommandStates.SWITCH));
-		d_left.whenPressed(new LiftCommand(Constants.LiftCommandStates.SCALE_DOWN));
-		d_lu.whenPressed(new LiftCommand(Constants.LiftCommandStates.SCALE_MID));
+		d_left.whenPressed(new LiftCommand(Constants.LiftCommandStates.SWITCH));
+		d_right.whenPressed(new LiftCommand(Constants.LiftCommandStates.SCALE_MID));
 		d_up.whenPressed(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP));
 		b.whileHeld(new ShootCubeCommand(0.75, false));
 		x.whileHeld(new ShootCubeCommand(-0.75, false));

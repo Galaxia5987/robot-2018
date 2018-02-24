@@ -59,10 +59,7 @@ public class Constants {
 	 */
 	public static final double DRIVE_DECCELERATION = 0.45;
 	public static final double DRIVE_ROTATION_RADIUS = 0.3325; // test chasiss
-	/**
-	 * Mapping between 0-5V to METER for the analog input
-	 */
-	public static final double ultransonicMeterFactor = 1.024;
+	
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
 	public static final boolean DRIVE_leftInverted = false; // inverts the left motors
 	public static final boolean DRIVE_rightEncoderInverted = true; // inverts the right encoder
@@ -85,8 +82,13 @@ public class Constants {
 	
 	/****************************  GRIPPER  ******************************/
 	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.25;
-	public static final boolean GRIPPER_REVERSED = false;
+	public static final boolean GRIPPER_LEFT_REVERSED = false;
+	public static final boolean GRIPPER_RIGHT_REVERSED = true;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
+	
+	/****************************  INTAKE  ******************************/
+	public static final boolean INTAKE_RIGHT_REVERSED = true;
+	public static final boolean INTAKE_LEFT_REVERSED = false;
 	
 	/*****************************  LIFT  *******************************/
 	/*-------------- Talon Sensors Constants ------------*/
