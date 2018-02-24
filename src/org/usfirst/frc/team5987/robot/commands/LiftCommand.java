@@ -39,7 +39,7 @@ public class LiftCommand extends Command {
 			this.position = 0.0;
 			break;
 		case SWITCH:
-			this.position = 1.4;
+			this.position = 0.85;
 			break;
 		case SCALE_DOWN:
 			this.position = 1.5;

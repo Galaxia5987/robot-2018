@@ -33,7 +33,7 @@ public class ShootCubeCommand extends Command {
 				Robot.gripperSubsystem.setSpeed(speed, speed);
 		} else {
 			Robot.gripperSubsystem.setSpeed(speed, speed);
-			if (Robot.liftSubsystem.getHeight() < 0.1)
+			if (Robot.liftSubsystem.getHeight() < 0.65)
 				Robot.intakeSubsystem.setSpeed(speed, speed);
 		}
 	}
