@@ -44,7 +44,7 @@ public class CloseScale extends CommandGroup {
 						(END_Y + sideAddition) * Y_DIRECTION),
 				new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE + forwardAddition,
 						(END_Y + sideAddition) * Y_DIRECTION)
-				}, isBackwards, true)
+				}, isBackwards, true, 6.5)
 		);
 
 		if (isBackwards) {

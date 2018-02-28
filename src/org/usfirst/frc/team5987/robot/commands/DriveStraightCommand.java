@@ -30,7 +30,10 @@ public class DriveStraightCommand extends Command {
 	NetworkTableEntry ntShowAngleToKeep = driveTable.getEntry("Show Angle To Keep");
 	private double absDistanceAddition = 0;
 	
-	
+	public DriveStraightCommand(double distance, double angleToKeep,double timeout) {
+		this(distance);
+		setTimeout(timeout);
+	} 
 
 	/**
 	 * 
@@ -187,7 +190,7 @@ public class DriveStraightCommand extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
 		// finish when both sides have reached targets
-		return Math.abs(DistanceError) < Constants.DRIVE_STRAIGHT_MIN_DISTANCE_ERROR;
+		return Math.abs(DistanceError) < Constants.DRIVE_STRAIGHT_MIN_DISTANCE_ERROR || isTimedOut();
 
 	}
 

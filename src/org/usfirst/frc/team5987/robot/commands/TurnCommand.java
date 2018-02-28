@@ -36,6 +36,11 @@ public class TurnCommand extends Command {
 	NetworkTableEntry ntRotationDegreesError = driveTable.getEntry("Rotation Degrees Error");
 	private PIDTypes priorPIDType;
 	
+	public TurnCommand(double angle, boolean isRelative,double timeOut) {
+		this(angle,isRelative);
+		setTimeout(timeOut);
+	}
+	
 	/**
 	 * 
 	 * @param angle angle in DEGREES
@@ -127,7 +132,7 @@ public class TurnCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Math.abs(degreesError) < Constants.TURN_MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < Constants.DRIVE_MIN_VELOCITY / 2 ;
+        return (Math.abs(degreesError) < Constants.TURN_MIN_DEGREES_ERROR) && Math.abs(Robot.driveSubsystem.getLeftSpeed()) < Constants.DRIVE_MIN_VELOCITY / 2 || isTimedOut();
     }
 
     // Called once after isFinished returns true

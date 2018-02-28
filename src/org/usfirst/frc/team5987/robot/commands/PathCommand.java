@@ -6,7 +6,6 @@ import org.usfirst.frc.team5987.robot.Robot;
 import auxiliary.Point;
 import auxiliary.surfaceMP;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -28,15 +27,21 @@ public abstract class PathCommand extends Command {
 	 */
 	public abstract Point[] getPoints(); 
 	
-	public PathCommand(boolean isRelative) {
+	public PathCommand(boolean isRelative, double timeOut) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveSubsystem);
     	this.isRelative = isRelative;
+    	if (timeOut != 0)
+    		setTimeout(timeOut);
     }
 	
+	public PathCommand(boolean isRelative) {
+		this(isRelative,0);
+	}
+	
 	public PathCommand(){
-		this(true);
+		this(true,0);
      }
 
     // Called just before this Command runs the first time
@@ -105,7 +110,7 @@ public abstract class PathCommand extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         double[] end  = endPoint.get();
-    	return Math.abs(end[0] - pointX) < 0.05 && Math.abs(end[1] - pointY) < 0.05;
+    	return Math.abs(end[0] - pointX) < 0.05 && Math.abs(end[1] - pointY) < 0.05 || isTimedOut();
     }
 
     // Called once after isFinished returns true

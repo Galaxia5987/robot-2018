@@ -12,6 +12,9 @@ public class PathSwitchCommand extends PathCommand {
 	public PathSwitchCommand() {
 		super();
 	}
+	public PathSwitchCommand(double timeOut) {
+		super(true,timeOut);
+	}
 	
 	@Override
 	public Point[] getPoints() {

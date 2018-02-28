@@ -30,7 +30,7 @@ public class Constants {
 	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
 	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
 	public static final double AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5);
-	public static final double AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER = -0.1;
+	public static final double AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER = 0.45;
 	public static final double CENTER_TO_BACK_BUMPER = toMeter(13.25);
 	public static final double CENTER_TO_SIDE_BUMPER = toMeter(19.75);
 	
@@ -66,7 +66,7 @@ public class Constants {
 	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
-	public static double DRIVE_kP = 0.15;
+	public static double DRIVE_kP = 0.175;
 	public static double DRIVE_kI = 0.0001;
 	public static double DRIVE_kD = 0;
 	public static double DRIVE_kF = 0.33;
@@ -157,7 +157,7 @@ public class Constants {
 	public static double PATH_h = 0.2;
 	public static final double PATH_MOVE_FORWARD_SWITCH_DISTANCE = 3;
 	public static final double PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE = 2;
-	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.5;
+	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.6;
 	public static final double PATH_TURN_DISTANCE_BEFORE_SWITCH = 1.5;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	

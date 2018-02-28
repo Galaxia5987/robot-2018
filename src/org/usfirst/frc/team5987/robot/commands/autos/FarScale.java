@@ -30,7 +30,7 @@ public class FarScale extends CommandGroup {
 	public FarScale(char robotPosition, boolean isBackwards) {
 		double intakeDelay = isBackwards ? 2 : 0; // delay for opening intake so it won't touch the allience wall
 		double forwardAddition = isBackwards ? 0.24 : 0; // forward addition to backwards
-		double sideAddition = isBackwards ? 0.17 : 0; // side addition to backwards
+		double sideAddition = isBackwards ? 0.37 : 0; // side addition to backwards
 		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
 //		if(isBackwards)
 			addParallel(new TakeCommand(3.5, 0.7));
@@ -41,12 +41,11 @@ public class FarScale extends CommandGroup {
 		addSequential(new PathPointsCommand(new Point[] { 
 				new Point(4.5, -0.15 * Y_DIRECTION),
 				new Point(5.3, 0.4 * Y_DIRECTION),
-				new Point(5.30001, 4.0 * Y_DIRECTION),
-				new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_TURN_DISTANCE_BEFORE_SCALE,
-						(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER + sideAddition + 0.1) * Y_DIRECTION),
+				new Point(5.30001,
+						(4.55 + Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER) * Y_DIRECTION),
 				new Point(Constants.toMeter(299.65) - Constants.CENTER_TO_BACK_BUMPER - Constants.AUTO_END_DISTANCE_BEFORE_SCALE + forwardAddition,
-						(4.55 - Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER + sideAddition) * Y_DIRECTION)
-				}, isBackwards, true)
+						(4.55 + Constants.AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER) * Y_DIRECTION)
+				}, isBackwards, true, 9)
 		);
 		if (isBackwards) {
 			addSequential(new ShootCubeCommand(-0.75, true));

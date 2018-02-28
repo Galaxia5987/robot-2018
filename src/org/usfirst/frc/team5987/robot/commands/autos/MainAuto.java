@@ -35,13 +35,13 @@ public class MainAuto extends CommandGroup {
 			}
 			else {
 				ntAppendCommand("AutoRun");
-				addSequential(new AutoRun());
+				addSequential(new AutoRun(false));
 			}
         	return;
 		} else {
 			if(scaleChoice == "nothing"){
 				ntAppendCommand("AutoRun");
-				addSequential(new AutoRun());
+				addSequential(new AutoRun(true));
 				return;
 			}
 		}
@@ -69,7 +69,7 @@ public class MainAuto extends CommandGroup {
     		}
     		else {
     			ntAppendCommand("AutoRun");
-    			addSequential(new AutoRun());
+    			addSequential(new AutoRun(true));
     			return;
     		}
     	}

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutoRun extends CommandGroup {
 
-    public AutoRun() {
+    public AutoRun(boolean isBack) {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -27,6 +27,6 @@ public class AutoRun extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new DriveStraightCommand(Constants.AUTO_LINE));
+    	addSequential(new DriveStraightCommand(isBack ? -Constants.AUTO_LINE : Constants.AUTO_LINE));
     }
 }

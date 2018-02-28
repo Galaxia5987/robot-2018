@@ -310,6 +310,9 @@ public class Robot extends TimedRobot {
 		{
 			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 1);		
 			m_oi.xbox.setRumble(RumbleType.kRightRumble, 1);
+		} else {
+			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 0);		
+			m_oi.xbox.setRumble(RumbleType.kRightRumble, 0);
 		}
 	}
 
