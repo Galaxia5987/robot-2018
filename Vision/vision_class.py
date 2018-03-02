@@ -435,14 +435,24 @@ class Vision:
         hullpoints = list(cv2.convexHull(approx, returnPoints=True))
         hullpoints.sort(key=index1)
 
-        top.append(hullpoints[0][0])
-        top.append(hullpoints[1][0])
+        if len(hullpoints) is 6:
+            top.append(hullpoints[0][0])
+            top.append(hullpoints[1][0])
 
-        middle.append(hullpoints[2][0])
-        middle.append(hullpoints[3][0])
+            middle.append(hullpoints[2][0])
+            middle.append(hullpoints[3][0])
 
-        bottom.append(hullpoints[4][0])
-        bottom.append(hullpoints[5][0])
+            bottom.append(hullpoints[4][0])
+            bottom.append(hullpoints[5][0])
+
+        if len(hullpoints) is 5:
+            top.append(hullpoints[0][0])
+            top.append(hullpoints[1][0])
+
+            middle.append(hullpoints[2][0])
+
+            bottom.append(hullpoints[3][0])
+            bottom.append(hullpoints[4][0])
 
         hullpoints = list(cv2.convexHull(approx, returnPoints=True))
         hullpoints_list=[list(x[0]) for x in hullpoints]
@@ -492,13 +502,25 @@ class Vision:
             cv2.line(self.show_frame, tuple(points[i]), (points[i][0]+x, points[i][1]+y), [0, 0, 255], 2)
             i+=1
             # print("i "+str(i)+" j "+str(j)+" x "+str(x)+" y "+str(y)+" alpha "+str(alpha))
-        # print(alphas)
+        if len(alphas) is 5:
+            print(alphas)
         if len(alphas) is 6 or 4:
             counter = 0
             for i in range(0, int(len(alphas)/2)):
                 if abs(alphas[i] - alphas[i+int(len(alphas)/2)]) <= 25:
                     counter+=1
             if counter >= 2:
+                cube = 1
+        if len(alphas) is 5:
+            para = False
+            perp = False
+            for i in range(0, len(alphas)-2):
+                if abs(alphas[i] + alphas[i+2]) < 5:
+                    perp = True
+                    continue
+                if abs(alphas[i] - alphas[i+2]) < 5:
+                    para = True
+            if para and perp:
                 cube = 1
         return cube
 
@@ -570,12 +592,22 @@ class Vision:
 
     def get_frame(self, once=False):
         if once:
-            self.on, self.frame = self.cam.read()
+            if self.surfix is '2':
+                self.on = self.cam.read()[0]
+                self.frame = cv2.resize(self.cam.read()[1], None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+                self.frame = cv2.blur(self.frame, (5, 5))
+            else:
+                self.on, self.frame = self.cam.read()
             self.show_frame = self.frame.copy()
         else:
             global stop
             while not self.get_item("Raspberry Stop", stop):
-                self.on, self.frame = self.cam.read()
+                if self.surfix is '2':
+                    self.on = self.cam.read()[0]
+                    self.frame = cv2.resize(self.cam.read()[1], None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+                    self.frame = cv2.blur(self.frame, (5,5))
+                else:
+                    self.on, self.frame = self.cam.read()
                 self.show_frame = self.frame.copy()
 
     def show(self):
