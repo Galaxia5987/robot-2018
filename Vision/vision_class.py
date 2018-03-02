@@ -435,24 +435,31 @@ class Vision:
         hullpoints = list(cv2.convexHull(approx, returnPoints=True))
         hullpoints.sort(key=index1)
 
-        if len(hullpoints) is 6:
-            top.append(hullpoints[0][0])
-            top.append(hullpoints[1][0])
-
-            middle.append(hullpoints[2][0])
-            middle.append(hullpoints[3][0])
-
-            bottom.append(hullpoints[4][0])
-            bottom.append(hullpoints[5][0])
-
         if len(hullpoints) is 5:
-            top.append(hullpoints[0][0])
-            top.append(hullpoints[1][0])
+            print(hullpoints)
+            i = 0
+            max = 0
+            point = None
+            while i < len(hullpoints):
+                j = i - 1
+                x = hullpoints[j][0][0] - hullpoints[i][0][0]
+                y = hullpoints[j][0][1] - hullpoints[i][0][1]
+                z = math.sqrt(x**2 +y**2)
+                if abs(z) > max:
+                    max = z
+                    point = (hullpoints[i][0][0] + x/2, hullpoints[i][0][1] + y/2)
+                i+=1;
+            hullpoints.append(point)
 
-            middle.append(hullpoints[2][0])
 
-            bottom.append(hullpoints[3][0])
-            bottom.append(hullpoints[4][0])
+        top.append(hullpoints[0][0])
+        top.append(hullpoints[1][0])
+
+        middle.append(hullpoints[2][0])
+        middle.append(hullpoints[3][0])
+
+        bottom.append(hullpoints[4][0])
+        bottom.append(hullpoints[5][0])
 
         hullpoints = list(cv2.convexHull(approx, returnPoints=True))
         hullpoints_list=[list(x[0]) for x in hullpoints]
@@ -502,24 +509,24 @@ class Vision:
             cv2.line(self.show_frame, tuple(points[i]), (points[i][0]+x, points[i][1]+y), [0, 0, 255], 2)
             i+=1
             # print("i "+str(i)+" j "+str(j)+" x "+str(x)+" y "+str(y)+" alpha "+str(alpha))
-        if len(alphas) is 5:
-            print(alphas)
         if len(alphas) is 6 or 4:
             counter = 0
             for i in range(0, int(len(alphas)/2)):
-                if abs(alphas[i] - alphas[i+int(len(alphas)/2)]) <= 25:
+                if abs(alphas[i] - alphas[i+int(len(alphas)/2)]) <= 15:
                     counter+=1
             if counter >= 2:
                 cube = 1
-        if len(alphas) is 5:
             para = False
             perp = False
-            for i in range(0, len(alphas)-2):
-                if abs(alphas[i] + alphas[i+2]) < 5:
-                    perp = True
-                    continue
-                if abs(alphas[i] - alphas[i+2]) < 5:
-                    para = True
+            for i in range(0, len(alphas)-1):
+                for j in range(1, len(alphas)):
+                    print(abs(alphas[i] - alphas[j]))
+                    print(abs(alphas[i] + alphas[j]))
+                    if abs(alphas[i] - alphas[j]) < 5:
+                        para = True
+                    if abs(90 - (alphas[i] + alphas[j])) < 5:
+                        perp = True
+                    print(para, perp)
             if para and perp:
                 cube = 1
         return cube
