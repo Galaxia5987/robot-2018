@@ -5,7 +5,7 @@ os.system("v4l2-ctl -d /dev/video0 --set-ctrl exposure_auto=1")
 from clint.textui import colored
 import sys
 from flask import Flask, render_template, Response
-sys.stdout=open("Logs.txt","w+")
+#sys.stdout=open("Logs.txt","w+")
 camera = 0
 if '-h' in sys.argv or '--help' in sys.argv:
     print(
@@ -436,7 +436,6 @@ class Vision:
         hullpoints.sort(key=index1)
 
         if len(hullpoints) is 5:
-            print(hullpoints)
             i = 0
             max = 0
             point = None
@@ -484,6 +483,7 @@ class Vision:
         except ZeroDivisionError:
             distance=None
         self.distance=distance
+        print(distance)
         self.set_item('Distance',self.distance)
         return self.distance
 
@@ -520,13 +520,10 @@ class Vision:
             perp = False
             for i in range(0, len(alphas)-1):
                 for j in range(1, len(alphas)):
-                    print(abs(alphas[i] - alphas[j]))
-                    print(abs(alphas[i] + alphas[j]))
                     if abs(alphas[i] - alphas[j]) < 5:
                         para = True
                     if abs(90 - (alphas[i] + alphas[j])) < 5:
                         perp = True
-                    print(para, perp)
             if para and perp:
                 cube = 1
         return cube
