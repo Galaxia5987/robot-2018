@@ -97,7 +97,8 @@ public class Robot extends TimedRobot {
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 
 	Command m_autonomousCommand;
-    SendableChooser <Character> initPositionChooser = new SendableChooser <>();
+    SendableChooser <Character> directionChooser = new SendableChooser <>();
+	SendableChooser <Character> initPositionChooser = new SendableChooser <>();
     SendableChooser <String> scaleChooser = new SendableChooser <>();
     SendableChooser <String> switchChooser = new SendableChooser <>();
     SendableChooser <Command> m_chooser = new SendableChooser <>();
@@ -121,6 +122,9 @@ public class Robot extends TimedRobot {
 		m_oi = new OI();
         
 		// Autonomous options
+		directionChooser.addDefault("backward", 'T');
+		directionChooser.addObject("Forward", 'F');
+		
 		initPositionChooser.addObject("Right", 'R');
 		initPositionChooser.addDefault("Center", 'C');
 		initPositionChooser.addObject("Left", 'L');
@@ -140,10 +144,10 @@ public class Robot extends TimedRobot {
 		m_chooser.addObject("Scale (Robot Right) backwards", new CloseScale('R', true));
 		m_chooser.addObject("Scale (Robot Left) forward", new CloseScale('L', false));
 		SmartDashboard.putData("Auto mode", m_chooser);
+		SmartDashboard.putData("Auto direction", directionChooser);
 		SmartDashboard.putData("Robot Position", initPositionChooser);
 		SmartDashboard.putData("Scale Options", scaleChooser);
 		SmartDashboard.putData("Switch Options", switchChooser);
-
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData("Drive forward", new DriveStraightCommand(3));
@@ -186,6 +190,8 @@ public class Robot extends TimedRobot {
 		driveSubsystem.setLeftSpeed(0);
 		driveSubsystem.setRightSpeed(0);
 		driveSubsystem.resetEncoders();
+		m_oi.xbox.setRumble(RumbleType.kLeftRumble, 0);		
+		m_oi.xbox.setRumble(RumbleType.kRightRumble, 0);
 
 	}
 
@@ -224,7 +230,7 @@ public class Robot extends TimedRobot {
 //		if (m_autonomousCommand != null) {
 //			m_autonomousCommand.start();
 //		}
-		boolean isBack = true;
+		boolean isBack = directionChooser.getSelected() == 'T' ? true : false;
         initPosition = initPositionChooser.getSelected();
         scaleChoice = scaleChooser.getSelected();
         switchChoice = switchChooser.getSelected();

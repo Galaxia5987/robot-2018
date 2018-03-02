@@ -30,9 +30,9 @@ public class EatCubeGroupCommand extends CommandGroup {
     	char scalePosition = DriverStation.getInstance().getGameSpecificMessage().charAt(0);    	
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
     	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 2));
-    	addParallel(new TakeCommand());
-    	addSequential(new EatCubeCommand());
-    	addSequential(new TurnCommand(scalePosition == 'L' ? 15 : -15, true));
+    	addParallel(new TakeCommand(0,5));
+    	addSequential(new EatCubeCommand(3));
+    	addSequential(new TurnCommand(15, true,0.5));
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
     }
 }

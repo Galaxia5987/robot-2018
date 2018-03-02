@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5987.robot;
 
 import java.util.EnumMap;
+
 import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -25,8 +26,8 @@ public class Constants {
 	public static final double AUTO_SWITCH_Y_SIDE_SHIFT = 0;
 	public static final double AUTO_SWITCH_X_SHIFT = 0.45;
 	// Scale
-	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 4.5;
-	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 5.6;
+	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 3.5;
+	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 5.1;
 	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
 	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
 	public static final double AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5);
@@ -57,7 +58,7 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DRIVE_DECCELERATION = 0.45;
+	public static final double DRIVE_DECCELERATION = 0.7;
 	public static final double DRIVE_ROTATION_RADIUS = 0.3325; // test chasiss
 	
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
@@ -66,7 +67,7 @@ public class Constants {
 	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
-	public static double DRIVE_kP = 0.175;
+	public static double DRIVE_kP = 0.2;
 	public static double DRIVE_kI = 0.0001;
 	public static double DRIVE_kD = 0;
 	public static double DRIVE_kF = 0.33;
@@ -157,7 +158,7 @@ public class Constants {
 	public static double PATH_h = 0.2;
 	public static final double PATH_MOVE_FORWARD_SWITCH_DISTANCE = 3;
 	public static final double PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE = 2;
-	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.6;
+	public static final double PATH_END_DISTANCE_BEFORE_SWITCH = 0.5;
 	public static final double PATH_TURN_DISTANCE_BEFORE_SWITCH = 1.5;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	

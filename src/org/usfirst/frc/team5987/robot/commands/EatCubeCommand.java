@@ -9,8 +9,8 @@ import auxiliary.Point;
  */
 public class EatCubeCommand extends PathCommand {
 
-    public EatCubeCommand() {
-    	super();
+    public EatCubeCommand(double timeout) {
+    	super(true,timeout);
     }
     
     
@@ -19,8 +19,8 @@ public class EatCubeCommand extends PathCommand {
 	public Point[] getPoints() {
 		if (Robot.ntVisionTarget.getBoolean(false)) {
 			double angle = Math.toRadians(Robot.ntVisionAngle.getDouble(0));
-			double distance = Robot.ntVisionDistance.getDouble(0) / Math.cos(angle) - 0.85;
-			double navx = Math.toRadians(Robot.navx.getAngle());
+			double distance = Robot.ntVisionDistance.getDouble(0) / Math.cos(angle) - 0.5;
+			double navx = Robot.driveSubsystem.getAngleRadians();
 			double y = distance * Math.sin(angle + navx);
 			double x = distance * Math.cos(angle + navx);
 //			double y = distance * Math.sin(angle);

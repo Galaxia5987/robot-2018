@@ -35,7 +35,7 @@ public class ChangeFilterModeCommand extends Command {
     		break;
 		default:
     	case STREAM:
-    		ntFilterMode.setString("1");
+    		ntFilterMode.setString("2");
     		break;
     	}
     }

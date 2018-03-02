@@ -29,19 +29,13 @@ public class MainAuto extends CommandGroup {
         
         // Going to the Switch from the center.
 		if (currentPosition == 'C') {
-			if (switchChoice != "nothing") {
-				ntAppendCommand("Switch");
-				addSequential(new Switch());
-			}
-			else {
-				ntAppendCommand("AutoRun");
-				addSequential(new AutoRun(false));
-			}
+			ntAppendCommand("Switch");
+			addSequential(new Switch());
         	return;
 		} else {
 			if(scaleChoice == "nothing"){
 				ntAppendCommand("AutoRun");
-				addSequential(new AutoRun(true));
+				addSequential(new AutoRun(isBackwards));
 				return;
 			}
 		}
@@ -69,7 +63,7 @@ public class MainAuto extends CommandGroup {
     		}
     		else {
     			ntAppendCommand("AutoRun");
-    			addSequential(new AutoRun(true));
+    			addSequential(new AutoRun(isBackwards));
     			return;
     		}
     	}
