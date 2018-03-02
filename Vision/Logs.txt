@@ -1,2 +1,0 @@
-NetworkTables Server: roboRIO-5987-FRC.local
-IP: 10.10.3.10
