@@ -63,13 +63,13 @@ public class Constants {
 	
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
 	public static final boolean DRIVE_leftInverted = false; // inverts the left motors
-	public static final boolean DRIVE_rightEncoderInverted = true; // inverts the right encoder
-	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
+	public static final boolean DRIVE_rightEncoderInverted = false; // inverts the right encoder
+	public static final boolean DRIVE_leftEncoderInverted = false; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
-	public static double DRIVE_kP = 0.2;
-	public static double DRIVE_kI = 0.0001;
-	public static double DRIVE_kD = 0;
+	public static double DRIVE_kP = 0.675;
+	public static double DRIVE_kI = 0.0;
+	public static double DRIVE_kD = 0.011;
 	public static double DRIVE_kF = 0.33;
 	public static double DRIVE_TurnKp = 0.15;
 	public static double DRIVE_TurnKi = 0.01;
@@ -82,9 +82,9 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  GRIPPER  ******************************/
-	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.5;
+	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.25;
 	public static final boolean GRIPPER_LEFT_REVERSED = false;
-	public static final boolean GRIPPER_RIGHT_REVERSED = true;
+	public static final boolean GRIPPER_RIGHT_REVERSED = false;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  INTAKE  ******************************/
