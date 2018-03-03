@@ -20,7 +20,7 @@ public class GetAndEatSwitchCube extends CommandGroup {
 
     public GetAndEatSwitchCube(char currentPosition) {
 		if (Constants.isCubeVision) {
-			addSequential(new WaitCommand(2));
+			addSequential(new WaitCommand(1));
 			addSequential(new EatCubeGroupCommand());
 		} 
 		else {
@@ -33,9 +33,9 @@ public class GetAndEatSwitchCube extends CommandGroup {
 			}
 		}
 		addParallel(new IntakeSolenoidCommand());
-		addParallel(new DriveStraightCommand(0.3, 0.5));
-		addSequential(new LiftCommand(Constants.LiftCommandStates.SWITCH));
-		addSequential(new WaitCommand(0.75));
+		addParallel(new LiftCommand(Constants.LiftCommandStates.SWITCH));
+		addSequential(new WaitCommand(0.5));
+		addSequential(new DriveStraightCommand(0.3, 0, 1));
 		addSequential(new ShootCubeCommand(1, true));
     }
 }

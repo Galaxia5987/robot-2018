@@ -110,6 +110,8 @@ public class Robot extends TimedRobot {
 
 	Compressor compressor = new Compressor(1);
 	
+	Command auto;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -197,7 +199,8 @@ public class Robot extends TimedRobot {
         initPosition = initPositionChooser.getSelected();
         scaleChoice = scaleChooser.getSelected();
         switchChoice = switchChooser.getSelected();
-		(new MainAuto(initPosition, scaleChoice, switchChoice, isBack)).start();
+		auto = new MainAuto(initPosition, scaleChoice, switchChoice, isBack);
+		auto.start();
 	}
 
 	/**
@@ -215,6 +218,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
+		if (auto != null)
+			auto.cancel();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -253,6 +258,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Distance from Target", ntVisionDistance.getDouble(0));
 		SmartDashboard.putBoolean("Sees Target", ntVisionTarget.getBoolean(false));
 		SmartDashboard.putNumber("Angle from Target", ntVisionAngle.getDouble(0));
+		SmartDashboard.putString("Filter Mode", ntVisionFilterMode.getString("3"));
 		
 		SmartDashboard.putBoolean("Intake", intakeSubsystem.getSolenoid());
 		
