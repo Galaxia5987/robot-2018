@@ -144,8 +144,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Scale Options", scaleChooser);
 		SmartDashboard.putData("Switch Options", switchChooser);
 		SmartDashboard.putData(new TurnCommand(30, true));
-		SmartDashboard.putData("Drive forward", new DriveStraightCommand(3));
-		SmartDashboard.putData("Drive backward", new DriveStraightCommand(-3));
+		SmartDashboard.putData("Drive forward", new DriveStraightCommand(5));
+		SmartDashboard.putData("Drive backward", new DriveStraightCommand(-5));
+		SmartDashboard.putData(new FarScale('R', true));
+		SmartDashboard.putData("Staright Path", new PathPointsCommand(new Point[]{new Point(1,0), new Point(1.5, 0.5)}));
 
 		SmartDashboard.putData(new EatCubeGroupCommand());
 		ntSetpoint.setDouble(0);

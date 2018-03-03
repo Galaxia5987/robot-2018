@@ -21,8 +21,8 @@ public class EatCubeCommand extends PathCommand {
 			double angle = Math.toRadians(Robot.ntVisionAngle.getDouble(0));
 			double distance = Robot.ntVisionDistance.getDouble(0) / Math.cos(angle) - 0.5;
 			double navx = Robot.driveSubsystem.getAngleRadians();
-			double y = distance * Math.sin(angle + navx);
-			double x = distance * Math.cos(angle + navx);
+			double y = distance * Math.sin(angle + navx + 0.06);
+			double x = distance * Math.cos(angle + navx + 0.06);
 //			double y = distance * Math.sin(angle);
 //			double x = distance * Math.cos(angle);
 					

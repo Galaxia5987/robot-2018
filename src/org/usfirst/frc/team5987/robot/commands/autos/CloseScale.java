@@ -28,18 +28,19 @@ public class CloseScale extends CommandGroup {
 	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
 	public CloseScale(char robotPosition, boolean isBackwards) {
-		double intakeDelay = isBackwards ? 2 : 0; // delay for opening intake so it won't touch the allience wall
+		double intakeDelay = isBackwards ? 0.5 : 0; // delay for opening intake so it won't touch the allience wall
 		double forwardAddition = isBackwards ? 0.2 : 0; // forward addition to backwards
 		double sideAddition = isBackwards ? 0.30 : 0.28; // side addition to backwards	
 		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
 		if(isBackwards)
-			addParallel(new TakeCommand(3.5, 0.7));
+			addParallel(new TakeCommand(1.5, 0.9));
 		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
 		final int Y_DIRECTION = robotPosition == 'R' ? 1 : -1;
 //		/**Close Scale**/
-		addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
+		
 		if (isBackwards)
 		{
+			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY + 0.85));
 			addSequential(new PathPointsCommand(new Point[]{
 				    new Point(4.493986606186959, -0.14026388942251572 * Y_DIRECTION),
 				    new Point(4.588839236898502, -0.13759404472058684 * Y_DIRECTION),
@@ -49,18 +50,19 @@ public class CloseScale extends CommandGroup {
 				    new Point(4.94538990378364, -0.01751630269109339 * Y_DIRECTION),
 				    new Point(5.02253334028851, 0.037738016849118705 * Y_DIRECTION),
 				    new Point(5.077895446118615, 0.08700692249059852 * Y_DIRECTION),
-				    new Point(5.5945759804049855, 0.5916014338964474 * Y_DIRECTION),
-				    new Point(5.666275227252452, 0.6537574281780834 * Y_DIRECTION),
-				    new Point(5.744829622706185, 0.7069867112704874 * Y_DIRECTION),
-				    new Point(5.829133986250153, 0.750540401252843 * Y_DIRECTION),
-				    new Point(5.918002241160489, 0.7838057419669279 * Y_DIRECTION),
-				    new Point(6.010184101399688, 0.8063147238735684 * Y_DIRECTION),
-				    new Point(6.104382661870597, 0.8177506684712601 * Y_DIRECTION),
-				    new Point(6.153527804274843, 0.8192616234756093 * Y_DIRECTION),
-				    new Point(7.334839572192509, 0.8192616234756094 * Y_DIRECTION)}, true, true, 6.5));
+				    new Point(5.605567373724623, 0.6023357201212085 * Y_DIRECTION),
+				    new Point(5.67726662057209, 0.6644917144028444 * Y_DIRECTION),
+				    new Point(5.755821016025823, 0.7177209974952484 * Y_DIRECTION),
+				    new Point(5.840125379569791, 0.7612746874776041 * Y_DIRECTION),
+				    new Point(5.928993634480128, 0.7945400281916887 * Y_DIRECTION),
+				    new Point(6.021175494719327, 0.8170490100983292 * Y_DIRECTION),
+				    new Point(6.115374055190235, 0.8284849546960208 * Y_DIRECTION),
+				    new Point(6.137993640668958, 0.8295560355381902 * Y_DIRECTION),
+				    new Point(7.334839572192509, 0.8692616234756096 * Y_DIRECTION)}, true, true, 6.5));
 		}
 		else
 		{
+			addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_CLOSE_LIFT_DELAY));
 			addSequential(new PathPointsCommand(new Point[]{
 				    new Point(4.3629363110350345, -0.14868285520377655 * Y_DIRECTION),
 				    new Point(4.458846457706386, -0.1461949097600171 * Y_DIRECTION),
@@ -77,14 +79,14 @@ public class CloseScale extends CommandGroup {
 				    new Point(5.844841427855013, 0.7497097657392569 * Y_DIRECTION),
 				    new Point(5.9384653089954025, 0.77067437847743 * Y_DIRECTION),
 				    new Point(6.03392562677958, 0.7802803055849491 * Y_DIRECTION),
-				    new Point(7.150924369747899, 0.8192616234756098 * Y_DIRECTION)}, false, true, 6.5));
+				    new Point(7.150924369747899, 0.8192616234756098 * Y_DIRECTION)}, false, true, 10));
 			
 		}
 			if (isBackwards) {
 			addSequential(new ShootCubeCommand(-1, true));
 		}
 		else {
-			addSequential(new ShootCubeCommand(0.75	, true));
+			addSequential(new ShootCubeCommand(0.5 , true));
 		}
 		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM));
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.2));

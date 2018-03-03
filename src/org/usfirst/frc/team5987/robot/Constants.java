@@ -26,8 +26,8 @@ public class Constants {
 	public static final double AUTO_SWITCH_Y_SIDE_SHIFT = 0;
 	public static final double AUTO_SWITCH_X_SHIFT = 0.45;
 	// Scale
-	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 3.5;
-	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 5.1;
+	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 2.5;
+	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 4.6;
 	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
 	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
 	public static final double AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5);
@@ -63,13 +63,13 @@ public class Constants {
 	
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
 	public static final boolean DRIVE_leftInverted = false; // inverts the left motors
-	public static final boolean DRIVE_rightEncoderInverted = false; // inverts the right encoder
-	public static final boolean DRIVE_leftEncoderInverted = false; // inverts the left encoder
+	public static final boolean DRIVE_rightEncoderInverted = true; // inverts the right encoder
+	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
-	public static double DRIVE_kP = 0.675;
+	public static double DRIVE_kP = 0.475;
 	public static double DRIVE_kI = 0.0;
-	public static double DRIVE_kD = 0.011;
+	public static double DRIVE_kD = 0.03;
 	public static double DRIVE_kF = 0.33;
 	public static double DRIVE_TurnKp = 0.15;
 	public static double DRIVE_TurnKi = 0.01;
@@ -82,13 +82,13 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  GRIPPER  ******************************/
-	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.25;
-	public static final boolean GRIPPER_LEFT_REVERSED = false;
+	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2;
+	public static final boolean GRIPPER_LEFT_REVERSED = true;
 	public static final boolean GRIPPER_RIGHT_REVERSED = false;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  INTAKE  ******************************/
-	public static final boolean INTAKE_RIGHT_REVERSED = true;
+	public static final boolean INTAKE_RIGHT_REVERSED = false;
 	public static final boolean INTAKE_LEFT_REVERSED = false;
 	
 	/*****************************  LIFT  *******************************/
@@ -165,7 +165,7 @@ public class Constants {
 	/***********************  SHOOT CUBE COMMAND  *************************/
 	public static final double SHOOT_TIME = 1;
 	public static final double SHOOT_BACKWARDS_MIN_HEIGHT = 1.44;
-	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.65;
+	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.5;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 
@@ -184,7 +184,7 @@ public class Constants {
 	
 	
 	/***********************  SHOOT SHOOT COMMAND  *************************/
-	public static final double INTAKE_SHOOT_SPEED = 0.5;
+	public static final double INTAKE_SHOOT_SPEED = 0.65;
 	public static final double INTAKE_SHOOT_DIRECTION = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
@@ -204,6 +204,7 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/***********************  SIDE SWITCH COMMAND  *************************/
+	
 	public static final double SIDE_SWITCH_FORAWARD_DISTANCE = 3.755;
 	public static final double SIDE_SWITCH_SIDE_DISTANCE = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/	
