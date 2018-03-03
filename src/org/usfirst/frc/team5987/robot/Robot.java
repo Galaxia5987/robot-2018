@@ -96,12 +96,11 @@ public class Robot extends TimedRobot {
 
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 
-	Command m_autonomousCommand;
     SendableChooser <Character> directionChooser = new SendableChooser <>();
 	SendableChooser <Character> initPositionChooser = new SendableChooser <>();
     SendableChooser <String> scaleChooser = new SendableChooser <>();
     SendableChooser <String> switchChooser = new SendableChooser <>();
-    SendableChooser <Command> m_chooser = new SendableChooser <>();
+
     char initPosition;
     String scaleChoice, switchChoice;
 	public static NetworkTableEntry ntVisionAngle = visionTable.getEntry("Angle");
@@ -110,7 +109,7 @@ public class Robot extends TimedRobot {
 	public static NetworkTableEntry ntVisionFilterMode = visionTable.getEntry("Filter Mode");
 
 	Compressor compressor = new Compressor(1);
-
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -122,7 +121,7 @@ public class Robot extends TimedRobot {
 		m_oi = new OI();
         
 		// Autonomous options
-		directionChooser.addDefault("backward", 'T');
+		directionChooser.addDefault("Backward", 'T');
 		directionChooser.addObject("Forward", 'F');
 		
 		initPositionChooser.addObject("Right", 'R');
@@ -138,41 +137,15 @@ public class Robot extends TimedRobot {
 		switchChooser.addObject("Close and far", "both");
 		switchChooser.addObject("Side", "side");
         
-        SmartDashboard.putData("Auto mode", initPositionChooser);
-		m_chooser.addDefault("Default Auto", new Switch());
-		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
-		m_chooser.addObject("Scale (Robot Right) backwards", new CloseScale('R', true));
-		m_chooser.addObject("Scale (Robot Left) forward", new CloseScale('L', false));
-		SmartDashboard.putData("Auto mode", m_chooser);
 		SmartDashboard.putData("Auto direction", directionChooser);
 		SmartDashboard.putData("Robot Position", initPositionChooser);
 		SmartDashboard.putData("Scale Options", scaleChooser);
 		SmartDashboard.putData("Switch Options", switchChooser);
 		SmartDashboard.putData(new TurnCommand(30, true));
-		SmartDashboard.putData(new TurnToTargetGroupCommand());
 		SmartDashboard.putData("Drive forward", new DriveStraightCommand(3));
-		SmartDashboard.putData("Drive 0.2", new DriveStraightCommand(0.2));
-		SmartDashboard.putData("Drive 4", new DriveStraightCommand(4));
 		SmartDashboard.putData("Drive backward", new DriveStraightCommand(-3));
-		SmartDashboard.putData(new Switch());
-		SmartDashboard.putData("0.5M lift 3s", new LiftCommand(0.5, 3));
-		SmartDashboard.putData("0M lift", new LiftCommand(0));
-		SmartDashboard.putData(new PathSwitchCommand());
-		SmartDashboard.putData(new PathPointsCommand(new Point[]{
-				new Point(0,0),
-				new Point(1, 0),
-				new Point (2, 2)
-				})
-				);
 
-        SmartDashboard.putData(new CloseScale('R'));
-
-		SmartDashboard.putData(new ShootCubeCommand(1, true));
-		SmartDashboard.putData(new TurnTillSeesTargetCommand(-90, true, ntVisionTarget));
-		SmartDashboard.putData(new Switch());
 		SmartDashboard.putData(new EatCubeGroupCommand());
-		SmartDashboard.putData(new TestAbsPath());
-		SmartDashboard.putData(new IntakeSolenoidCommand());
 		ntSetpoint.setDouble(0);
 		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 	}
@@ -218,18 +191,8 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
-//		m_chooser.addDefault("Default Auto", new AutoSwitchCommandGroup('C'));
-//		m_chooser.addObject("Line", new DriveStraightCommand(1.5));
-//		m_chooser.addObject("Scale (Robot Right)", new CloseScale('R', true));
-//		m_chooser.addObject("Scale (Robot Left)", new CloseScale('L', false));
-//		m_autonomousCommand = m_chooser.getSelected();
-		while(DriverStation.getInstance().getGameSpecificMessage().length() != 3){} // wait for game data
-		char switchPosition = DriverStation.getInstance().getGameSpecificMessage().charAt(0), 
-			 scalePosition = DriverStation.getInstance().getGameSpecificMessage().charAt(1);
+		while(DriverStation.getInstance().getGameSpecificMessage().length() != 3) {} // wait for game data
 
-//		if (m_autonomousCommand != null) {
-//			m_autonomousCommand.start();
-//		}
 		boolean isBack = directionChooser.getSelected() == 'T' ? true : false;
         initPosition = initPositionChooser.getSelected();
         scaleChoice = scaleChooser.getSelected();
@@ -257,12 +220,7 @@ public class Robot extends TimedRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		navx.reset(); // TODO: remove
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
-		}
-		// driveSubsystem.setSetpoints(1, 1);
 		compressor.start();
-		SmartDashboard.putNumber("Drive Setpoint", 0);
 	}
 
 	/**
@@ -271,19 +229,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-//		driveSubsystem.setSetpoints(SmartDashboard.getNumber("Drive Setpoint", 0), SmartDashboard.getNumber("Drive Setpoint", 0));
-//		driveSubsystem.updatePID();
-//		SmartDashboard.putNumber("right V", driveSubsystem.getRightSpeed());
-//		SmartDashboard.putNumber("left V", driveSubsystem.getLeftSpeed());
-		// liftSubsystem.update();
 		liftSubsystem.displaySensorValues();
-		// double joyY = m_oi.rightStick.getY();
-		// SmartDashboard.putNumber("Joy Y", joyY);
-		// liftSubsystem.setPrecentSpeed(joyY);
 		ntPitch.setDouble(driveSubsystem.getPitch());
 		ntYaw.setDouble(driveSubsystem.getYaw());
 		ntAngle.setDouble(driveSubsystem.getAngle());
-
 		
 		ntAcs1.setDouble(navx.getRawAccelX());
 		ntAcs2.setDouble(navx.getRawAccelY());
@@ -298,21 +247,17 @@ public class Robot extends TimedRobot {
 		inTakeCanine.feed();
 		gripperSubsystem.ntProximityVoltage.setDouble(gripperSubsystem.voltage());
 		gripperSubsystem.ntSeesCube.setBoolean(gripperSubsystem.isCubeInside());
-		// driveSubsystem.setLeftSpeed(-m_oi.left.getY());
-		// driveSubsystem.setRightSpeed(-m_oi.right.getY());
-		SmartDashboard.putNumber("left Dis", driveSubsystem.getLeftDistance());
-		SmartDashboard.putNumber("right Dis", driveSubsystem.getRightDistance());
-//
-//		driveSubsystem.ntRightDistance.setDouble(driveSubsystem.getRightDistance());
-//		driveSubsystem.ntLeftDistance.setDouble(driveSubsystem.getLeftDistance());
-		// driveSubsystem.setSetpoints(ntLeftSP.getDouble(-0.1),
-		// ntRightSP.getDouble(-0.1));
-		// driveSubsystem.setSetpoints(-0.3, -1);
+		SmartDashboard.putNumber("left Distance", driveSubsystem.getLeftDistance());
+		SmartDashboard.putNumber("right Distance", driveSubsystem.getRightDistance());
 
-		SmartDashboard.putBoolean("inTake", intakeSubsystem.getSolenoid());
+		SmartDashboard.putNumber("Distance from Target", ntVisionDistance.getDouble(0));
+		SmartDashboard.putBoolean("Sees Target", ntVisionTarget.getBoolean(false));
+		SmartDashboard.putNumber("Angle from Target", ntVisionAngle.getDouble(0));
+		
+		SmartDashboard.putBoolean("Intake", intakeSubsystem.getSolenoid());
 		
 		// Make the Xbox controller rumble if a Power Cube is recognized by the camera.
-		if (ntVisionTarget.getBoolean(false))
+		if (ntVisionTarget.getBoolean(false) && ntVisionDistance.getDouble(0) < 4)
 		{
 			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 1);		
 			m_oi.xbox.setRumble(RumbleType.kRightRumble, 1);

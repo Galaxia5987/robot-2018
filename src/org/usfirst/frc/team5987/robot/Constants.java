@@ -127,7 +127,7 @@ public class Constants {
 	private static final double LIFT_MIN_DOWN_OUTPUT = -0.1;
 	public static final double LIFT_NOMINAL_OUT_FWD = 0.2;
 	public static final double LIFT_PEAK_OUT_FWD = 1;
-	public static final double LIFT_PEAK_OUT_REV = -0.2;
+	public static final double LIFT_PEAK_OUT_REV = -0.4;
 	public static final double LIFT_NOMINAL_OUT_REV = 0;
 	public static final double LIFT_MAX_HEIGHT = 2.05;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
