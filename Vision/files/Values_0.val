@@ -6,4 +6,4 @@ self.find_center_b = True
 self._iterations_i=1
 self.focal = 638.6086956521739
 self.target_height = 41
-os.system("v4l2-ctl -d /dev/video"+str(camera)" --set-ctrl exposure_absolute=5")
+os.system("v4l2-ctl -d /dev/video"+str(camera)+" --set-ctrl exposure_absolute=5")

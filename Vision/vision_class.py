@@ -203,7 +203,7 @@ class Vision:
                 'self._iterations_i=3\n'+
                 'self.focal = 638.6086956521739\n'+
                 'self.target_height = 0\n'
-                'os.system("v4l2-ctl -d /dev/video"+str(camera)" --set-ctrl exposure_absolute=156")'
+                'os.system("v4l2-ctl -d /dev/video"+str(camera)+" --set-ctrl exposure_absolute=156")'
             )
             file.close()
 
