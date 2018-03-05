@@ -520,10 +520,11 @@ class Vision:
             perp = False
             for i in range(0, len(alphas)-1):
                 for j in range(1, len(alphas)):
-                    if abs(alphas[i] - alphas[j]) < 5:
-                        para = True
-                    if abs(90 - (alphas[i] + alphas[j])) < 5:
-                        perp = True
+                    if i is not j:
+                        if abs(alphas[i] - alphas[j]) < 5:
+                            para = True
+                        if abs(alphas[i] + alphas[j]) < 5:
+                            perp = True
             if para and perp:
                 cube = 1
         return cube
