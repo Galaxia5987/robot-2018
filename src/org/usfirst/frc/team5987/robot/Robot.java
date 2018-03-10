@@ -58,6 +58,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
 	public static double[] robotAbsolutePosition = new double[] { 0, 0 };
+	private static Timer autoTimer;
 	public static final PowerDistributionPanel PDP = new PowerDistributionPanel();
 
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
@@ -101,9 +102,10 @@ public class Robot extends TimedRobot {
 	SendableChooser<Character> initPositionChooser = new SendableChooser<>();
 	SendableChooser<String> scaleChooser = new SendableChooser<>();
 	SendableChooser<String> switchChooser = new SendableChooser<>();
+	SendableChooser<String> stupidAutoChooser = new SendableChooser<>();
 
 	char initPosition;
-	String scaleChoice, switchChoice;
+	String scaleChoice, switchChoice, stupidAutoChoise;
 	public static NetworkTableEntry ntVisionAngle = visionTable.getEntry("Angle");
 	public static NetworkTableEntry ntVisionTarget = visionTable.getEntry("Sees Target");
 	public static NetworkTableEntry ntVisionDistance = visionTable.getEntry("Distance");
@@ -138,6 +140,11 @@ public class Robot extends TimedRobot {
 		switchChooser.addObject("Close", "close");
 		switchChooser.addObject("Close and far", "both");
 		switchChooser.addObject("Side", "side");
+		switchChooser.addObject("Another Scale", "another scale");
+		
+		stupidAutoChooser.addDefault("Other", "other");
+		stupidAutoChooser.addObject("Line", "line");
+		stupidAutoChooser.addObject("Nothing", "nothing");
 
 		SmartDashboard.putData("Auto direction", directionChooser);
 		SmartDashboard.putData("Robot Position", initPositionChooser);
@@ -194,20 +201,22 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
-		Timer t = new Timer();
-		t.start();
-		while (DriverStation.getInstance().getGameSpecificMessage() == null && t.get() < 5) {
+		autoTimer = new Timer();
+		autoTimer.start();
+		while (DriverStation.getInstance().getGameSpecificMessage() == null && autoTimer.get() < 5) {
 			Timer.delay(0.01);
 		} // wait for game data
-		while (DriverStation.getInstance().getGameSpecificMessage().length() != 3 && t.get() < 5) {
+		while (DriverStation.getInstance().getGameSpecificMessage().length() != 3 && autoTimer.get() < 5) {
 			Timer.delay(0.01);
 		} // wait for game data
+		
 		boolean isBack = directionChooser.getSelected() == 'T' ? true : false;
 		initPosition = initPositionChooser.getSelected();
 		scaleChoice = scaleChooser.getSelected();
 		switchChoice = switchChooser.getSelected();
+		stupidAutoChoise = stupidAutoChooser.getSelected();
 		try {
-			auto = new MainAuto(initPosition, scaleChoice, switchChoice, isBack);
+			auto = new MainAuto(initPosition, scaleChoice, switchChoice, stupidAutoChoise, isBack);
 			auto.start();
 		} catch (StringIndexOutOfBoundsException e) {
 			auto = new AutoRun(isBack);
@@ -230,8 +239,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
-		if (auto != null)
-			auto.cancel();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -246,6 +253,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		if(auto != null && (m_oi.xbox.getRawButton(9) || autoTimer.get() > 20)){
+			auto.cancel();
+			auto = null;
+		}
 		liftSubsystem.displaySensorValues();
 		ntPitch.setDouble(driveSubsystem.getPitch());
 		ntYaw.setDouble(driveSubsystem.getYaw());
