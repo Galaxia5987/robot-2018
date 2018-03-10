@@ -1,6 +1,9 @@
 package org.usfirst.frc.team5987.robot.commands.autos;
 
 
+import org.usfirst.frc.team5987.robot.commands.DriveSeconds;
+import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,13 +16,25 @@ public class MainAuto extends CommandGroup {
 		String current = SmartDashboard.getString("Auto Commands", "");
 		SmartDashboard.putString("Auto Commands", current + ", \n" + command);
 	}
-    public MainAuto(char robotPosition, String scaleChoice, String switchChoice, boolean isBackwards) {
+    public MainAuto(char robotPosition, String scaleChoice, String switchChoice, String stupidAuto, boolean isBackwards) {
         final char switchSide = DriverStation.getInstance().getGameSpecificMessage().charAt(0),
         	 scaleSide = DriverStation.getInstance().getGameSpecificMessage().charAt(1);
 		char currentPosition = robotPosition;
         
 		SmartDashboard.putString("Auto Commands", "");
-			
+		
+		// Stupid autos
+		if(stupidAuto == "nothing"){
+			ntAppendCommand("IntakeSolenoidCommand(true)");
+			addSequential(new IntakeSolenoidCommand(true));
+			return;
+		}else if (stupidAuto == "line"){
+			double direction = isBackwards ? -1 : 1;
+			ntAppendCommand("DriveSeconds(" + 0.5 * direction + ", 2)");
+			addSequential(new DriveSeconds(0.5 * direction, 2));
+			return;
+		}
+		
         // Going to the Switch side if the robot starts on the Switch position.
         if (switchChoice == "side" && robotPosition == switchSide) {
         	ntAppendCommand("SwitchSide");
@@ -84,6 +99,10 @@ public class MainAuto extends CommandGroup {
     			ntAppendCommand("CloseSwitchAfterScale(" + currentPosition + ")");
     			addSequential(new CloseSwitchAfterScale(currentPosition));
     		}
+    		break;
+    	case "another scale":
+			ntAppendCommand("ScaleAfterScale(" + robotPosition + ", " + currentPosition + ", " + (robotPosition == scaleSide) +")");
+			addSequential(new ScaleAfterScale(robotPosition, currentPosition, robotPosition == scaleSide));
     		break;
     	}
   
