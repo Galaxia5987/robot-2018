@@ -27,7 +27,6 @@ public class EatCubeGroupCommand extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	char scalePosition = DriverStation.getInstance().getGameSpecificMessage().charAt(0);    	
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
     	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 2));
     	addParallel(new TakeCommand(0,4));

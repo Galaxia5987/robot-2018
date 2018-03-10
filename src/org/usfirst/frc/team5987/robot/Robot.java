@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -56,7 +57,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static double[] robotAbsolutePosition = new double[]{0, 0};
+	public static double[] robotAbsolutePosition = new double[] { 0, 0 };
 	public static final PowerDistributionPanel PDP = new PowerDistributionPanel();
 
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
@@ -96,36 +97,35 @@ public class Robot extends TimedRobot {
 
 	public static AHRS navx = new AHRS(SPI.Port.kMXP);
 
-    SendableChooser <Character> directionChooser = new SendableChooser <>();
-	SendableChooser <Character> initPositionChooser = new SendableChooser <>();
-    SendableChooser <String> scaleChooser = new SendableChooser <>();
-    SendableChooser <String> switchChooser = new SendableChooser <>();
+	SendableChooser<Character> directionChooser = new SendableChooser<>();
+	SendableChooser<Character> initPositionChooser = new SendableChooser<>();
+	SendableChooser<String> scaleChooser = new SendableChooser<>();
+	SendableChooser<String> switchChooser = new SendableChooser<>();
 
-    char initPosition;
-    String scaleChoice, switchChoice;
+	char initPosition;
+	String scaleChoice, switchChoice;
 	public static NetworkTableEntry ntVisionAngle = visionTable.getEntry("Angle");
 	public static NetworkTableEntry ntVisionTarget = visionTable.getEntry("Sees Target");
 	public static NetworkTableEntry ntVisionDistance = visionTable.getEntry("Distance");
 	public static NetworkTableEntry ntVisionFilterMode = visionTable.getEntry("Filter Mode");
 
 	Compressor compressor = new Compressor(1);
-	
+
 	Command auto;
-	
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		SmartDashboard.putNumber("Match number", DriverStation.getInstance().getMatchNumber());
 		navx.reset();
 		m_oi = new OI();
-        
+
 		// Autonomous options
 		directionChooser.addDefault("Backward", 'T');
 		directionChooser.addObject("Forward", 'F');
-		
+
 		initPositionChooser.addObject("Right", 'R');
 		initPositionChooser.addDefault("Center", 'C');
 		initPositionChooser.addObject("Left", 'L');
@@ -133,12 +133,12 @@ public class Robot extends TimedRobot {
 		scaleChooser.addDefault("Nothing", "nothing");
 		scaleChooser.addObject("Close", "close");
 		scaleChooser.addObject("Close and far", "both");
-		
+
 		switchChooser.addDefault("Nothing", "nothing");
 		switchChooser.addObject("Close", "close");
 		switchChooser.addObject("Close and far", "both");
 		switchChooser.addObject("Side", "side");
-        
+
 		SmartDashboard.putData("Auto direction", directionChooser);
 		SmartDashboard.putData("Robot Position", initPositionChooser);
 		SmartDashboard.putData("Scale Options", scaleChooser);
@@ -146,10 +146,9 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData("Drive forward", new DriveStraightCommand(5));
 		SmartDashboard.putData("Drive backward", new DriveStraightCommand(-5));
-		SmartDashboard.putData(new FarScale('R', true));
-		SmartDashboard.putData("Staright Path", new PathPointsCommand(new Point[]{new Point(1,0), new Point(1.5, 0.5)}));
+		SmartDashboard.putData("Staright Path",
+				new PathPointsCommand(new Point[] { new Point(1, 0), new Point(1.5, 0.5) }));
 
-		SmartDashboard.putData(new EatCubeGroupCommand());
 		ntSetpoint.setDouble(0);
 		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
 	}
@@ -167,7 +166,7 @@ public class Robot extends TimedRobot {
 		driveSubsystem.setLeftSpeed(0);
 		driveSubsystem.setRightSpeed(0);
 		driveSubsystem.resetEncoders();
-		m_oi.xbox.setRumble(RumbleType.kLeftRumble, 0);		
+		m_oi.xbox.setRumble(RumbleType.kLeftRumble, 0);
 		m_oi.xbox.setRumble(RumbleType.kRightRumble, 0);
 
 	}
@@ -195,14 +194,25 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
-		while(DriverStation.getInstance().getGameSpecificMessage().length() != 3) {} // wait for game data
-
+		Timer t = new Timer();
+		t.start();
+		while (DriverStation.getInstance().getGameSpecificMessage() == null && t.get() < 5) {
+			Timer.delay(0.01);
+		} // wait for game data
+		while (DriverStation.getInstance().getGameSpecificMessage().length() != 3 && t.get() < 5) {
+			Timer.delay(0.01);
+		} // wait for game data
 		boolean isBack = directionChooser.getSelected() == 'T' ? true : false;
-        initPosition = initPositionChooser.getSelected();
-        scaleChoice = scaleChooser.getSelected();
-        switchChoice = switchChooser.getSelected();
-		auto = new MainAuto(initPosition, scaleChoice, switchChoice, isBack);
-		auto.start();
+		initPosition = initPositionChooser.getSelected();
+		scaleChoice = scaleChooser.getSelected();
+		switchChoice = switchChooser.getSelected();
+		try {
+			auto = new MainAuto(initPosition, scaleChoice, switchChoice, isBack);
+			auto.start();
+		} catch (StringIndexOutOfBoundsException e) {
+			auto = new AutoRun(isBack);
+			auto.start();
+		}
 	}
 
 	/**
@@ -240,7 +250,7 @@ public class Robot extends TimedRobot {
 		ntPitch.setDouble(driveSubsystem.getPitch());
 		ntYaw.setDouble(driveSubsystem.getYaw());
 		ntAngle.setDouble(driveSubsystem.getAngle());
-		
+
 		ntAcs1.setDouble(navx.getRawAccelX());
 		ntAcs2.setDouble(navx.getRawAccelY());
 		ntAcs3.setDouble(navx.getRawAccelZ());
@@ -261,16 +271,16 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Sees Target", ntVisionTarget.getBoolean(false));
 		SmartDashboard.putNumber("Angle from Target", ntVisionAngle.getDouble(0));
 		SmartDashboard.putString("Filter Mode", ntVisionFilterMode.getString("3"));
-		
+
 		SmartDashboard.putBoolean("Intake", intakeSubsystem.getSolenoid());
-		
-		// Make the Xbox controller rumble if a Power Cube is recognized by the camera.
-		if (ntVisionTarget.getBoolean(false) && ntVisionDistance.getDouble(0) < 4)
-		{
-			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 1);		
+
+		// Make the Xbox controller rumble if a Power Cube is recognized by the
+		// camera.
+		if (ntVisionTarget.getBoolean(false) && ntVisionDistance.getDouble(0) < 4) {
+			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 1);
 			m_oi.xbox.setRumble(RumbleType.kRightRumble, 1);
 		} else {
-			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 0);		
+			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 0);
 			m_oi.xbox.setRumble(RumbleType.kRightRumble, 0);
 		}
 	}

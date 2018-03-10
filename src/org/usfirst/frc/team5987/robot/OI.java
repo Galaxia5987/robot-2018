@@ -14,6 +14,8 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
 
+import org.usfirst.frc.team5987.robot.commands.LiftState;
+
 import auxiliary.DPadButton;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -35,10 +37,10 @@ public class OI {
 	Button b = new JoystickButton(xbox, 2);
 	Button x = new JoystickButton(xbox, 3);
 	Button y = new JoystickButton(xbox, 4);
+	Button lb = new JoystickButton(xbox, 5);
 	Button rb = new JoystickButton(xbox, 6);
 	Button select = new JoystickButton(xbox, 7);
 	Button start = new JoystickButton(xbox, 8);
-	
 	DPadButton d_up = new DPadButton(xbox,0);
 	DPadButton d_down = new DPadButton(xbox,4);
 	DPadButton d_left = new DPadButton(xbox,6);
@@ -56,5 +58,6 @@ public class OI {
 		rb.whenPressed(new EatCubeGroupCommand());
 		select.whenPressed(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.SWITCH));
 		start.whenPressed(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
+		lb.whenPressed(new LiftState());
 	}
 }
