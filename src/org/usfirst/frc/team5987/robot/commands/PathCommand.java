@@ -51,10 +51,7 @@ public abstract class PathCommand extends Command {
     	
     	double startX = 0;
     	double startY = 0;
-    	if(!isRelative){
-	    	startX += Robot.robotAbsolutePosition[0];
-	    	startY += Robot.robotAbsolutePosition[1];
-    	}
+
     	x = startX;
     	y = startY;
     	startX += Constants.PATH_h * Math.cos(Robot.driveSubsystem.getAngleRadians());
@@ -65,7 +62,7 @@ public abstract class PathCommand extends Command {
 		Point[] p = new Point[pWithoutFirst.length + 1];
 		for(int i=1; i<p.length; i++)
 			p[i] = pWithoutFirst[i - 1];
-		p[0] = new Point(0, 0);
+		p[0] = isRelative ? new Point(0, 0) : new Point(Robot.robotAbsolutePosition[0], Robot.robotAbsolutePosition[1]);
 			
 		
 		for (int i = 0; i < p.length; i++) {

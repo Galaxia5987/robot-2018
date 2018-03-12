@@ -150,11 +150,15 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Robot Position", initPositionChooser);
 		SmartDashboard.putData("Scale Options", scaleChooser);
 		SmartDashboard.putData("Switch Options", switchChooser);
+		SmartDashboard.putData("Stupid Options", stupidAutoChooser);
+
 		SmartDashboard.putData(new TurnCommand(30, true));
 		SmartDashboard.putData("Drive forward", new DriveStraightCommand(5));
 		SmartDashboard.putData("Drive backward", new DriveStraightCommand(-5));
 		SmartDashboard.putData("Staright Path",
 				new PathPointsCommand(new Point[] { new Point(1, 0), new Point(1.5, 0.5) }));
+		SmartDashboard.putData("abs Path",
+				new PathPointsCommand(new Point[] { new Point(1, 0)},true,false));
 
 		ntSetpoint.setDouble(0);
 		liftSubsystem.setState(LiftSubsystem.States.ZEROING);
@@ -201,6 +205,7 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
+		robotAbsolutePosition = new double[] {0, 0};
 		autoTimer = new Timer();
 		autoTimer.start();
 		while (DriverStation.getInstance().getGameSpecificMessage() == null && autoTimer.get() < 5) {
@@ -243,7 +248,6 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		navx.reset(); // TODO: remove
 		compressor.start();
 	}
 

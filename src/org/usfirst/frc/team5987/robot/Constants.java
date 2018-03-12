@@ -143,7 +143,7 @@ public class Constants {
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SWITCH,    0.85d  );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_DOWN,1.5d  );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_MID, 1.75d );
-		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_TOP, 2d    );
+		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_TOP, 2.05d    );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.CLIMB,     1.65d );
 	}
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/

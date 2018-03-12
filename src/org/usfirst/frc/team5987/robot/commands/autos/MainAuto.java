@@ -30,8 +30,8 @@ public class MainAuto extends CommandGroup {
 			return;
 		}else if (stupidAuto == "line"){
 			double direction = isBackwards ? -1 : 1;
-			ntAppendCommand("DriveSeconds(" + 0.5 * direction + ", 2)");
-			addSequential(new DriveSeconds(0.5 * direction, 2));
+			ntAppendCommand("DriveSeconds(" + 0.5 * direction + ", 1.5)");
+			addSequential(new DriveSeconds(0.5 * direction, 1.5));
 			return;
 		}
 		

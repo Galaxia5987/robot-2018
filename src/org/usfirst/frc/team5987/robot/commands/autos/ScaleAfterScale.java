@@ -33,17 +33,19 @@ public class ScaleAfterScale extends CommandGroup {
 						false, false));
 			}
 		}
-		addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, 0.5));
-		final int Y_DIRECTION = startingRobotPosition == 'R' ? 1 : -1;
-		if(isClose){
-			addSequential(new PathPointsCommand(new Point[]{
-				    new Point(6.137993640668958, 0.8295560355381902 * Y_DIRECTION),
-				    new Point(7.334839572192509, 0.8692616234756096 * Y_DIRECTION)}, true, false, 4));
-		}else{
-			addSequential(new PathPointsCommand(new Point[]{
-				    new Point(6.378173615800014, 5.32919896400697 * Y_DIRECTION),
-				    new Point(7.260286478227652, 5.259730743437007 * Y_DIRECTION)}, true, false, 4));
-		}
-		addSequential(new ShootCubeCommand(-1, true));
+//		addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, 0.5));
+//		final int Y_DIRECTION = startingRobotPosition == 'R' ? 1 : -1;
+//		if(isClose){
+//			addSequential(new PathPointsCommand(new Point[]{
+//				    new Point(6.137993640668958, 0.8295560355381902 * Y_DIRECTION),
+//				    new Point(7.334839572192509, 0.8692616234756096 * Y_DIRECTION)}, true, false, 4));
+//		}else{
+//			addSequential(new PathPointsCommand(new Point[]{
+//				    new Point(6.378173615800014, 5.32919896400697 * Y_DIRECTION),
+//				    new Point(7.260286478227652, 5.259730743437007 * Y_DIRECTION)}, true, false, 4));
+//		}
+//		addSequential(new ShootCubeCommand(-1, true));
+//		addSequential(new DriveStraightCommand(0.2));
+
     }
 }
