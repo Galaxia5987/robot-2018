@@ -1,7 +1,6 @@
 package org.usfirst.frc.team5987.robot;
 
 import java.util.EnumMap;
-
 import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -26,12 +25,12 @@ public class Constants {
 	public static final double AUTO_SWITCH_Y_SIDE_SHIFT = 0;
 	public static final double AUTO_SWITCH_X_SHIFT = 0.45;
 	// Scale
-	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 2.5;
-	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 4.6;
+	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 4.5;
+	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 5.6;
 	public static final double AUTO_END_DISTANCE_BEFORE_SCALE = toMeter(3.25);
 	public static final double AUTO_TURN_DISTANCE_BEFORE_SCALE = 1.3;
 	public static final double AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER = toMeter(-5.5);
-	public static final double AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER = 0.45;
+	public static final double AUTO_SCALE_FAR_SHIFT_T0_FIELD_CENTER = -0.1;
 	public static final double CENTER_TO_BACK_BUMPER = toMeter(13.25);
 	public static final double CENTER_TO_SIDE_BUMPER = toMeter(19.75);
 	
@@ -58,7 +57,7 @@ public class Constants {
 	/**
 	 * ABSOLUTE, METER/SEC^2
 	 */
-	public static final double DRIVE_DECCELERATION = 0.7;
+	public static final double DRIVE_DECCELERATION = 0.45;
 	public static final double DRIVE_ROTATION_RADIUS = 0.3325; // test chasiss
 	
 	public static final boolean DRIVE_rightInverted = true; // inverts the right motor
@@ -67,9 +66,9 @@ public class Constants {
 	public static final boolean DRIVE_leftEncoderInverted = true; // inverts the left encoder
 	
 	// PIDF constants for controlling velocity for wheels
-	public static double DRIVE_kP = 0.475;
-	public static double DRIVE_kI = 0.0;
-	public static double DRIVE_kD = 0.03;
+	public static double DRIVE_kP = 0.15;
+	public static double DRIVE_kI = 0.0001;
+	public static double DRIVE_kD = 0;
 	public static double DRIVE_kF = 0.33;
 	public static double DRIVE_TurnKp = 0.15;
 	public static double DRIVE_TurnKi = 0.01;
@@ -82,13 +81,13 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  GRIPPER  ******************************/
-	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2;
-	public static final boolean GRIPPER_LEFT_REVERSED = true;
-	public static final boolean GRIPPER_RIGHT_REVERSED = false;
+	public static final double GRIPPER_MIN_PROXIMITY_VOLT = 2.5;
+	public static final boolean GRIPPER_LEFT_REVERSED = false;
+	public static final boolean GRIPPER_RIGHT_REVERSED = true;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/****************************  INTAKE  ******************************/
-	public static final boolean INTAKE_RIGHT_REVERSED = false;
+	public static final boolean INTAKE_RIGHT_REVERSED = true;
 	public static final boolean INTAKE_LEFT_REVERSED = false;
 	
 	/*****************************  LIFT  *******************************/
@@ -127,7 +126,7 @@ public class Constants {
 	private static final double LIFT_MIN_DOWN_OUTPUT = -0.1;
 	public static final double LIFT_NOMINAL_OUT_FWD = 0.2;
 	public static final double LIFT_PEAK_OUT_FWD = 1;
-	public static final double LIFT_PEAK_OUT_REV = -0.4;
+	public static final double LIFT_PEAK_OUT_REV = -0.2;
 	public static final double LIFT_NOMINAL_OUT_REV = 0;
 	public static final double LIFT_MAX_HEIGHT = 2.05;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
@@ -143,7 +142,7 @@ public class Constants {
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SWITCH,    0.85d  );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_DOWN,1.5d  );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_MID, 1.75d );
-		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_TOP, 2.05d    );
+		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.SCALE_TOP, 2d    );
 		LIFT_COMMAND_POSITIONS.put(LiftCommandStates.CLIMB,     1.65d );
 	}
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
@@ -165,7 +164,7 @@ public class Constants {
 	/***********************  SHOOT CUBE COMMAND  *************************/
 	public static final double SHOOT_TIME = 1;
 	public static final double SHOOT_BACKWARDS_MIN_HEIGHT = 1.44;
-	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.5;
+	public static final double SHOOT_FORWARD_INTAKE_MAX_HEIGHT = 0.65;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 
@@ -184,7 +183,7 @@ public class Constants {
 	
 	
 	/***********************  SHOOT SHOOT COMMAND  *************************/
-	public static final double INTAKE_SHOOT_SPEED = 0.65;
+	public static final double INTAKE_SHOOT_SPEED = 0.5;
 	public static final double INTAKE_SHOOT_DIRECTION = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
@@ -204,7 +203,6 @@ public class Constants {
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/
 	
 	/***********************  SIDE SWITCH COMMAND  *************************/
-	
 	public static final double SIDE_SWITCH_FORAWARD_DISTANCE = 3.755;
 	public static final double SIDE_SWITCH_SIDE_DISTANCE = 1;
 	/**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^**/	

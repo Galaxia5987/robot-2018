@@ -16,9 +16,7 @@ package org.usfirst.frc.team5987.robot;
 public class RobotMap {
 
 
-	/*done---------------CLIMB-----------------*/
-
-	
+	/*done---------------CLIMB-----------------*/	
 	public static int climbMotor1 = 10;
 	public static int climbMotor2 = 9;
 	public static int climb1PDP = 12;
@@ -30,17 +28,17 @@ public class RobotMap {
 
 
 	/*done----------------DRIVE----------------*/
-	public static final int driveRightRearMotor = 8; // TODO: CHANGE!
-	public static final int driveRightFrontMotor = 9; // TODO: CHANGE!
-	public static final int driveLeftRearMotor = 6; // TODO: CHANGE!
-	public static final int driveLeftFrontMotor = 7; // TODO: CHANGE!
+	public static final int driveRightRearMotor = 1; // TODO: CHANGE!
+	public static final int driveRightFrontMotor = 2; // TODO: CHANGE!
+	public static final int driveLeftRearMotor = 3; // TODO: CHANGE!
+	public static final int driveLeftFrontMotor = 4; // TODO: CHANGE!
 	/*-------------------------------------*/
 
 	/*done---------------GRIPPER---------------*/
-	public static int gripperWheelLeft = 2; // TODO: CHANGE!
-	public static int gripperLeftPDP = 6; // TODO: CHANGE!
-	public static int gripperWheelRight = 3; // TODO: CHANGE!
-	public static int gripperRightPDP = 5; // TODO: CHANGE!
+	public static int gripperWheelLeft = 8; // TODO: CHANGE!
+	public static int gripperLeftPDP = 8; // TODO: CHANGE!
+	public static int gripperWheelRight = 6; // TODO: CHANGE!
+	public static int gripperRightPDP = 3; // TODO: CHANGE!
 	
 	public static final int[] gripperPDPs = new int[] {gripperLeftPDP, gripperRightPDP};
 	/*-------------------------------------*/
@@ -52,10 +50,10 @@ public class RobotMap {
 	/*-------------------------------------*/
 
 	/*done----------------INTAKE---------------*/
-	public static final int intakeMotorLeft = 4;
-	public static int intakeLeftPDP = 4;
+	public static final int intakeMotorLeft = 7;
+	public static int intakeLeftPDP = 2;
 	public static final int intakeMotorRight = 5;
-	public static int intakeRightPDP = 11;
+	public static int intakeRightPDP = 1;
 	
 	public static final int[] intakePDPs = new int[] {intakeLeftPDP, intakeRightPDP};
 	/*-------------------------------------*/
