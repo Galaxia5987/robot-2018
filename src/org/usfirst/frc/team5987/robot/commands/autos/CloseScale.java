@@ -86,9 +86,9 @@ public class CloseScale extends CommandGroup {
 			addSequential(new ShootCubeCommand(-1, true));
 		}
 		else {
-			addSequential(new ShootCubeCommand(0.5 , true));
+			addSequential(new ShootCubeCommand(0.3 , true)); // was 0.5 in first playoff game [untested]
 		}
-		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM));
+		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 0 delay
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.2));
 	}
 	
