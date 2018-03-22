@@ -24,7 +24,7 @@ public class Constants {
 	public static final double AUTO_SWITCH_TURN = 30;
 	public static final double AUTO_SWITCH_STRAIGHT = 0.2;
 	public static final double AUTO_SWITCH_Y_SIDE_SHIFT = 0;
-	public static final double AUTO_SWITCH_X_SHIFT = 0.45;
+	public static final double AUTO_SWITCH_X_SHIFT = 0.5;
 	// Scale
 	public static final double AUTO_SCALE_CLOSE_LIFT_DELAY = 2.5;
 	public static final double AUTO_SCALE_FAR_LIFT_DELAY = 4.6;
