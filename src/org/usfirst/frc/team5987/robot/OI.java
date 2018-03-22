@@ -10,6 +10,7 @@ package org.usfirst.frc.team5987.robot;
 import org.usfirst.frc.team5987.robot.commands.ChangeFilterModeCommand;
 import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
+import org.usfirst.frc.team5987.robot.commands.IntakeSpringSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
@@ -55,7 +56,7 @@ public class OI {
 		x.whileHeld(new ShootCubeCommand(-0.75, false));
 		y.whenPressed(new IntakeSolenoidCommand());
 		a.whenPressed(new TakeCommand());
-		rb.whenPressed(new EatCubeGroupCommand());
+		rb.whenPressed(new IntakeSpringSolenoidCommand());
 		select.whenPressed(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.SWITCH));
 		start.whenPressed(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
 		lb.whenPressed(new LiftState());
