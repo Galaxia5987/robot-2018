@@ -49,13 +49,9 @@ public abstract class PathCommand extends Command {
     	preLeftDistance = Robot.driveSubsystem.getLeftDistance();
     	preRightDistance = Robot.driveSubsystem.getRightDistance();
     	
-    	double startX = 0;
-    	double startY = 0;
+    	double camStartX = Constants.PATH_h * Math.cos(Robot.driveSubsystem.getAngleRadians());
+    	double camStartY = Constants.PATH_h * Math.sin(Robot.driveSubsystem.getAngleRadians());
 
-    	x = startX;
-    	y = startY;
-    	startX += Constants.PATH_h * Math.cos(Robot.driveSubsystem.getAngleRadians());
-    	startY += Constants.PATH_h * Math.sin(Robot.driveSubsystem.getAngleRadians());
     	
     	//	Add first point
 		Point[] pWithoutFirst = getPoints();
@@ -64,10 +60,12 @@ public abstract class PathCommand extends Command {
 			p[i] = pWithoutFirst[i - 1];
 		p[0] = isRelative ? new Point(0, 0) : new Point(Robot.robotAbsolutePosition[0], Robot.robotAbsolutePosition[1]);
 			
+    	x = p[0].get()[0];
+    	y = p[0].get()[1];
 		
 		for (int i = 0; i < p.length; i++) {
 			double[] cords = p[i].get();
-			p[i].setPoint(cords[0]+ startX, cords[1] + startY);
+			p[i].setPoint(cords[0]+ camStartX, cords[1] + camStartY);
 		}
 				
 		train = new surfaceMP(p, Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_ACCELERATION, Constants.DRIVE_DECCELERATION, Constants.DRIVE_MIN_VELOCITY, 0, Constants.ERROR_ACCELERATION);
@@ -118,12 +116,12 @@ public abstract class PathCommand extends Command {
     	
 		Robot.driveSubsystem.setSetpoints(0, 0);
 		if(isRelative){
-			Robot.robotAbsolutePosition[0] += pointX;
-				Robot.robotAbsolutePosition[1] += pointY;
-			}else{
-				Robot.robotAbsolutePosition[0] = pointX;
-				Robot.robotAbsolutePosition[1] = pointY;
-			}
+			Robot.robotAbsolutePosition[0] += x;
+			Robot.robotAbsolutePosition[1] += y;
+		}else{
+			Robot.robotAbsolutePosition[0] = x;
+			Robot.robotAbsolutePosition[1] = y;
+		}
 
 }
 

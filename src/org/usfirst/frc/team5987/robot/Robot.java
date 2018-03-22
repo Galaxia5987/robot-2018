@@ -203,6 +203,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		robotAbsolutePosition[0] = 0;
+		robotAbsolutePosition[1] = 0;
 		SmartDashboard.putBoolean("Robot Enabled", true);
 		navx.reset();
 		robotAbsolutePosition = new double[] {0, 0};
