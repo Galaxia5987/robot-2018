@@ -19,7 +19,7 @@ public class IntakeSubsystem extends Subsystem implements Watch_Dogeable {
 	private SafeVictor intakeMotorLeft = new SafeVictor(RobotMap.intakeMotorLeft);
 	private SafeVictor intakeMotorRight = new SafeVictor(RobotMap.intakeMotorRight);
 	private DoubleSolenoid solenoid = new DoubleSolenoid(1,RobotMap.intakeSolenoid1, RobotMap.intakeSolenoid2);
-	DoubleSolenoid springSolenoid = new DoubleSolenoid(RobotMap.intakeSolenoid3, RobotMap.intakeSolenoid4);
+	DoubleSolenoid springSolenoid = new DoubleSolenoid(1,RobotMap.intakeSolenoid3, RobotMap.intakeSolenoid4);
 	Timer downTimer = new Timer();
 
 	public IntakeSubsystem() {
