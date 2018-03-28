@@ -124,6 +124,8 @@ public class Robot extends TimedRobot {
 		navx.reset();
 		m_oi = new OI();
 
+		SmartDashboard.putBoolean("Spring", intakeSubsystem.getSpringSolenoid());
+		
 		// Autonomous options
 		directionChooser.addDefault("Backward", 'T');
 		directionChooser.addObject("Forward", 'F');
@@ -268,6 +270,7 @@ public class Robot extends TimedRobot {
 		ntYaw.setDouble(driveSubsystem.getYaw());
 		ntAngle.setDouble(driveSubsystem.getAngle());
 
+		SmartDashboard.putBoolean("Spring", intakeSubsystem.getSpringSolenoid());
 		ntAcs1.setDouble(navx.getRawAccelX());
 		ntAcs2.setDouble(navx.getRawAccelY());
 		ntAcs3.setDouble(navx.getRawAccelZ());

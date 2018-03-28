@@ -19,6 +19,7 @@ public class IntakeSubsystem extends Subsystem implements Watch_Dogeable {
 	private SafeVictor intakeMotorLeft = new SafeVictor(RobotMap.intakeMotorLeft);
 	private SafeVictor intakeMotorRight = new SafeVictor(RobotMap.intakeMotorRight);
 	private DoubleSolenoid solenoid = new DoubleSolenoid(1,RobotMap.intakeSolenoid1, RobotMap.intakeSolenoid2);
+	DoubleSolenoid springSolenoid = new DoubleSolenoid(1,RobotMap.intakeSolenoid3, RobotMap.intakeSolenoid4);
 	Timer downTimer = new Timer();
 
 	public IntakeSubsystem() {
@@ -57,6 +58,29 @@ public class IntakeSubsystem extends Subsystem implements Watch_Dogeable {
 		return false;
 	}
 
+	/**
+	 * Lock the Intake spring mechanism.
+	 * 
+	 * @param toLock - whether you want to lock the mechanism.
+	 */
+	public void setSpringSolenoid(boolean toLock) {
+		// open decides weather to open the piston or close it
+		if (toLock) {
+			springSolenoid.set(DoubleSolenoid.Value.kForward);
+		} else {
+			springSolenoid.set(DoubleSolenoid.Value.kReverse);
+		}
+	}
+	
+	/**
+	   * Read the current value of the spring solenoid.
+	   *
+	   * @return The current value of the spring solenoid.
+	   */
+	public boolean getSpringSolenoid() {
+		return springSolenoid.get() == DoubleSolenoid.Value.kForward;
+	}
+	
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());

@@ -30,6 +30,6 @@ public class EatCubeCommand extends PathCommand {
 			return cube;
 		}
 //		this.cancel();
-		return new Point[] {new Point(0,0)};
+		return new Point[] {new Point(1.5,0)};
 	}
 }

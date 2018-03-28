@@ -77,6 +77,8 @@ public class RobotMap {
 	/*done----------------INTAKE---------------*/
 	public static final int intakeSolenoid1 = 0;
 	public static final int intakeSolenoid2 = 1;
+	public static final int intakeSolenoid3 = 2;
+	public static final int intakeSolenoid4 = 3;
 	/*-------------------------------------*/
 	
 }
