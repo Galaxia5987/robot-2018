@@ -89,7 +89,7 @@ public class CloseScale extends CommandGroup {
 			addSequential(new ShootCubeCommand(0.3 , true)); // was 0.5 in first playoff game [untested]
 		}
 		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 0 delay
-		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.2));
+		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6)); // 0.4M more when forward
 	}
 	
 	public CloseScale(char robotPosition) {
