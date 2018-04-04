@@ -57,7 +57,7 @@ public class MainAuto extends CommandGroup {
 		
 		// Special case: If we choose to go to both Switches and both Scales and the robot starts
 		// on the Switch side and on the opposite of the Scale side.
-		if (scaleChoice == "both" && switchChoice != "nothing" && robotPosition == switchSide && robotPosition != scaleSide)
+		if (scaleChoice == "both" &&( switchChoice != "nothing" && switchChoice != "another scale") && robotPosition == switchSide && robotPosition != scaleSide)
 		{
 			ntAppendCommand("CloseSwitchFarScale(" + robotPosition + ")");
 			addSequential(new CloseSwitchFarScale(robotPosition));

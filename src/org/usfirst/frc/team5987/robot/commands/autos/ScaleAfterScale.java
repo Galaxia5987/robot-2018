@@ -21,7 +21,7 @@ public class ScaleAfterScale extends CommandGroup {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	if (Constants.isCubeVision) {
-			addSequential(new WaitCommand(1));
+			addSequential(new WaitCommand(2));
 			addSequential(new EatCubeGroupCommand());
 		} 
 		else {

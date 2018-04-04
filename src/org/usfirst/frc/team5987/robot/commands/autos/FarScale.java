@@ -113,7 +113,7 @@ public class FarScale extends CommandGroup {
 		else {
 			addSequential(new ShootCubeCommand(0.35, true)); // less (was 0.65) [untested]
 		}
-		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1.5)); // was 1 sec delay
+		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 1 sec delay
 		addSequential(new DriveStraightCommand(isBackwards ? 0.6 : -0.6));
 	}
 	
