@@ -28,7 +28,7 @@ public class CloseScale extends CommandGroup {
 	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
 	public CloseScale(char robotPosition, boolean isBackwards) {
-		double intakeDelay = isBackwards ? 0.5 : 0; // delay for opening intake so it won't touch the allience wall
+		double intakeDelay = isBackwards ? 0.2 : 0; // delay for opening intake so it won't touch the allience wall
 		double forwardAddition = isBackwards ? 0.2 : 0; // forward addition to backwards
 		double sideAddition = isBackwards ? 0.30 : 0.28; // side addition to backwards	
 		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
