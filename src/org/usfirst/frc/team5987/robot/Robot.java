@@ -16,6 +16,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.PathSwitchCommand;
+import org.usfirst.frc.team5987.robot.commands.SafeStopCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TestAbsPath;
 import org.usfirst.frc.team5987.robot.commands.TurnCommand;
@@ -111,6 +112,10 @@ public class Robot extends TimedRobot {
 	public static NetworkTableEntry ntVisionDistance = visionTable.getEntry("Distance");
 	public static NetworkTableEntry ntVisionFilterMode = visionTable.getEntry("Filter Mode");
 
+	double proTime;
+	double proLeftSpeed;
+	double proRightSpeed;
+	
 	Compressor compressor = new Compressor(1);
 
 	Command auto;
@@ -253,6 +258,10 @@ public class Robot extends TimedRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		compressor.start();
+		
+		proTime = autoTimer.get();
+		proLeftSpeed = driveSubsystem.getLeftSpeed();
+		proRightSpeed = driveSubsystem.getRightSpeed();
 	}
 
 	/**
@@ -302,6 +311,16 @@ public class Robot extends TimedRobot {
 		} else {
 			m_oi.xbox.setRumble(RumbleType.kLeftRumble, 0);
 			m_oi.xbox.setRumble(RumbleType.kRightRumble, 0);
+		}
+		
+		double dt = autoTimer.get() - proTime;
+		proTime = autoTimer.get();
+		double leftAccel = (driveSubsystem.getLeftSpeed() - proLeftSpeed) / dt;
+		proLeftSpeed = driveSubsystem.getLeftSpeed();
+		double rightAccel = (driveSubsystem.getRightSpeed() - proRightSpeed) / dt;
+		proRightSpeed = driveSubsystem.getRightSpeed();
+		if (leftAccel > 1.5 || rightAccel > 1.5) {
+			new SafeStopCommand(proLeftSpeed, 0.3).start();
 		}
 	}
 
