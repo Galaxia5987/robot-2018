@@ -30,7 +30,8 @@ public class SafeStopCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double delta = t.get() * Constants.DRIVE_DECCELERATION * 0.4; //times constant 0.4
-     	Robot.driveSubsystem.setSetpoints(startSpeed - delta,startSpeed - delta);
+    	delta *= startSpeed >= 0 ? -1 : 1;
+     	Robot.driveSubsystem.setSetpoints(startSpeed + delta,startSpeed + delta);
 		Robot.driveSubsystem.updatePID();
     }
 
