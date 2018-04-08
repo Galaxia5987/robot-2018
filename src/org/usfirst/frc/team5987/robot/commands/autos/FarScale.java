@@ -115,6 +115,9 @@ public class FarScale extends CommandGroup {
 		}
 		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 1 sec delay
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6));
+		
+		if (!isBackwards)
+			addSequential(new TurnCommand(180, false,1));
 	}
 	
 	public FarScale(char robotPosition) {

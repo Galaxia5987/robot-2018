@@ -90,6 +90,9 @@ public class CloseScale extends CommandGroup {
 		}
 		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 0 delay
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6)); // 0.4M more when forward
+		
+		if (!isBackwards)
+			addSequential(new TurnCommand(180, false,1));
 	}
 	
 	public CloseScale(char robotPosition) {
