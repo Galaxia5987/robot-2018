@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 
-#cam = cv2.VideoCapture(1)
+cam = cv2.VideoCapture('practice12.avi')
 while True:
-    #_, img = cam.read()
-    img = cv2.imread("cube.jpg")
+    _, img = cam.read()
+    #img = cv2.imread("")
     #img = np.ndarray(img)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -32,35 +32,43 @@ while True:
 
     img1 = img.copy()
     img2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    img2 = cv2.GaussianBlur(img2, ksize=(7, 7), sigmaX=0)
-    img2 = cv2.cvtColor(img2, cv2.COLOR_HSV2BGR)
-    img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
-    img3 = cv2.bitwise_and(mask, img2)
+    # img2 = cv2.GaussianBlur(img2, ksize=(7, 7), sigmaX=0)
+    # img2 = cv2.cvtColor(img2, cv2.COLOR_HSV2BGR)
+    # img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    # img3 = cv2.bitwise_and(mask, img2)
 
-    canny = cv2.Canny(img3, 50, 75)
-    _, thresh = cv2.threshold(canny, 10, 255, cv2.THRESH_BINARY)
-    thresh = np.array(thresh, dtype=np.uint8)
-    thresh = cv2.dilate(thresh, kernel=kernel, iterations=5)
-    thresh = cv2.erode(thresh, kernel=kernel, iterations=3)
-    mask = cv2.bitwise_and(cv2.bitwise_not(thresh), mask)
+    # canny = cv2.Canny(img3, 50, 75)
+    # _, thresh = cv2.threshold(canny, 10, 255, cv2.THRESH_BINARY)
+    # thresh = np.array(thresh, dtype=np.uint8)
+    # thresh = cv2.dilate(thresh, kernel=kernel, iterations=5)
+    # thresh = cv2.erode(thresh, kernel=kernel, iterations=3)
+    # mask = cv2.bitwise_and(cv2.bitwise_not(thresh), mask)
 
-    _, contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(img1, contours, -1, [255, 0, 0], 3)
 
-    for c in contours:
-        hull=cv2.convexHull(c)
-        epsilon = 0.015*cv2.arcLength(hull,True)
-        approx = cv2.approxPolyDP(hull,epsilon,True)
-        hullpoints = cv2.convexHull(approx,returnPoints=True)
-        #if len(hullpoints) == 6 or len(hullpoints) == 5:
-        for i in range(0,len(hullpoints)):
-            cv2.line(img1, tuple(hullpoints[i-1][0]), tuple(hullpoints[i][0]), [0, 255, 0], 2)
-            cv2.circle(img1, tuple(hullpoints[i][0]), 5, [0, 0, 255], -1)
+    # _, contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # cv2.drawContours(img1, contours, -1, [255, 0, 0], 3)
+    #
+    # for c in contours:
+    #     hull=cv2.convexHull(c)
+    #     epsilon = 0.015*cv2.arcLength(hull,True)
+    #     approx = cv2.approxPolyDP(hull,epsilon,True)
+    #     hullpoints = cv2.convexHull(approx,returnPoints=True)
+    #     #if len(hullpoints) == 6 or len(hullpoints) == 5:
+    #     for i in range(0,len(hullpoints)):
+    #         cv2.line(img1, tuple(hullpoints[i-1][0]), tuple(hullpoints[i][0]), [0, 255, 0], 2)
+    #         cv2.circle(img1, tuple(hullpoints[i][0]), 5, [0, 0, 255], -1)
 
-    cv2.imshow("thresh", thresh)
-    cv2.imshow("mask", mask)
+    [hue,saturation,value]=cv2.split(img2)
+    hue=cv2.Laplacian(hue,8)
+    value=cv2.Laplacian(value,8)
+    saturation=cv2.Laplacian(saturation,8)
+    huesat=cv2.bitwise_and(hue,saturation)
+
+    cv2.imshow("hue", hue)
+    cv2.imshow("value",value)
+    cv2.imshow("saturation", saturation)
     cv2.imshow("image", img1)
-    key = cv2.waitKey(1)
+    key = cv2.waitKey(0)
     if key is ord('q'):
         break
 
