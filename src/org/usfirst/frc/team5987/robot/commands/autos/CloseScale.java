@@ -12,6 +12,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 
 /**
  *
@@ -79,7 +80,7 @@ public class CloseScale extends CommandGroup {
 				    new Point(5.844841427855013, 0.7497097657392569 * Y_DIRECTION),
 				    new Point(5.9384653089954025, 0.77067437847743 * Y_DIRECTION),
 				    new Point(6.03392562677958, 0.7802803055849491 * Y_DIRECTION),
-				    new Point(7.150924369747899, 0.8192616234756098 * Y_DIRECTION)}, false, true, 10));
+				    new Point(7.150924369747899, 0.8192616234756098 * Y_DIRECTION)}, false, true, 6.5));
 			
 		}
 			if (isBackwards) {
@@ -92,7 +93,7 @@ public class CloseScale extends CommandGroup {
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6)); // 0.4M more when forward
 		
 		if (!isBackwards)
-			addSequential(new TurnCommand(180, false,1));
+			addSequential(new TurnCommand(180, false,3));
 	}
 	
 	public CloseScale(char robotPosition) {

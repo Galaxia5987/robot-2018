@@ -12,6 +12,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 
 /**
  *
@@ -117,7 +118,7 @@ public class FarScale extends CommandGroup {
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6));
 		
 		if (!isBackwards)
-			addSequential(new TurnCommand(180, false,1));
+			addSequential(new TurnCommand(180, false,3));
 	}
 	
 	public FarScale(char robotPosition) {
