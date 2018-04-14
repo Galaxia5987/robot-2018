@@ -33,10 +33,10 @@ public class Switch extends CommandGroup {
 		addSequential(new PathPointsCommand(new Point[]{
 				new Point(0.2, 0),
 				new Point(0.4, 0.2 * direction)},
-		false, true, 1
+		false, true, 2
 		));
 
-			addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 1));
+			addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 0.5));
 			addSequential(new LiftCommand(Constants.LiftCommandStates.SWITCH));
 			addParallel(new IntakeSolenoidCommand(false));
 			addSequential(new PathSwitchCommand(4));
