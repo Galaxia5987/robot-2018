@@ -3,6 +3,7 @@ package org.usfirst.frc.team5987.robot.subsystems;
 import org.usfirst.frc.team5987.robot.Constants;
 import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.RobotMap;
+import org.usfirst.frc.team5987.robot.commands.TriggerShootCommand;
 
 import auxiliary.SafeVictor;
 import auxiliary.Watch_Dogeable;
@@ -37,7 +38,7 @@ public class GripperSubsystem extends Subsystem implements Watch_Dogeable {
 	}
 	
 	public void initDefaultCommand() {
-
+		setDefaultCommand(new TriggerShootCommand());
 	}
 
 	/**
