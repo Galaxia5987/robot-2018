@@ -23,7 +23,7 @@ public class ScaleAfterScale extends CommandGroup {
     	if (Constants.isCubeVision) {
 			addSequential(new WaitCommand(2));
 			addSequential(new EatCubeGroupCommand());
-		} 
+		}
 		else {
 			if (currentPosition == 'R') {
 				addSequential(new PathPointsCommand(new Point[] { new Point(4.781846902310962, 1.0371526195899774) },
