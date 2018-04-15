@@ -1,6 +1,8 @@
 package org.usfirst.frc.team5987.robot.commands.autos;
 
 
+import org.usfirst.frc.team5987.robot.FieldMeasurements;
+import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.commands.DriveSeconds;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 
@@ -17,6 +19,12 @@ public class MainAuto extends CommandGroup {
 		SmartDashboard.putString("Auto Commands", current + ", \n" + command);
 	}
     public MainAuto(char robotPosition, String scaleChoice, String switchChoice, String stupidAuto, boolean isBackwards) {
+    	if(robotPosition == 'L')
+    		Robot.robotStartingPositionPoint = FieldMeasurements.ROBOTS.get(FieldMeasurements.Robot.LEFT);
+    	if(robotPosition == 'C')
+    		Robot.robotStartingPositionPoint = FieldMeasurements.ROBOTS.get(FieldMeasurements.Robot.CENTER);
+    	if(robotPosition == 'R')
+    		Robot.robotStartingPositionPoint = FieldMeasurements.ROBOTS.get(FieldMeasurements.Robot.RIGHT);
         final char switchSide = DriverStation.getInstance().getGameSpecificMessage().charAt(0),
         	 scaleSide = DriverStation.getInstance().getGameSpecificMessage().charAt(1);
 		char currentPosition = robotPosition;
