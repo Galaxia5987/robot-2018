@@ -59,14 +59,16 @@ while True:
     #         cv2.circle(img1, tuple(hullpoints[i][0]), 5, [0, 0, 255], -1)
 
     [hue,saturation,value]=cv2.split(img2)
-    hue=cv2.Laplacian(hue,8)
     value=cv2.Laplacian(value,8)
     saturation=cv2.Laplacian(saturation,8)
-    huesat=cv2.bitwise_and(hue,saturation)
+    valsat=cv2.bitwise_or(value,saturation)
+    img3 = cv2.bitwise_and(mask, valsat)
+    _, img3 = cv2.threshold(img3, 32, 255, cv2.THRESH_BINARY)
+    img3 = cv2.dilate(img3, kernel=kernel, iterations=3)
+    img3 = cv2.erode(img3, kernel=kernel, iterations=3)
 
-    cv2.imshow("hue", hue)
-    cv2.imshow("value",value)
-    cv2.imshow("saturation", saturation)
+    cv2.imshow("valsat", valsat)
+    cv2.imshow("processed image", img3)
     cv2.imshow("image", img1)
     key = cv2.waitKey(0)
     if key is ord('q'):
