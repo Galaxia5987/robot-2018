@@ -10,7 +10,7 @@ import auxiliary.Point;
  *
  */
 public class FieldMeasurements {
-	public Point getRelative(Point robotStartingPosition, Point destination){
+	public static Point getRelative(Point robotStartingPosition, Point destination){
 		return destination.minus(robotStartingPosition);
 	}
 	

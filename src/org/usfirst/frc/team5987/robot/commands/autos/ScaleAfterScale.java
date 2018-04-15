@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5987.robot.commands.autos;
 
 import org.usfirst.frc.team5987.robot.Constants;
+import org.usfirst.frc.team5987.robot.FieldMeasurements;
 import org.usfirst.frc.team5987.robot.commands.DriveStraightCommand;
 import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
@@ -22,7 +23,10 @@ public class ScaleAfterScale extends CommandGroup {
         // eg. requires(chassis);
     	if (Constants.isCubeVision) {
 			addSequential(new WaitCommand(2));
-			addSequential(new EatCubeGroupCommand());
+			if(currentPosition == 'L')
+				addSequential(new EatCubeGroupCommand(FieldMeasurements.CUBES.get(FieldMeasurements.Cube.PLATFORM_6)));
+			if(currentPosition == 'R')
+				addSequential(new EatCubeGroupCommand(FieldMeasurements.CUBES.get(FieldMeasurements.Cube.PLATFORM_1)));
 		}
 		else {
 			if (currentPosition == 'R') {
