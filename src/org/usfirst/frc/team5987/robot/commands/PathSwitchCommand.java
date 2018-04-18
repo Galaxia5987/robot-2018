@@ -30,7 +30,7 @@ public class PathSwitchCommand extends PathCommand {
 			Point p0 =  new Point(0, 0);
 			Point p1 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
 			Point p2 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_END_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
-			System.out.println("switch not found");
+//			System.out.println("switch not found");
 			
 			
 			SmartDashboard.putString("Vision - "+d.toString(), "switch not found");
@@ -49,8 +49,8 @@ public class PathSwitchCommand extends PathCommand {
 		double yShift = dy >= 0 ? Constants.AUTO_SWITCH_Y_SIDE_SHIFT : - Constants.AUTO_SWITCH_Y_SIDE_SHIFT;
 		Point B = new Point(dx - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH + Constants.AUTO_SWITCH_X_SHIFT, dy + yShift);
 		Point C = new Point(dx - Constants.PATH_END_DISTANCE_BEFORE_SWITCH + Constants.AUTO_SWITCH_X_SHIFT, dy + yShift);
-		System.out.println("switch found B(: " +B.get()[0]+", "+B.get()[1]);
-		System.out.println("switch found C(: " +C.get()[0]+", "+C.get()[1]);
+//		System.out.println("switch found B(: " +B.get()[0]+", "+B.get()[1]);
+//		System.out.println("switch found C(: " +C.get()[0]+", "+C.get()[1]);
 		SmartDashboard.putString("Vision B - "+d.toString(), "switch-B( " +B.get()[0]+", "+B.get()[1]);
 		SmartDashboard.putString("Vision C - "+d.toString(), "switch-C( " +C.get()[0]+", "+C.get()[1]);
 		return new Point[] {B,C};
