@@ -110,6 +110,7 @@ public class Robot extends TimedRobot {
 	public static NetworkTableEntry ntVisionTarget = visionTable.getEntry("Sees Target");
 	public static NetworkTableEntry ntVisionDistance = visionTable.getEntry("Distance");
 	public static NetworkTableEntry ntVisionFilterMode = visionTable.getEntry("Filter Mode");
+	public static Point robotStartingPositionPoint = new Point(0,0);
 
 	Compressor compressor = new Compressor(1);
 

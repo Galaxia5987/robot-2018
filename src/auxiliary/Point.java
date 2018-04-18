@@ -36,4 +36,9 @@ public class Point {
 		angle += p.get()[0] <= x ? 0 : Math.PI;
 		return angle;
 	}
+	
+	public Point minus(Point point){
+		double[] XY = point.get();
+		return new Point(XY[0] - x, XY[1] - y);
+	} 
 }

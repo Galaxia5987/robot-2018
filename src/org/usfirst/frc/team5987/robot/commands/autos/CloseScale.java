@@ -12,6 +12,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 
 /**
  *
@@ -28,7 +29,7 @@ public class CloseScale extends CommandGroup {
 	private static double END_Y = Constants.toMeter(41.88) + Constants.AUTO_SCALE_CLOSE_SHIFT_T0_FIELD_CENTER - Constants.CENTER_TO_BACK_BUMPER;
 
 	public CloseScale(char robotPosition, boolean isBackwards) {
-		double intakeDelay = isBackwards ? 0.5 : 0; // delay for opening intake so it won't touch the allience wall
+		double intakeDelay = isBackwards ? 0.2 : 0; // delay for opening intake so it won't touch the allience wall
 		double forwardAddition = isBackwards ? 0.2 : 0; // forward addition to backwards
 		double sideAddition = isBackwards ? 0.30 : 0.28; // side addition to backwards	
 		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
@@ -79,7 +80,7 @@ public class CloseScale extends CommandGroup {
 				    new Point(5.844841427855013, 0.7497097657392569 * Y_DIRECTION),
 				    new Point(5.9384653089954025, 0.77067437847743 * Y_DIRECTION),
 				    new Point(6.03392562677958, 0.7802803055849491 * Y_DIRECTION),
-				    new Point(7.150924369747899, 0.8192616234756098 * Y_DIRECTION)}, false, true, 10));
+				    new Point(7.150924369747899, 0.8192616234756098 * Y_DIRECTION)}, false, true, 6.5));
 			
 		}
 			if (isBackwards) {
@@ -90,6 +91,9 @@ public class CloseScale extends CommandGroup {
 		}
 		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 0 delay
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6)); // 0.4M more when forward
+		
+		if (!isBackwards)
+			addSequential(new TurnCommand(180, false,3));
 	}
 	
 	public CloseScale(char robotPosition) {

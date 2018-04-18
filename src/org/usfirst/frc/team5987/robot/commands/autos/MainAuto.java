@@ -1,6 +1,8 @@
 package org.usfirst.frc.team5987.robot.commands.autos;
 
 
+import org.usfirst.frc.team5987.robot.FieldMeasurements;
+import org.usfirst.frc.team5987.robot.Robot;
 import org.usfirst.frc.team5987.robot.commands.DriveSeconds;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 
@@ -17,6 +19,12 @@ public class MainAuto extends CommandGroup {
 		SmartDashboard.putString("Auto Commands", current + ", \n" + command);
 	}
     public MainAuto(char robotPosition, String scaleChoice, String switchChoice, String stupidAuto, boolean isBackwards) {
+    	if(robotPosition == 'L')
+    		Robot.robotStartingPositionPoint = FieldMeasurements.ROBOTS.get(FieldMeasurements.Robot.LEFT);
+    	if(robotPosition == 'C')
+    		Robot.robotStartingPositionPoint = FieldMeasurements.ROBOTS.get(FieldMeasurements.Robot.CENTER);
+    	if(robotPosition == 'R')
+    		Robot.robotStartingPositionPoint = FieldMeasurements.ROBOTS.get(FieldMeasurements.Robot.RIGHT);
         final char switchSide = DriverStation.getInstance().getGameSpecificMessage().charAt(0),
         	 scaleSide = DriverStation.getInstance().getGameSpecificMessage().charAt(1);
 		char currentPosition = robotPosition;
@@ -57,7 +65,7 @@ public class MainAuto extends CommandGroup {
 		
 		// Special case: If we choose to go to both Switches and both Scales and the robot starts
 		// on the Switch side and on the opposite of the Scale side.
-		if (scaleChoice == "both" && (switchChoice != "nothing" && switchChoice != "another scale") && robotPosition == switchSide && robotPosition != scaleSide)
+		if (scaleChoice == "both" &&( switchChoice != "nothing" && switchChoice != "another scale") && robotPosition == switchSide && robotPosition != scaleSide)
 		{
 			ntAppendCommand("CloseSwitchFarScale(" + robotPosition + ")");
 			addSequential(new CloseSwitchFarScale(robotPosition));

@@ -8,12 +8,14 @@
 package org.usfirst.frc.team5987.robot;
 
 import org.usfirst.frc.team5987.robot.commands.ChangeFilterModeCommand;
+import org.usfirst.frc.team5987.robot.commands.EatCubeGroupCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.IntakeSpringSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
-import org.usfirst.frc.team5987.robot.commands.LiftState;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
+
+import org.usfirst.frc.team5987.robot.commands.LiftState;
 
 import auxiliary.DPadButton;
 import edu.wpi.first.wpilibj.Joystick;

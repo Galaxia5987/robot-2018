@@ -12,6 +12,7 @@ import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
 import org.usfirst.frc.team5987.robot.commands.TakeCommand;
+import org.usfirst.frc.team5987.robot.commands.TurnCommand;
 
 /**
  *
@@ -34,7 +35,7 @@ public class FarScale extends CommandGroup {
 		addParallel(new IntakeSolenoidCommand(true, intakeDelay));
 //		if(isBackwards)
 			addParallel(new TakeCommand(3.5, 0.7));
-		addParallel(new LiftCommand(0.2, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
+		addParallel(new LiftCommand(0.1, 1.7)); // move the lift up a bit to prevent the cube from touching the floor  
 		final int Y_DIRECTION = robotPosition == 'R' ? 1 : -1;
 		/**Far Scale**/
 		addParallel(new LiftCommand(Constants.LiftCommandStates.SCALE_TOP, Constants.AUTO_SCALE_FAR_LIFT_DELAY + 0.6));
@@ -108,13 +109,16 @@ public class FarScale extends CommandGroup {
 				    new Point(7.320286478227653, 5.109730743437007 * Y_DIRECTION)}, false, true, 8));
 			}
 		if (isBackwards) {
-			addSequential(new ShootCubeCommand(-0.65, true));
+			addSequential(new ShootCubeCommand(-1, true));
 		}
 		else {
-			addSequential(new ShootCubeCommand(0.35, true)); // less (was 0.65) [untested]
+			addSequential(new ShootCubeCommand(0.3, true)); // less (was 0.65) [untested]
 		}
 		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 1 sec delay
-		addSequential(new DriveStraightCommand(isBackwards ? 0.6 : -0.6));
+		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6));
+		
+		if (!isBackwards)
+			addSequential(new TurnCommand(180, false,3));
 	}
 	
 	public FarScale(char robotPosition) {

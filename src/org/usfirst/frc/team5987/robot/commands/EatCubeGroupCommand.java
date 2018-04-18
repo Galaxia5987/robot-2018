@@ -2,6 +2,7 @@ package org.usfirst.frc.team5987.robot.commands;
 
 import org.usfirst.frc.team5987.robot.Robot;
 
+import auxiliary.Point;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -10,6 +11,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class EatCubeGroupCommand extends CommandGroup {
 	
+	public EatCubeGroupCommand(Point cube) {
+    	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
+    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 1));
+    	addParallel(new TakeCommand(0,4));
+    	addSequential(new EatCubeCommand(cube, 3));
+    	addSequential(new TurnCommand(15, true,0.5));
+    	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
+	}
     public EatCubeGroupCommand() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -28,7 +37,7 @@ public class EatCubeGroupCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
-    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 2));
+    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 1));
     	addParallel(new TakeCommand(0,4));
     	addSequential(new EatCubeCommand(3));
     	addSequential(new TurnCommand(15, true,0.5));
