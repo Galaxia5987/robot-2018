@@ -25,6 +25,7 @@ public class TriggerShootCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	double speed = Robot.m_oi.xbox.getTriggerAxis(Hand.kRight);
+    	speed *= 0.75;
     	Robot.gripperSubsystem.setSpeed(speed, speed);
 		if (Robot.liftSubsystem.getHeight() < Constants.SHOOT_FORWARD_INTAKE_MAX_HEIGHT)
 			Robot.intakeSubsystem.setSpeed(speed, speed);

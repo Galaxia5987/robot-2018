@@ -39,6 +39,6 @@ public class Point {
 	
 	public Point minus(Point point){
 		double[] XY = point.get();
-		return new Point(XY[0] - x, XY[1] - y);
+		return new Point(x - XY[0], y - XY[1]);
 	} 
 }

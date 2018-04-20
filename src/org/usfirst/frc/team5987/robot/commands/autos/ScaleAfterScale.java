@@ -8,6 +8,7 @@ import org.usfirst.frc.team5987.robot.commands.IntakeSolenoidCommand;
 import org.usfirst.frc.team5987.robot.commands.LiftCommand;
 import org.usfirst.frc.team5987.robot.commands.PathPointsCommand;
 import org.usfirst.frc.team5987.robot.commands.ShootCubeCommand;
+import org.usfirst.frc.team5987.robot.commands.TakeCommand;
 
 import auxiliary.Point;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -22,7 +23,7 @@ public class ScaleAfterScale extends CommandGroup {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	if (Constants.isCubeVision) {
-			addSequential(new WaitCommand(2));
+			addSequential(new WaitCommand(0.5));
 			if(currentPosition == 'L')
 				addSequential(new EatCubeGroupCommand(FieldMeasurements.CUBES.get(FieldMeasurements.Cube.PLATFORM_6)));
 			if(currentPosition == 'R')
@@ -48,7 +49,7 @@ public class ScaleAfterScale extends CommandGroup {
 				    new Point(6.378173615800014, 5.32919896400697 * Y_DIRECTION),
 				    new Point(7.260286478227652, 5.259730743437007 * Y_DIRECTION)}, true, false, 4));
 		}
-		addSequential(new ShootCubeCommand(-1, true));
+		addSequential(new ShootCubeCommand(-0.8, true));
 		addSequential(new DriveStraightCommand(0.2));
 
     }

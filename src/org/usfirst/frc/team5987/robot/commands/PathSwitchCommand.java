@@ -28,14 +28,14 @@ public class PathSwitchCommand extends PathCommand {
 			// Positions of the alliance Switch and Scale Plates.
 			double switchPosition = gameData.charAt(0) == 'L' ? 1 : -1;
 			Point p0 =  new Point(0, 0);
-			Point p1 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_TURN_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
-			Point p2 = new Point(Constants.PATH_MOVE_FORWARD_SWITCH_DISTANCE - Constants.PATH_END_DISTANCE_BEFORE_SWITCH, switchPosition * Constants.PATH_MOVE_SIDEWAYS_SWITCH_DISTANCE);
+			Point p1 = new Point(1.85, switchPosition * 1.4);
+			Point p2 = new Point(2.85, switchPosition * 1.4);
 //			System.out.println("switch not found");
 			
 			
 			SmartDashboard.putString("Switch - "+d.toString(), "switch not found");
-//			return new Point[] {p1,p2};
-			return new Point[] {p0}; // TODO: Change to above!
+			return new Point[] {p1,p2};
+//			return new Point[] {p0}; // TODO: Change to above!
     	}
 		double switchDistance = Robot.ntVisionDistance.getDouble(0);
     	double switchAngle = Math.toRadians(Robot.ntVisionAngle.getDouble(0));

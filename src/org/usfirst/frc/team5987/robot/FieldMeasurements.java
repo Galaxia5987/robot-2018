@@ -37,14 +37,14 @@ public class FieldMeasurements {
 
 	public static Map<Cube, Point> CUBES = new EnumMap<Cube, Point>(Cube.class);
 	static {
-		CUBES.put(Cube.PLATFORM_1, new Point(0, 0));
+		CUBES.put(Cube.PLATFORM_1, new Point(3.55+1.43+0.334/2.0, 2.16+0.334/2));
 		CUBES.put(Cube.PLATFORM_2, new Point(0, 0));
 		CUBES.put(Cube.PLATFORM_3, new Point(0, 0));
 		CUBES.put(Cube.PLATFORM_4, new Point(0, 0));
 		CUBES.put(Cube.PLATFORM_5, new Point(0, 0));
-		CUBES.put(Cube.PLATFORM_6, new Point(0, 0));
+		CUBES.put(Cube.PLATFORM_6, new Point(3.55+1.43+0.334/2.0, 2.16+3.9-0.334/2 + 0.05));
 
-		CUBES.put(Cube.PILE_1, new Point(0, 0));
+		CUBES.put(Cube.PILE_1, new Point(3.55-2.5*0.334, 3.42+0.7));
 		CUBES.put(Cube.PILE_2, new Point(0, 0));
 		CUBES.put(Cube.PILE_3, new Point(0, 0));
 		CUBES.put(Cube.PILE_4, new Point(0, 0));
@@ -66,8 +66,8 @@ public class FieldMeasurements {
 	
 	public static Map<Robot, Point> ROBOTS = new EnumMap<Robot, Point>(Robot.class);
 	static {
-		ROBOTS.put(Robot.RIGHT, new Point(0, 0));
+		ROBOTS.put(Robot.RIGHT, new Point(0.55, 0.7+0.53));
 		ROBOTS.put(Robot.LEFT, new Point(0, 0));
-		ROBOTS.put(Robot.CENTER, new Point(0, 0));
+		ROBOTS.put(Robot.CENTER, new Point(0.34, 0.7+3.72-0.53));
 	}
 }

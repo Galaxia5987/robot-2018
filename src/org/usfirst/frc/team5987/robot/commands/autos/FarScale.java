@@ -109,12 +109,12 @@ public class FarScale extends CommandGroup {
 				    new Point(7.320286478227653, 5.109730743437007 * Y_DIRECTION)}, false, true, 8));
 			}
 		if (isBackwards) {
-			addSequential(new ShootCubeCommand(-1, true));
+			addSequential(new ShootCubeCommand(-0.8, true));
 		}
 		else {
 			addSequential(new ShootCubeCommand(0.3, true)); // less (was 0.65) [untested]
 		}
-		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, 1)); // was 1 sec delay
+		addParallel(new LiftCommand(Constants.LiftCommandStates.BOTTOM, isBackwards ? 0.5 : 1)); // was 1 sec delay
 		addSequential(new DriveStraightCommand(isBackwards ? 0.2 : -0.6));
 		
 		if (!isBackwards)

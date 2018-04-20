@@ -13,9 +13,9 @@ public class EatCubeGroupCommand extends CommandGroup {
 	
 	public EatCubeGroupCommand(Point cube) {
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
-    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 1));
-    	addParallel(new TakeCommand(0,4));
-    	addSequential(new EatCubeCommand(cube, 3));
+    	addParallel(new TakeCommand(0.75,4));
+    	addSequential(new EatCubeCommand(cube, 2));
+    	addSequential(new IntakeSpringSolenoidCommand(true));
     	addSequential(new TurnCommand(15, true,0.5));
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
 	}
@@ -37,9 +37,10 @@ public class EatCubeGroupCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
-    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 1));
+    	addSequential(new WaitToTargetCommand(Robot.ntVisionTarget, 0.02));
     	addParallel(new TakeCommand(0,4));
     	addSequential(new EatCubeCommand(3));
+    	addSequential(new IntakeSpringSolenoidCommand(true));
     	addSequential(new TurnCommand(15, true,0.5));
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.STREAM));
     }

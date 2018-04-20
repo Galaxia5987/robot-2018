@@ -20,13 +20,14 @@ public class EatCubeCommand extends PathCommand {
     }
     
     public EatCubeCommand(Point cube, double timeout) {
-    	super(true,timeout);
+    	super(false, timeout);
     	cubeTarget = cube;
     }
     
 	@Override
 	public Point[] getPoints() {
-		if (Robot.ntVisionTarget.getBoolean(false)) {
+//		if (Robot.ntVisionTarget.getBoolean(false)) {
+		if (false) {
 			double angle = Math.toRadians(Robot.ntVisionAngle.getDouble(0));
 			double distance = Robot.ntVisionDistance.getDouble(0) / Math.cos(angle) - 0.5;
 			double navx = Robot.driveSubsystem.getAngleRadians();
@@ -37,13 +38,15 @@ public class EatCubeCommand extends PathCommand {
 					
 			Point[] cube = new Point[] {new Point(x, y)};
 			SmartDashboard.putString("Cube Vision - "+d.toString(), "("+x+", "+y+")");
+			SmartDashboard.putString("Abs Pos - "+d.toString(), "("+Robot.robotAbsolutePosition[0]+", "+Robot.robotAbsolutePosition[1]+")");
 			
 			return cube;
 		}
 		
 		if(cubeTarget != null) {
-			Point cube = FieldMeasurements.getRelative(Robot.robotStartingPositionPoint, cubeTarget);
+			Point cube = FieldMeasurements.getRelative(cubeTarget,Robot.robotStartingPositionPoint);
 			SmartDashboard.putString("Cube Dist - "+d.toString(), "("+cube.get()[0]+", "+cube.get()[1]+")");
+			SmartDashboard.putString("Abs Pos - "+d.toString(), "("+Robot.robotAbsolutePosition[0]+", "+Robot.robotAbsolutePosition[1]+")");
 			return new Point[] {cube};
 		}
 //		this.cancel();

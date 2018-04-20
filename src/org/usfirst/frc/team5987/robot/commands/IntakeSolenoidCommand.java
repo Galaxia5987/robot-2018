@@ -31,7 +31,7 @@ public class IntakeSolenoidCommand extends Command {
 		// eg. requires(chassis);
 		chosen = opMode.TOGGLE;
 		this.delay = delay;
-		requires(Robot.intakeSubsystem);
+//		requires(Robot.intakeSubsystem);
 	}
 	
 	public IntakeSolenoidCommand(boolean state, double delay) {
@@ -51,7 +51,7 @@ public class IntakeSolenoidCommand extends Command {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		chosen = opMode.TOGGLE;
-		requires(Robot.intakeSubsystem);
+//		requires(Robot.intakeSubsystem);
 	}
 	
 	/**

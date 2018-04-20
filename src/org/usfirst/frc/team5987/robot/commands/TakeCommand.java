@@ -50,6 +50,8 @@ public class TakeCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	if(timer.get() < delay)
+    		return false;
     	boolean isCubeInside = overrideProximitySensor ? false : Robot.gripperSubsystem.isCubeInside();
         return cancel || (isTimedOut() || isCubeInside ||!Robot.liftSubsystem.reachedBottom()) && !Robot.m_oi.xbox.getRawButton(OI.TakeCommandButton);
     	
