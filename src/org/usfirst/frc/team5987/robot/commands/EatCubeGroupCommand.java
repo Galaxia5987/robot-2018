@@ -13,7 +13,7 @@ public class EatCubeGroupCommand extends CommandGroup {
 	
 	public EatCubeGroupCommand(Point cube) {
     	addSequential(new ChangeFilterModeCommand(ChangeFilterModeCommand.Modes.CUBE));
-    	addParallel(new TakeCommand(0.75,4));
+    	addParallel(new TakeCommand(0.75,2.5));
     	addSequential(new EatCubeCommand(cube, 2));
     	addSequential(new IntakeSpringSolenoidCommand(true));
     	addSequential(new TurnCommand(15, true,0.5));

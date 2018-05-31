@@ -28,8 +28,8 @@ public class PathSwitchCommand extends PathCommand {
 			// Positions of the alliance Switch and Scale Plates.
 			double switchPosition = gameData.charAt(0) == 'L' ? 1 : -1;
 			Point p0 =  new Point(0, 0);
-			Point p1 = new Point(1.85, switchPosition * 1.4);
-			Point p2 = new Point(2.85, switchPosition * 1.4);
+			Point p1 = new Point(1.85, gameData.charAt(0) == 'L' ? 1.4 : -1.3);
+			Point p2 = new Point(2.85, gameData.charAt(0) == 'L' ? 1.4 : -1.3);
 //			System.out.println("switch not found");
 			
 			
