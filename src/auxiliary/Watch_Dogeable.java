@@ -21,6 +21,9 @@ public interface Watch_Dogeable {
      * will always gently ask the subsystem if it is willing to go back to the realm of the living.
      * Must be overloaded to return true to tell Watch_Doge if he/she/zhe can perform necromancy, false if the subsystem
      * wants to remain dead for another iteration.
+     * 
+     * This function has sparked many wars, between the 'inside' and 'before_you_go_go' factions.
+     * The battle has been a brutal one, and there seems to be no end in sight.
      *
      * @return boolean indicating if subsystem is ready to be re-enabled via necromancy (true is ready)
      */
